@@ -5,6 +5,7 @@
 
     // ---------------------------------------------------------------------- //
     const DATA_FETCH_TIME = 5 * 1000; // 5 seconds [also need to change fetchTimer animation duration]
+    const CLEAR_SUCCESS_TIME = 5 * 1000; // 5 seconds
     const V_MIN = 2.8; // 3.0
     const V_MAX = 4.4; // 4.2
     const T_MIN = 20;
@@ -41,6 +42,7 @@
 
     let error   = $state(null);
     let success = $state(null);
+    let successTimeout = null;
     // ---------------------------------------------------------------------- //
 
 
@@ -221,14 +223,15 @@
     function forceDischarge(enable) {
         loading++;
 
-        fetch(`${ipAddress}/forceDischarge/${enable ? 'enable' : 'disable'}`)
+        let url = `/forceDischarge/${enable ? 'enable' : 'disable'}`;
+        fetch(`${ipAddress}${url}`)
             .then((res) => res.text())
             .then((text) => {
                 loading--;
+                success = `${url}: ${text}`;
             })
             .catch((e) => {
                 loading--;
-
                 console.error(e);
                 error = e;
             });
@@ -243,15 +246,23 @@
             .then((res) => res.text())
             .then((text) => {
                 loading--;
-                state = text;
+                success = `/fullShutdown: ${text}`;
             })
             .catch((e) => {
                 loading--;
-
                 console.error(e);
                 error = e;
             });
     }
+
+    $effect(() => {
+        if (success) {
+            clearTimeout(successTimeout);
+            successTimeout = setTimeout(() => {
+                success = null;
+            }, CLEAR_SUCCESS_TIME);
+        }
+    });
     // ---------------------------------------------------------------------- //
 
     // ---------------------------------------------------------------------- //
@@ -554,6 +565,11 @@
                 <hr />
             {/if}
 
+            {#if success}
+                <p>{success}</p>
+                <hr />
+            {/if}
+
 
             <div>
                 <h2>State</h2>
@@ -574,8 +590,8 @@
 
                 <h2>Force Discharge</h2>
                 <div id="forceDischargeDiv">
-                    <button id="forceDischargeEnable"  class="forceDischargeButton" type="button" onclick={() => forceDischarge('enable')}  disabled={loading != 0}>Enable</button>
-                    <button id="forceDischargeDisable" class="forceDischargeButton" type="button" onclick={() => forceDischarge('disable')} disabled={loading != 0}>Disable</button>
+                    <button id="forceDischargeEnable"  class="forceDischargeButton" type="button" onclick={() => forceDischarge(true)}  disabled={loading != 0}>Enable</button>
+                    <button id="forceDischargeDisable" class="forceDischargeButton" type="button" onclick={() => forceDischarge(false)} disabled={loading != 0}>Disable</button>
                 </div>
 
                 <h2>Shutdown</h2>
