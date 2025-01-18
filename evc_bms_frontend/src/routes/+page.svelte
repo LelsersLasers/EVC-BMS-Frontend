@@ -33,12 +33,14 @@
     // ---------------------------------------------------------------------- //
     let dataLoopInterval = null;
     let data = $state({});
-    let error = $state(null);
     let voltageBarSets = $state([]);
     let temperatureBarSet = $state({});
 
-    let state = $state(null);
+    let state  = $state(null);
     let bypass = $state(null);
+
+    let error   = $state(null);
+    let success = $state(null);
     // ---------------------------------------------------------------------- //
 
 
@@ -216,6 +218,22 @@
             });
     }
 
+    function forceDischarge(enable) {
+        loading++;
+
+        fetch(`${ipAddress}/forceDischarge/${enable ? 'enable' : 'disable'}`)
+            .then((res) => res.text())
+            .then((text) => {
+                loading--;
+            })
+            .catch((e) => {
+                loading--;
+
+                console.error(e);
+                error = e;
+            });
+    }
+
     function shutdownButton() {
         if (!window.confirm('Are you sure you want to shutdown the BMS?')) return;
 
@@ -380,6 +398,25 @@
         transform: translateY(0.66px);
         accent-color: #ABD130;
     }
+    #forceDischargeDiv {
+        display: flex;
+        flex-direction: row;
+        gap: 5px;
+    }
+    .forceDischargeButton {
+        flex: 1;
+        padding: 8px;
+        background-color: #ABD130;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .forceDischargeButton:disabled {
+        background-color: #aaa;
+        cursor: not-allowed;
+    }
+
     #shutdownButton {
         width: 100%;
         padding: 8px;
@@ -535,8 +572,14 @@
                     <p class="error">Bypass triggered</p>
                 {/if}
 
+                <h2>Force Discharge</h2>
+                <div id="forceDischargeDiv">
+                    <button id="forceDischargeEnable"  class="forceDischargeButton" type="button" onclick={() => forceDischarge('enable')}  disabled={loading != 0}>Enable</button>
+                    <button id="forceDischargeDisable" class="forceDischargeButton" type="button" onclick={() => forceDischarge('disable')} disabled={loading != 0}>Disable</button>
+                </div>
+
                 <h2>Shutdown</h2>
-                <button id="shutdownButton" onclick={shutdownButton} type="button" disabled={loading != 0}>Full Shutdown</button>
+                <button id="shutdownButton" type="button" onclick={shutdownButton} disabled={loading != 0}>Full Shutdown</button>
             </div>
         </div>
     </div>

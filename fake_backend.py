@@ -37,6 +37,14 @@ def bypassDisable():
 	time.sleep(2)
 	return "disable"
 
+@app.route('/forceDischarge/enable', methods=['GET'])
+def forceDischargeEnable():
+	return "enable"
+
+@app.route('/forceDischarge/disable', methods=['GET'])
+def forceDischargeDisable():
+	return "disable"
+
 @app.route('/data', methods=['GET'])
 def data():
 	def random_voltage():
