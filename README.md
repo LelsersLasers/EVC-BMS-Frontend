@@ -4,11 +4,10 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 
 ## TODO:
 
-- Handle/error on fetch
-	- Disconnect or could really just reload the page
-- Current bar
+- Bar of the current (amps)
 - More readable bars
 	- Make the unit (V, A, C, etc) and label (1, FET, avg, etc) smaller/italtics/ligher font/something
+- Improve look of "waiting for ip" and loading displays
 - In general, better CSS
 - Component for the collections of bars (instead of repeating the same code)
 - Dynamic paths?

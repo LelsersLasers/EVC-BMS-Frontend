@@ -26,6 +26,7 @@
 
     let dataLoopInterval = null;
     let data = $state({});
+    let error = $state(null);
     let voltageBarSets = $state([]);
     let temperatureBarSet = $state({});
 
@@ -48,9 +49,10 @@
         let ip = ipAddressInput;
 
         if (!ip.startsWith('http://')) ip = `http://${ip}`;
-        if (ip.endsWith('/'))          ip = ip.slice(0, -1);
+        if (ip.endsWith('/')) ip = ip.slice(0, -1);
 
         loading = true;
+        ipAddressError = null;
 
         fetch(`${ip}/name`)
             .then((res) => {
@@ -108,6 +110,7 @@
             .then((res) => res.json())
             .then((d) => {
                 loading = false;
+                error = null;
 
                 // TODO: current
                 console.log(d);
@@ -147,9 +150,9 @@
                 data["ready"] = true;
             })
             .catch((e) => {
-                // TODO
                 loading = false;
                 console.error(e);
+                error = e;
             });
     }
 
@@ -286,6 +289,10 @@
         padding-top: 0.1em;
     }
 
+    .error {
+        color: red;
+    }
+
     #loading {
         width: fit-content;
 
@@ -333,13 +340,13 @@
     </div>
 </div>
 
-<div id="all">
-    <div id="main">
-        {#if !ipAddress}
-            <p>Waiting for ip address...</p>
-        {:else if !data["ready"]}
-            <p>Loading...</p>
-        {:else}
+{#if !ipAddress}
+    <p>Waiting for ip address...</p>
+{:else if !data["ready"]}
+    <p>Loading...</p>
+{:else}
+    <div id="all">
+        <div id="main">
             <div id="holder">
                 <div id="summaries"> <!-- Voltage overview and temperatures in horizontal -->
                     <div class="summary">
@@ -380,13 +387,18 @@
                     {/each}
                 </div>
             </div>
-        {/if}
+        </div>
+        
+        <div id="sidebar">
+            <hr id="fetchTimer" />
+            {#if error}
+                <p class="error">{error}</p>
+                <hr />
+            {/if}
+        </div>
     </div>
-    
-    <div id="sidebar">
-        <hr id="fetchTimer" />
-    </div>
-</div>
+{/if}
+
 
 
 
@@ -394,7 +406,7 @@
 {#snippet ipAddressPrompt()}
     <h2 class="modalTitle">Enter IP of BMS</h2>
     {#if ipAddressError}
-        <p style="color: red">{ipAddressError}</p>
+        <p class="error">{ipAddressError}</p>
     {/if}
     <!-- svelte-ignore a11y_autocomplete_valid -->
     <input id="ipInput" type="text" placeholder="192.168.1.1" autocomplete="ip" bind:value={ipAddressInput} />
