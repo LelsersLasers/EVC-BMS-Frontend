@@ -4,6 +4,7 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 
 ## TODO:
 
+- Section dividers
 - Bar of the current (amps)
 - More readable bars
 	- Make the unit (V, A, C, etc) and label (1, FET, avg, etc) smaller/italtics/ligher font/something

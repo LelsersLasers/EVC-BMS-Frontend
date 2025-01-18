@@ -30,6 +30,8 @@
     let voltageBarSets = $state([]);
     let temperatureBarSet = $state({});
 
+    let state = $state("");
+
 
     onMount(async () => {
         const ls = localStorage.getItem('ipAddress');
@@ -64,11 +66,9 @@
                 ipAddress = ip;
                 localStorage.setItem('ipAddress', ip);
                 loading = false;
-                console.log('connected to', ip, name);
                 showIpAddressModal = false;
-                console.log(showIpAddressModal);
                 ipAddressError = null;
-                setTimeout(setupDataLoop, 10);
+                setTimeout(setupAfterConnected, 10);
             })
             .catch((e) => {
                 loading = false;
@@ -87,20 +87,26 @@
     }
 
     $effect(() => {
-        console.log("aaaaaa", showIpAddressModal);
         if (!showIpAddressModal && ipAddress == null) {
             showIpAddressModal = true;
         }
     });
     
-    $effect(() => {
-        console.log("bbbbbb", showIpAddressModal);
-    });
 
-
-    function setupDataLoop() {
-        fetchData();
+    function setupAfterConnected() {
+        fetchData(); // set interval doesn't run immediately
         setInterval(fetchData, DATA_FETCH_TIME);
+    }
+
+    function fetchState() {
+        fetch(`${ipAddress}/state`)
+            .then((res) => res.json())
+            .then((s) => {
+                state = s;
+            })
+            .catch((e) => {
+                console.error(e);
+            });
     }
 
     function fetchData() {
@@ -113,9 +119,12 @@
                 error = null;
 
                 // TODO: current
-                console.log(d);
                 data = d;
-          
+
+                state = d["state"];
+
+
+                
                 voltageBarSets = [];
 
                 voltageBarSets["overview"] = {
@@ -395,6 +404,7 @@
                 <p class="error">{error}</p>
                 <hr />
             {/if}
+            {state}
         </div>
     </div>
 {/if}
