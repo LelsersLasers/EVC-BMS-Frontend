@@ -2,7 +2,7 @@
     import { onMount } from 'svelte';
     import Modal from '$lib/Modal.svelte';
 
-    const DATA_FETCH_TIME = 5 * 1000; // 5 seconds
+    const DATA_FETCH_TIME = 5 * 1000; // 5 seconds [also need to change fetchTimer animation duration]
     const V_MIN = 2.8; // 3.0
     const V_MAX = 4.4; // 4.2
     const T_MIN = 20;
