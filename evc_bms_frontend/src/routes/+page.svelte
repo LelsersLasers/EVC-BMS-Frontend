@@ -1,13 +1,17 @@
 <script>
     import { onMount } from 'svelte';
     import Modal from '$lib/Modal.svelte';
+    // ---------------------------------------------------------------------- //
 
+    // ---------------------------------------------------------------------- //
     const DATA_FETCH_TIME = 5 * 1000; // 5 seconds [also need to change fetchTimer animation duration]
     const V_MIN = 2.8; // 3.0
     const V_MAX = 4.4; // 4.2
     const T_MIN = 20;
     const T_MAX = 40;
+    // ---------------------------------------------------------------------- //
 
+    // ---------------------------------------------------------------------- //
     let ipAddress = $state(null);
     let displayIpAddress = $state(null);
     let showIpAddressModal = $state(false);
@@ -20,10 +24,13 @@
         else if (ipAddress.startsWith('http://')) displayIpAddress = ipAddress.slice(7);
         else displayIpAddress = ipAddress;
     })
+    // ---------------------------------------------------------------------- //
 
+    // ---------------------------------------------------------------------- //
     let loading = $state(false);
+    // ---------------------------------------------------------------------- //
 
-
+    // ---------------------------------------------------------------------- //
     let dataLoopInterval = null;
     let data = $state({});
     let error = $state(null);
@@ -31,8 +38,10 @@
     let temperatureBarSet = $state({});
 
     let state = $state("");
+    // ---------------------------------------------------------------------- //
 
 
+    // ---------------------------------------------------------------------- //
     onMount(async () => {
         const ls = localStorage.getItem('ipAddress');
         if (ls) {
@@ -91,22 +100,13 @@
             showIpAddressModal = true;
         }
     });
-    
+    // ---------------------------------------------------------------------- //
 
+    
+    // ---------------------------------------------------------------------- //
     function setupAfterConnected() {
         fetchData(); // set interval doesn't run immediately
         setInterval(fetchData, DATA_FETCH_TIME);
-    }
-
-    function fetchState() {
-        fetch(`${ipAddress}/state`)
-            .then((res) => res.json())
-            .then((s) => {
-                state = s;
-            })
-            .catch((e) => {
-                console.error(e);
-            });
     }
 
     function fetchData() {
@@ -115,16 +115,22 @@
         fetch(`${ipAddress}/data`)
             .then((res) => res.json())
             .then((d) => {
+                // ---------------------------------------------------------- //
                 loading = false;
                 error = null;
 
-                // TODO: current
                 data = d;
+                // ---------------------------------------------------------- //
 
-                state = d["state"];
+                // ---------------------------------------------------------- //
+                if (state == null) state = d["state"];
+                // ---------------------------------------------------------- //
 
+                // ---------------------------------------------------------- //
+                // TODO: current
+                // ---------------------------------------------------------- //
 
-                
+                // ---------------------------------------------------------- //            
                 voltageBarSets = [];
 
                 voltageBarSets["overview"] = {
@@ -144,7 +150,9 @@
                         voltageBarSets[i]["bars"].push({ label: j, v: d["cells"][i][j] });
                     }
                 }
+                // ---------------------------------------------------------- //
 
+                // ---------------------------------------------------------- //
                 temperatureBarSet = {
                     name: "Temperatures",
                     bars: [],
@@ -154,9 +162,11 @@
                 for (let key in d["therm"]) {
                     temperatureBarSet["bars"].push({ label: key, v: d["therm"][key] });
                 }
+                // ---------------------------------------------------------- //
 
-
+                // ---------------------------------------------------------- //
                 data["ready"] = true;
+                // ---------------------------------------------------------- //
             })
             .catch((e) => {
                 loading = false;
@@ -164,8 +174,10 @@
                 error = e;
             });
     }
+    // ---------------------------------------------------------------------- //
 
 
+    // ---------------------------------------------------------------------- //
     function voltageWidth(v) {
         return (v - V_MIN) / (V_MAX - V_MIN) * 100;
     }
@@ -173,6 +185,7 @@
     function temperatureWidth(v) {
         return (v - T_MIN) / (T_MAX - T_MIN) * 100;
     }
+    // ---------------------------------------------------------------------- //
 </script>
 
 <style>
