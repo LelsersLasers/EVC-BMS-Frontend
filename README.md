@@ -4,6 +4,9 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 
 ## TODO:
 
+- Loading back to T/F instead of a count?
+	- Or 2 separate loading states? (one for data loop one for parameters)
+- Change the active port
 - Section dividers
 - Double vs single quotes
 - Bar of the current (amps)
@@ -15,7 +18,6 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 - Dynamic paths?
 	- `/state/<state>` instead of 3 hardset routes?
 - Parameters
-	- Select for state
 	- Buttons?
 	- Log download
 	- Bypass

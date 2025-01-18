@@ -24,6 +24,10 @@ def monitor():
 def charging():
 	return "charging"
 
+@app.route('/fullShutdown', methods=['GET'])
+def fullShutdown():
+	return "ok"
+
 @app.route('/data', methods=['GET'])
 def data():
 	def random_voltage():

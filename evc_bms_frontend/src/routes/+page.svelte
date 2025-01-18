@@ -196,11 +196,26 @@
                 error = e;
             });
     }
-    // ---------------------------------------------------------------------- //
 
-    $effect(() => {
-        console.log(loading);
-    })
+    function shutdownButton() {
+        if (!window.confirm('Are you sure you want to shutdown the BMS?')) return;
+
+        loading++;
+
+        fetch(`${ipAddress}/fullShutdown`)
+            .then((res) => res.text())
+            .then((text) => {
+                loading--;
+                state = text;
+            })
+            .catch((e) => {
+                loading--;
+
+                console.error(e);
+                error = e;
+            });
+    }
+    // ---------------------------------------------------------------------- //
 
 
     // ---------------------------------------------------------------------- //
@@ -334,6 +349,15 @@
         border: 2px solid #ABD130;
         outline: none !important;
     }
+    #shutdownButton {
+        width: 100%;
+        padding: 8px;
+        background-color: #aaa;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
 
     .modalTitle {
         margin-bottom: 0.25em;
@@ -466,6 +490,9 @@
                     <option value="monitor">Monitor</option>
                     <option value="charging">Charging</option>
                 </select>
+
+                <h2>Shutdown</h2>
+                <button id="shutdownButton" onclick={shutdownButton} type="button" disabled={loading != 0}>Full Shutdown</button>
             </div>
         </div>
     </div>
