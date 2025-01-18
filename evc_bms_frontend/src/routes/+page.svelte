@@ -2,7 +2,6 @@
     import { onMount } from 'svelte';
 
     let ipAddress = $state(null);
-    let ipAddressText = $state('No IP address set');
 
     onMount(async () => {
         const ls = localStorage.getItem('ipAddress');
@@ -18,18 +17,14 @@
                 if (!ip.startsWith('http://')) ip = `http://${ip}`;
                 if (ip.endsWith('/'))          ip = ip.slice(0, -1);
 
-                ipAddressText = 'Checking IP address...';
-
                 await fetch(`${ip}/connected`)
                     .then(res => {
-                        ipAddressText = 'No IP address set';
                         if (!res.ok) throw new Error('');
                     });
 
                 ipAddress = ip;
                 localStorage.setItem('ipAddress', ip);
             } catch (e) {
-                ipAddressText = 'No IP address set';
                 alert('Invalid IP address');
                 promptForIpAddress();
             }
@@ -50,8 +45,8 @@
 
 <h1>EVC BMS</h1>
 
-{#if ipAddress}
-    <p>IP Address: {ipAddress}</p>
+{#if !ipAddress}
+    <p>Waiting for ip address...</p>
 {:else}
-    <p>{ipAddressText}</p>
+    <p>IP Address: {ipAddress}</p>
 {/if}
