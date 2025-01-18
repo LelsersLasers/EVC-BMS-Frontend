@@ -2,6 +2,12 @@
     import { onMount } from 'svelte';
     import Modal from '$lib/Modal.svelte';
 
+    const DATA_FETCH_TIME = 5 * 1000; // 5 seconds
+    const V_MIN = 2.8; // 3.0
+    const V_MAX = 4.4; // 4.2
+    const T_MIN = 20;
+    const T_MAX = 40;
+
     let ipAddress = $state(null);
     let displayIpAddress = $state(null);
     let showIpAddressModal = $state(false);
@@ -17,7 +23,11 @@
 
     let loading = $state(false);
 
+
+    let dataLoopInterval = null;
     let data = $state({});
+    let voltageBarSets = $state([]);
+    let temperatureBarSet = $state({});
 
 
     onMount(async () => {
@@ -29,7 +39,11 @@
     });
 
     function validateIpAddressInput() {
-        if (ipAddressInput == "") return;
+        if (ipAddressInput == "") {
+            showIpAddressModal = true;
+            ipAddressError = "Could not connect to saved Ip address";
+            return;
+        }
 
         let ip = ipAddressInput;
 
@@ -39,19 +53,22 @@
         loading = true;
 
         fetch(`${ip}/name`)
-            .then(res => {
+            .then((res) => {
                 if (!res.ok) throw new Error('');
                 return res.text();
             })
-            .then(text => {
+            .then((text) => {
                 name = text;
                 ipAddress = ip;
                 localStorage.setItem('ipAddress', ip);
                 loading = false;
+                console.log('connected to', ip, name);
                 showIpAddressModal = false;
+                console.log(showIpAddressModal);
                 ipAddressError = null;
+                setTimeout(setupDataLoop, 10);
             })
-            .catch(e => {
+            .catch((e) => {
                 loading = false;
                 showIpAddressModal = true;
                 ipAddressError = 'Could not connect to BMS at that IP address';
@@ -68,10 +85,82 @@
     }
 
     $effect(() => {
+        console.log("aaaaaa", showIpAddressModal);
         if (!showIpAddressModal && ipAddress == null) {
             showIpAddressModal = true;
         }
     });
+    
+    $effect(() => {
+        console.log("bbbbbb", showIpAddressModal);
+    });
+
+
+    function setupDataLoop() {
+        fetchData();
+        setInterval(fetchData, DATA_FETCH_TIME);
+    }
+
+    function fetchData() {
+        loading = true;
+
+        fetch(`${ipAddress}/data`)
+            .then((res) => res.json())
+            .then((d) => {
+                loading = false;
+
+                // TODO: current
+                console.log(d);
+                data = d;
+          
+                voltageBarSets = [];
+
+                voltageBarSets["overview"] = {
+                    name: "Voltage Overview",
+                    bars: [],
+                };
+                voltageBarSets["overview"]["bars"][0] = { label: "avg", v: d["avg"].toFixed(2) };
+                voltageBarSets["overview"]["bars"][1] = { label: "max", v: d["max"].toFixed(2) };
+                voltageBarSets["overview"]["bars"][2] = { label: "min", v: d["min"].toFixed(2) };
+
+                for (let i = 0; i < d["cells"].length; i++) {
+                    voltageBarSets[i] = {
+                        name: `Pack ${i} Voltages`,
+                        bars: [],
+                    };
+                    for (let j = 0; j < d["cells"][i].length; j++) {
+                        voltageBarSets[i]["bars"].push({ label: j, v: d["cells"][i][j] });
+                    }
+                }
+
+                temperatureBarSet = {
+                    name: "Temperatures",
+                    bars: [],
+                };
+
+                temperatureBarSet["bars"] = [];
+                for (let key in d["therm"]) {
+                    temperatureBarSet["bars"].push({ label: key, v: d["therm"][key] });
+                }
+
+
+                data["ready"] = true;
+            })
+            .catch((e) => {
+                // TODO
+                loading = false;
+                console.error(e);
+            });
+    }
+
+
+    function voltageWidth(v) {
+        return (v - V_MIN) / (V_MAX - V_MIN) * 100;
+    }
+
+    function temperatureWidth(v) {
+        return (v - T_MIN) / (T_MAX - T_MIN) * 100;
+    }
 </script>
 
 <style>
@@ -137,16 +226,64 @@
 
     #main {
         grid-column: 1;
-        outline: 1px solid black;
     }
+    /* #holder {} */
+    #summaries {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 5px;
+        margin-bottom: 5px;
+    }
+    .summary {
+        width: 50%;
+        border: 1px solid #333;
+        border-radius: 5px;
+        padding: 5px;
+    }
+    .pack {
+        border: 1px solid #333;
+        border-radius: 5px;
+        padding: 5px;
+        margin-bottom: 5px;
+    }
+    .bar {
+        border-radius: 5px;
+        transition: width 0.2s linear;
+        margin: 0;
+        padding: 0;
+        padding-top: 0.1em;
+        padding-bottom: 0.1em;
+        min-width: 20px;
+        max-width: 100%;
+        
+        background-color: #ABD130;
+    }
+    /* .barText {} */
+    
+
 
     #sidebar {
         grid-column: 2;
-        outline: 1px solid black;
+        border: 1px solid #333;
+        border-radius: 5px;
+        padding: 5px;
+        margin-bottom: 5px;
     }
 
     .modalTitle {
         margin-bottom: 0.25em;
+    }
+
+    /* div {
+        border: 1px solid red;
+    } */
+
+    span {
+        white-space: nowrap;
+        text-wrap: none;
+        margin-left: 6px;
+        padding-top: 0.1em;
     }
 
     #loading {
@@ -158,13 +295,26 @@
 
         padding-bottom: 1px;
         background: linear-gradient(currentColor 0 0) 0 100%/0% 3px no-repeat;
-        animation: l2 2s linear infinite;
+        animation: loading 2s linear infinite;
 
         position: absolute;
         top: 1%;
         right: 1%;
     }
-    @keyframes l2 {to{background-size: 100% 3px}}
+    @keyframes loading {
+        to { background-size: 100% 3px }
+    }
+
+    #fetchTimer {
+        width: 0%;
+        animation: fetchTimer 5s linear infinite;
+        border: 2px solid #ABD130;
+        border-radius: 5px;
+    }
+    @keyframes fetchTimer {
+        from { width: 0%;   }
+        to   { width: 100%; }
+    }
 </style>
 
 
@@ -187,13 +337,54 @@
     <div id="main">
         {#if !ipAddress}
             <p>Waiting for ip address...</p>
+        {:else if !data["ready"]}
+            <p>Loading...</p>
         {:else}
-            <h2>Connected to BMS at {ipAddress}</h2>
+            <div id="holder">
+                <div id="summaries"> <!-- Voltage overview and temperatures in horizontal -->
+                    <div class="summary">
+                        <h2>Voltage Overview</h2>
+                        <div class="bars">
+                            {#each voltageBarSets["overview"].bars as bar (bar.label)}
+                                <div class="bar" style="width: {voltageWidth(bar.v)}%">
+                                    <span class="barText">{bar.v}V ({bar.label})</span>
+                                </div>
+                            {/each}
+                        </div>
+                    </div>
+
+                    <div class="summary">
+                        <h2>Temperatures</h2>
+                        <div class="bars">
+                            {#each temperatureBarSet.bars as bar (bar.label)}
+                                <div class="bar" style="width: {temperatureWidth(bar.v)}%">
+                                    <span class="barText">{bar.v}°C ({bar.label})</span>
+                                </div>
+                            {/each}
+                        </div>
+                    </div>
+                </div>
+
+                <div id="packs"> <!-- Voltage of each pack in vertical -->
+                    {#each voltageBarSets as pack (pack.name)}
+                        <div class="pack">
+                            <h2>{pack.name}</h2>
+                            <div class="bars">
+                                {#each pack.bars as bar (bar.label)}
+                                    <div class="bar" style="width: {voltageWidth(bar.v)}%">
+                                        <span class="barText">{bar.v}V ({bar.label})</span>
+                                    </div>
+                                {/each}
+                            </div>
+                        </div>
+                    {/each}
+                </div>
+            </div>
         {/if}
     </div>
     
     <div id="sidebar">
-        <p>SIDE BAR</p>
+        <hr id="fetchTimer" />
     </div>
 </div>
 
@@ -205,7 +396,8 @@
     {#if ipAddressError}
         <p style="color: red">{ipAddressError}</p>
     {/if}
-    <input id="ipInput" type="text" placeholder="192.168.1.1" bind:value={ipAddressInput} />
+    <!-- svelte-ignore a11y_autocomplete_valid -->
+    <input id="ipInput" type="text" placeholder="192.168.1.1" autocomplete="ip" bind:value={ipAddressInput} />
     {#if !loading}
         <button id="connect" onclick={validateIpAddressInput}>Connect</button>
     {:else}
