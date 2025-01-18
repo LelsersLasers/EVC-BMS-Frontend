@@ -22,20 +22,17 @@
 
                 await fetch(`${ip}/connected`)
                     .then(res => {
-                        if (!res.ok) throw new Error('Invalid IP address');
+                        ipAddressText = 'No IP address set';
+                        if (!res.ok) throw new Error('');
                     });
-
-                ipAddressText = 'No IP address set';
 
                 ipAddress = ip;
                 localStorage.setItem('ipAddress', ip);
             } catch (e) {
+                ipAddressText = 'No IP address set';
                 alert('Invalid IP address');
                 promptForIpAddress();
             }
-
-            localStorage.setItem('ipAddress', ip);
-            ipAddress = ip;
         } else {
             alert('You must enter an IP address to continue');
             promptForIpAddress();
