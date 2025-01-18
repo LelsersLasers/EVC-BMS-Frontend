@@ -221,6 +221,8 @@
     }
 
     function forceDischarge(enable) {
+        if (!window.confirm(`Are you sure you want to ${enable ? 'enable' : 'disable'} force discharge?`)) return;
+
         loading++;
 
         let url = `/forceDischarge/${enable ? 'enable' : 'disable'}`;
