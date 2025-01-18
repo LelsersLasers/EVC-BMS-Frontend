@@ -27,7 +27,7 @@
     // ---------------------------------------------------------------------- //
 
     // ---------------------------------------------------------------------- //
-    let loading = $state(false);
+    let loading = $state(0);
     // ---------------------------------------------------------------------- //
 
     // ---------------------------------------------------------------------- //
@@ -37,7 +37,7 @@
     let voltageBarSets = $state([]);
     let temperatureBarSet = $state({});
 
-    let state = $state("");
+    let state = $state(null);
     // ---------------------------------------------------------------------- //
 
 
@@ -62,7 +62,7 @@
         if (!ip.startsWith('http://')) ip = `http://${ip}`;
         if (ip.endsWith('/')) ip = ip.slice(0, -1);
 
-        loading = true;
+        loading++;
         ipAddressError = null;
 
         fetch(`${ip}/name`)
@@ -74,13 +74,13 @@
                 name = text;
                 ipAddress = ip;
                 localStorage.setItem('ipAddress', ip);
-                loading = false;
+                loading--;
                 showIpAddressModal = false;
                 ipAddressError = null;
                 setTimeout(setupAfterConnected, 10);
             })
             .catch((e) => {
-                loading = false;
+                loading--;
                 showIpAddressModal = true;
                 ipAddressError = 'Could not connect to BMS at that IP address';
             });
@@ -110,20 +110,22 @@
     }
 
     function fetchData() {
-        loading = true;
+        loading++;
 
         fetch(`${ipAddress}/data`)
             .then((res) => res.json())
             .then((d) => {
                 // ---------------------------------------------------------- //
-                loading = false;
+                loading--;
                 error = null;
 
                 data = d;
                 // ---------------------------------------------------------- //
 
                 // ---------------------------------------------------------- //
-                if (state == null) state = d["state"];
+                if (state == null) {
+                    state = d["state"];
+                }
                 // ---------------------------------------------------------- //
 
                 // ---------------------------------------------------------- //
@@ -169,12 +171,36 @@
                 // ---------------------------------------------------------- //
             })
             .catch((e) => {
-                loading = false;
+                loading--;
                 console.error(e);
                 error = e;
             });
     }
     // ---------------------------------------------------------------------- //
+
+
+    // ---------------------------------------------------------------------- //
+    function stateParameter(e) {
+        loading++;
+
+        fetch(`${ipAddress}/${e.target.value}`)
+            .then((res) => res.text())
+            .then((text) => {
+                loading--;
+                state = text;
+            })
+            .catch((e) => {
+                loading--;
+
+                console.error(e);
+                error = e;
+            });
+    }
+    // ---------------------------------------------------------------------- //
+
+    $effect(() => {
+        console.log(loading);
+    })
 
 
     // ---------------------------------------------------------------------- //
@@ -295,6 +321,19 @@
         padding: 5px;
         margin-bottom: 5px;
     }
+    select {
+        width: 100%;
+        padding: 2px;
+        outline: none !important;
+        border: 2px solid #aaa;
+        border-radius: 5px;
+        margin-bottom: 0.25em;
+        cursor: pointer;
+    }
+    select:focus {
+        border: 2px solid #ABD130;
+        outline: none !important;
+    }
 
     .modalTitle {
         margin-bottom: 0.25em;
@@ -349,7 +388,7 @@
 
 
 
-<div id="loading" style="display: {loading ? 'block' : 'none'}">Loading...</div>
+<div id="loading" style="display: {loading != 0 ? 'block' : 'none'}">Fetching...</div>
 
 
 <div id="navbar">
@@ -413,11 +452,21 @@
         
         <div id="sidebar">
             <hr id="fetchTimer" />
+
             {#if error}
                 <p class="error">{error}</p>
                 <hr />
             {/if}
-            {state}
+
+
+            <div>
+                <h2>State</h2>
+                <select id="stateSelect" bind:value={state} onchange={stateParameter} disabled={loading != 0}>
+                    <option value="idle">Idle</option>
+                    <option value="monitor">Monitor</option>
+                    <option value="charging">Charging</option>
+                </select>
+            </div>
         </div>
     </div>
 {/if}

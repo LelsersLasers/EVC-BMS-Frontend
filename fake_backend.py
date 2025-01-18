@@ -2,16 +2,30 @@
 import flask
 import flask_cors
 import random
+import time
 
 app = flask.Flask(__name__)
 flask_cors.CORS(app)
 
 @app.route('/name', methods=['GET'])
-def get_plaintext():
+def name():
 	return "apSSID"
 
+@app.route('/idle', methods=['GET'])
+def idle():
+	time.sleep(3)
+	return "idle"
+
+@app.route('/monitor', methods=['GET'])
+def monitor():
+	return "monitor"
+
+@app.route('/charging', methods=['GET'])
+def charging():
+	return "charging"
+
 @app.route('/data', methods=['GET'])
-def get_json():
+def data():
 	def random_voltage():
 		return random.random() * (4.4 - 2.8) + 2.8
 	def random_temperature():
@@ -40,7 +54,7 @@ def get_json():
 	doc["bypass"] = False # random.choice([True, False])
 	doc["anyBypassed"] = False # random.choice([True, False])
 
-	doc["state"] = "Monitor" # random.choice(["Idle", "Charging", "Monitor"])
+	doc["state"] = "monitor" # random.choice(["idle", "monitor", "charging"] )
 
 	doc["SSS"] = False # random.choice([True, False])
 	doc["HCS"] = False # random.choice([True, False])
