@@ -3,59 +3,75 @@
     import Modal from '$lib/Modal.svelte';
 
     let ipAddress = $state(null);
+    let displayIpAddress = $state(null);
+    let showIpAddressModal = $state(false);
+    let ipAddressInput = $state('');
+    let ipAddressError = $state(null);
     let name = $state("disconnected...");
 
-    let loading = $state(true);
+    $effect(() => {
+        if (!ipAddress) return;
+        else if (ipAddress.startsWith('http://')) displayIpAddress = ipAddress.slice(7);
+        else displayIpAddress = ipAddress;
+    })
+
+    let loading = $state(false);
 
     let data = $state({});
 
 
-    // onMount(async () => {
-    //     // TODO: valid old IP address
-    //     // TODO: not use window prompt, use an input
-    //     const ls = localStorage.getItem('ipAddress');
-    //     if (ls) {
-    //         ipAddress = ls;
-    //     }
-    // });
+    onMount(async () => {
+        const ls = localStorage.getItem('ipAddress');
+        if (ls) {
+            ipAddressInput = ls;
+            validateIpAddressInput();
+        }
+    });
 
-    function promptForIpAddress() {
-        let ip = prompt('Enter the IP address of the BMS');
-        if (ip) {
-                if (!ip.startsWith('http://')) ip = `http://${ip}`;
-                if (ip.endsWith('/'))          ip = ip.slice(0, -1);
+    function validateIpAddressInput() {
+        if (ipAddressInput == "") return;
 
-                loading = true;
+        let ip = ipAddressInput;
 
-                fetch(`${ip}/name`)
-                    .then(res => {
-                        if (!res.ok) throw new Error('');
-                        return res.text();
-                    })
-                    .then(text => {
-                        name = text;
-                        ipAddress = ip;
-                        localStorage.setItem('ipAddress', ip);
-                        loading = false;
-                    })
-                    .catch(e => {
-                        loading = false;
-                        setTimeout(() => {
-                            alert('Could not connect to BMS at that IP address');
-                            promptForIpAddress();
-                        }, 10);
-                    });
-        } else {
-            alert('You must enter an IP address to continue');
-            promptForIpAddress();
+        if (!ip.startsWith('http://')) ip = `http://${ip}`;
+        if (ip.endsWith('/'))          ip = ip.slice(0, -1);
+
+        loading = true;
+
+        fetch(`${ip}/name`)
+            .then(res => {
+                if (!res.ok) throw new Error('');
+                return res.text();
+            })
+            .then(text => {
+                name = text;
+                ipAddress = ip;
+                localStorage.setItem('ipAddress', ip);
+                loading = false;
+                showIpAddressModal = false;
+                ipAddressError = null;
+            })
+            .catch(e => {
+                loading = false;
+                showIpAddressModal = true;
+                ipAddressError = 'Could not connect to BMS at that IP address';
+            });
+    }
+
+    function ipAddressDialogClose() {
+        showIpAddressModal = false;
+        if (ipAddress == null) {
+            setTimeout(() => {
+                showIpAddressModal = true;
+            }, 10);
         }
     }
 
-    // $effect(() => {
-    //     if (!ipAddress) {
-    //         promptForIpAddress();
-    //     }
-    // });
+    $effect(() => {
+        if (!showIpAddressModal && ipAddress == null) {
+            showIpAddressModal = true;
+        }
+    });
 </script>
 
 <style>
@@ -86,6 +102,30 @@
     #address {
         color: #aaa;
     }
+    #ipInput {
+        width: 100%;
+        padding: 8px;
+        outline: none !important;
+        border: 2px solid #aaa;
+        border-radius: 5px;
+        margin-bottom: 0.25em;
+    }
+    #ipInput:focus {
+        border: 2px solid #ABD130;
+        outline: none !important;
+    }
+    #connect {
+        padding: 8px;
+        background-color: #ABD130;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    #connect:disabled {
+        background-color: #aaa;
+        cursor: not-allowed;
+    }
 
     #all {
         display: grid;
@@ -105,11 +145,16 @@
         outline: 1px solid black;
     }
 
+    .modalTitle {
+        margin-bottom: 0.25em;
+    }
+
     #loading {
         width: fit-content;
 
         font-weight: 400;
         font-style: italic;
+        font-size: smaller;
 
         padding-bottom: 1px;
         background: linear-gradient(currentColor 0 0) 0 100%/0% 3px no-repeat;
@@ -134,10 +179,8 @@
         <h1>BMS</h1>
     </div>
     <div id="ip">
-        <span id="address">{name} ({ipAddress})</span>
+        <span id="address">{name} ({displayIpAddress})</span>
     </div>
-
-
 </div>
 
 <div id="all">
@@ -157,9 +200,18 @@
 
 
 
-{#snippet loadingModal()}
-    <p>Loading...</p>
+{#snippet ipAddressPrompt()}
+    <h2 class="modalTitle">Enter IP of BMS</h2>
+    {#if ipAddressError}
+        <p style="color: red">{ipAddressError}</p>
+    {/if}
+    <input id="ipInput" type="text" placeholder="192.168.1.1" bind:value={ipAddressInput} />
+    {#if !loading}
+        <button id="connect" onclick={validateIpAddressInput}>Connect</button>
+    {:else}
+        <button id="connect" disabled>Connect</button>
+    {/if}
 {/snippet}
 
-<Modal showModal={loading} children={loadingModal}>
+<Modal showModal={showIpAddressModal} close={ipAddressDialogClose} children={ipAddressPrompt}>
 </Modal>

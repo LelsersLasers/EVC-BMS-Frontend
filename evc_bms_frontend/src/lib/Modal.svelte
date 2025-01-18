@@ -1,6 +1,4 @@
 <script>
-	// export let showModal; // boolean
-
 	// window.mobileCheck = function () {
 	// 	let check = false;
 	// 	// prettier-ignore
@@ -8,20 +6,14 @@
 	// 	return check;
 	// };
 
-	// let dialog; // HTMLDialogElement
-
-	// $: if (dialog) {
-	// 	// if dialog is defined
-	// 	if (showModal) {
-	// 		dialog.showModal();
-	// 	} else {
-	// 		dialog.close();
-	// 	}
-	// }
-
-	let { showModal, children } = $props();
+	let { showModal, close, children } = $props();
 
 	let dialog;
+
+	function onClose() {
+		if (close) close();
+		showModal = false;
+	}
 
 	$effect(() => {
 		if (dialog) {
@@ -39,12 +31,11 @@
 <!-- svelte-ignore a11y_click_events_have_key_events -->
 <dialog
 	bind:this={dialog}
-	onclose={() => (showModal = false)}
+	onclose={onClose}
 	onclick={(e) => { if (e.target === dialog) dialog.close(); }}
 >
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<div onclick={(e) => e.stopPropagation()}>
-		<!-- <slot /> -->
 		{@render children()}
 	</div>
 </dialog>
@@ -55,7 +46,6 @@
 		border-radius: 1.5em;
 		border: none;
 		padding: 0.5em;
-
 
 		transform: translate(-50%, -50%);
 		top: 30%;
@@ -69,7 +59,6 @@
 			width: 60%;
 		}
 	}
-
 
 	dialog::backdrop {
 		background: rgba(0, 0, 0, 0.3);
