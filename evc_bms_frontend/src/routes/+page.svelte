@@ -1,10 +1,14 @@
 <script>
     import { onMount } from 'svelte';
+    import Modal from '$lib/Modal.svelte';
 
     let ipAddress = $state(null);
     let name = $state("disconnected...");
 
     let loading = $state(true);
+
+    let data = $state({});
+
 
     // onMount(async () => {
     //     // TODO: valid old IP address
@@ -124,8 +128,6 @@
 <div id="loading" style="display: {loading ? 'block' : 'none'}">Loading...</div>
 
 
-
-
 <div id="navbar">
     <div id="logo">
         <h1 id="name">EVC</h1>
@@ -151,3 +153,13 @@
         <p>SIDE BAR</p>
     </div>
 </div>
+
+
+
+
+{#snippet loadingModal()}
+    <p>Loading...</p>
+{/snippet}
+
+<Modal showModal={loading} children={loadingModal}>
+</Modal>
