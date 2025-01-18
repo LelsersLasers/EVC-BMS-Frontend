@@ -38,6 +38,7 @@
     let temperatureBarSet = $state({});
 
     let state = $state(null);
+    let bypass = $state(null);
     // ---------------------------------------------------------------------- //
 
 
@@ -123,9 +124,8 @@
                 // ---------------------------------------------------------- //
 
                 // ---------------------------------------------------------- //
-                if (state == null) {
-                    state = d["state"];
-                }
+                if (state == null) state   = d["state"];
+                if (bypass == null) bypass = d["bypass"];
                 // ---------------------------------------------------------- //
 
                 // ---------------------------------------------------------- //
@@ -197,6 +197,25 @@
             });
     }
 
+    function bypassParameter(e) {
+        loading++;
+
+        console.log("aaaaaa", e.target.checked);
+
+        fetch(`${ipAddress}/bypass/${e.target.checked ? 'enable' : 'disable'}`)
+            .then((res) => res.text())
+            .then((text) => {
+                loading--;
+                bypass = text == 'enable';
+            })
+            .catch((e) => {
+                loading--;
+
+                console.error(e);
+                error = e;
+            });
+    }
+
     function shutdownButton() {
         if (!window.confirm('Are you sure you want to shutdown the BMS?')) return;
 
@@ -216,7 +235,6 @@
             });
     }
     // ---------------------------------------------------------------------- //
-
 
     // ---------------------------------------------------------------------- //
     function voltageWidth(v) {
@@ -349,6 +367,19 @@
         border: 2px solid #ABD130;
         outline: none !important;
     }
+    #bypassDiv {
+        display: flex;
+        flex-direction: row;
+        gap: 5px;
+    }
+    #bypassLabel {
+        cursor: pointer;
+    }
+    #bypass {
+        cursor: pointer;
+        transform: translateY(0.66px);
+        accent-color: #ABD130;
+    }
     #shutdownButton {
         width: 100%;
         padding: 8px;
@@ -357,6 +388,10 @@
         border: none;
         border-radius: 5px;
         cursor: pointer;
+    }
+    #shutdownButton:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
     }
 
     .modalTitle {
@@ -490,6 +525,15 @@
                     <option value="monitor">Monitor</option>
                     <option value="charging">Charging</option>
                 </select>
+
+                <h2>Bypass</h2>
+                <div id="bypassDiv">    
+                    <label id="bypassLabel" for="bypass">Enabled</label>
+                    <input type="checkbox" id="bypass" bind:checked={bypass} onchange={bypassParameter} disabled={loading != 0} />
+                </div>
+                {#if data["anyBypassed"]}
+                    <p class="error">Bypass triggered</p>
+                {/if}
 
                 <h2>Shutdown</h2>
                 <button id="shutdownButton" onclick={shutdownButton} type="button" disabled={loading != 0}>Full Shutdown</button>

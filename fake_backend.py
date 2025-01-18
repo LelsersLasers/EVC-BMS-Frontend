@@ -28,6 +28,15 @@ def charging():
 def fullShutdown():
 	return "ok"
 
+@app.route('/bypass/enable', methods=['GET'])
+def bypassEnable():
+	return "enable"
+
+@app.route('/bypass/disable', methods=['GET'])
+def bypassDisable():
+	time.sleep(2)
+	return "disable"
+
 @app.route('/data', methods=['GET'])
 def data():
 	def random_voltage():
@@ -56,7 +65,7 @@ def data():
 	doc["therm"]["FET"] = random_temperature()
 
 	doc["bypass"] = False # random.choice([True, False])
-	doc["anyBypassed"] = False # random.choice([True, False])
+	doc["anyBypassed"] = True # random.choice([True, False])
 
 	doc["state"] = "monitor" # random.choice(["idle", "monitor", "charging"] )
 
