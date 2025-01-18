@@ -183,7 +183,7 @@
     function stateParameter(e) {
         loading++;
 
-        fetch(`${ipAddress}/${e.target.value}`)
+        fetch(`${ipAddress}/state/${e.target.value}`)
             .then((res) => res.text())
             .then((text) => {
                 loading--;

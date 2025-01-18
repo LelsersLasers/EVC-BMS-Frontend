@@ -11,16 +11,16 @@ flask_cors.CORS(app)
 def name():
 	return "apSSID"
 
-@app.route('/idle', methods=['GET'])
+@app.route('/state/idle', methods=['GET'])
 def idle():
 	time.sleep(3)
 	return "idle"
 
-@app.route('/monitor', methods=['GET'])
+@app.route('/state/monitor', methods=['GET'])
 def monitor():
 	return "monitor"
 
-@app.route('/charging', methods=['GET'])
+@app.route('/state/charging', methods=['GET'])
 def charging():
 	return "charging"
 
@@ -65,7 +65,7 @@ def data():
 	doc["therm"]["FET"] = random_temperature()
 
 	doc["bypass"] = False # random.choice([True, False])
-	doc["anyBypassed"] = True # random.choice([True, False])
+	doc["anyBypassed"] = False # random.choice([True, False])
 
 	doc["state"] = "monitor" # random.choice(["idle", "monitor", "charging"] )
 

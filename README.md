@@ -15,8 +15,6 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 - Improve look of "waiting for ip" and loading displays
 - In general, better CSS
 - Component for the collections of bars (instead of repeating the same code)
-- Dynamic paths?
-	- `/state/<state>` instead of 3 hardset routes?
 - Parameters
 	- Buttons?
 	- Log download
