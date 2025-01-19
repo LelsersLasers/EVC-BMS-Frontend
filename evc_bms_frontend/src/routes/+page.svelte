@@ -4,6 +4,7 @@
     // ---------------------------------------------------------------------- //
 
     // ---------------------------------------------------------------------- //
+    const LS_KEY = "ipAddress";
     const DATA_FETCH_TIME = 5 * 1000; // 5 seconds [also need to change fetchTimer animation duration]
     const CLEAR_SUCCESS_TIME = 5 * 1000; // 5 seconds
     const V_MIN = 2.8; // 3.0
@@ -53,7 +54,7 @@
 
     // ---------------------------------------------------------------------- //
     onMount(async () => {
-        const ls = localStorage.getItem("ipAddress");
+        const ls = localStorage.getItem(LS_KEY);
         if (ls) {
             ipAddressInput = ls;
             validateIpAddressInput();
@@ -84,7 +85,7 @@
                 parameterLoading = false;
                 name = text;
                 ipAddress = ip;
-                localStorage.setItem("ipAddress", ip);
+                localStorage.setItem(LS_KEY, ip);
                 showIpAddressModal = false;
                 ipAddressError = null;
                 setTimeout(setupAfterConnected, 10);
@@ -110,6 +111,13 @@
             showIpAddressModal = true;
         }
     });
+
+    function triggerDisconnect() {
+        if (window.confirm("Are you sure you want to disconnect?")) {
+            localStorage.removeItem(LS_KEY);
+            window.location.reload();
+        }
+    }
     // ---------------------------------------------------------------------- //
 
     
@@ -540,7 +548,7 @@
         <h1 id="name">EVC</h1>
         <h1>BMS</h1>
     </div>
-    <div id="ip">
+    <div id="ip" onclick={triggerDisconnect}>
         <span id="address">{name} ({displayIpAddress})</span>
     </div>
 </div>
