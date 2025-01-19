@@ -4,8 +4,8 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 
 ## TODO:
 
-- File upload (modal)
 - Favicon
+- Better usage of error vs result messages
 - Svelte component for the collections of bars and bars (instead of repeating the same code)?
 	- Or snippets?
 - Parameters/GUI inputs for all hardcoded values

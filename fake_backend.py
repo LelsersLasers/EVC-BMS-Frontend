@@ -53,6 +53,10 @@ def logDownload():
 def logDelete():
 	return "ok"
 
+@app.route('/upload', methods=['POST'])
+def upload():
+	return "ok"
+
 @app.route('/data', methods=['GET'])
 def data():
 	time.sleep(0.5)

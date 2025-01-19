@@ -39,6 +39,11 @@
     // ---------------------------------------------------------------------- //
 
     // ---------------------------------------------------------------------- //
+    let showFileUploadModal = $state(false);
+    let file = $state(null);
+    // ---------------------------------------------------------------------- //
+
+    // ---------------------------------------------------------------------- //
     let dataLoading = $state(false);
     let parameterLoading = $state(false);
     // ---------------------------------------------------------------------- //
@@ -125,6 +130,42 @@
             localStorage.removeItem(LS_KEY);
             window.location.reload();
         }
+    }
+    // ---------------------------------------------------------------------- //
+
+
+    // ---------------------------------------------------------------------- //
+    function fileUpload(e) {
+        e.preventDefault();
+
+        if (!file) {
+            alert("Please select a file.");
+            return;
+        }
+
+        showFileUploadModal = false;
+        document.getElementById("fileInput").value = "";
+		document.getElementById("fileNameDisplay").textContent = "No file chosen";
+
+        const formData = new FormData();
+        formData.append("data", file);
+
+        parameterLoading = true;
+
+        fetch(`${ipAddress}/upload`, {
+            method: "POST",
+            body: formData,
+        })
+            .then((res) => res.text())
+            .then((text) => {
+                parameterLoading = false;
+                result = `/upload: ${text}`;
+            })
+            .catch((e) => {
+                parameterLoading = false;
+                console.error(e);
+                error = e;
+            });
     }
     // ---------------------------------------------------------------------- //
 
@@ -685,6 +726,9 @@
                     <p class="error">Bypass triggered</p>
                 {/if}
 
+                <h2>File Upload</h2>
+                <button class="normalButton" type="button" onclick={() => showFileUploadModal = true} disabled={parameterLoading}>Upload File</button>
+
                 <h2>Log file</h2>
                 <div id="splitButton">
                     <button class="normalButton" type="button" onclick={downloadLog} disabled={parameterLoading}>Download Log</button>
@@ -708,7 +752,7 @@
 
 
 
-{#snippet ipAddressPrompt()}
+{#snippet ipAddressPromptSlot()}
     <h2 class="modalTitle">Enter IP of BMS</h2>
     {#if ipAddressError}
         <p class="error">{ipAddressError}</p>
@@ -722,5 +766,76 @@
     {/if}
 {/snippet}
 
-<Modal showModal={showIpAddressModal} close={ipAddressDialogClose} children={ipAddressPrompt}>
+<Modal showModal={showIpAddressModal} close={ipAddressDialogClose} children={ipAddressPromptSlot}>
+</Modal>
+
+
+{#snippet fileUploadSlot()}
+    <h2 class="modalTitle">Upload File</h2>
+    <form onsubmit={fileUpload}>
+        <!-- svelte-ignore a11y_click_events_have_key_events -->
+        <!-- svelte-ignore a11y_no_static_element_interactions -->
+        <div style="display: inline-flex; align-items: center; gap: 0.2em; cursor: pointer; margin-bottom: 0.4em; width: 100%;">
+            <div style="position: relative; display: inline-block; cursor: pointer;">
+                <label
+                    for="fileInput"
+                    style="
+                        display: inline-block;
+                        padding: 0.4em;
+                        padding-left: 0.6em;
+                        background-color: #ABD130;
+                        font-size: 1em;
+                        border-radius: 0.5em 0 0 0.5em;
+                        cursor: pointer;
+                    "
+                >
+                    Choose File
+                </label>
+                <input
+                    id="fileInput"
+                    type="file"
+                    style="
+                        opacity: 0;
+                        position: absolute;
+                        left: 0;
+                        top: 0;
+                        width: 100%;
+                        height: 100%;
+                        cursor: pointer;
+                    "
+                    onchange={(e) => {
+                        file = e.target.files[0];
+                        document.getElementById("fileNameDisplay").textContent = file.name;
+                    }}
+                    required
+                />
+            </div>		  
+            <!-- svelte-ignore a11y_click_events_have_key_events -->
+            <span
+                id="fileNameDisplay"
+                style="
+                    font-size: 14px;
+                    color: #45475a;
+                    font-style: italic;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    display: inline-block;
+                    font-size: 0.9em;
+                    cursor: pointer;
+                "
+                onclick={() => document.getElementById("fileInput").click()}
+            >
+                No file chosen
+            </span>
+        </div>
+        <br />
+
+        <p>Existing files will be replaced.</p>
+
+        <button class="normalButton" type="submit" disabled={!file}>Upload</button>
+    </form>
+{/snippet}
+
+<Modal showModal={showFileUploadModal} children={fileUploadSlot}>
 </Modal>
