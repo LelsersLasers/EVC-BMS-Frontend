@@ -41,8 +41,8 @@
     let bypass = $state(null);
 
     let error   = $state(null);
-    let success = $state(null);
-    let successTimeout = null;
+    let result = $state(null);
+    let resultTimeout = null;
     // ---------------------------------------------------------------------- //
 
 
@@ -220,6 +220,47 @@
             });
     }
 
+    function deleteLog() {
+        if (!window.confirm('Are you sure you want to delete the log file?')) return;
+
+        loading++;
+
+        fetch(`${ipAddress}/log/delete`)
+            .then((res) => res.text())
+            .then((text) => {
+                loading--;
+                result = `/log/delete: ${text}`;
+            })
+            .catch((e) => {
+                loading--;
+                console.error(e);
+                error = e;
+            });
+    }
+
+    function downloadLog() {
+        loading++;
+
+        fetch(`${ipAddress}/log/download`)
+            .then((res) => res.blob())
+            .then((blob) => {
+                loading--;
+
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'evc_bms_log.csv';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+            })
+            .catch((e) => {
+                loading--;
+                console.error(e);
+                error = e;
+            });
+    }
+
     function forceDischarge(enable) {
         if (!window.confirm(`Are you sure you want to ${enable ? 'enable' : 'disable'} force discharge?`)) return;
 
@@ -230,7 +271,7 @@
             .then((res) => res.text())
             .then((text) => {
                 loading--;
-                success = `${url}: ${text}`;
+                result = `${url}: ${text}`;
             })
             .catch((e) => {
                 loading--;
@@ -248,7 +289,7 @@
             .then((res) => res.text())
             .then((text) => {
                 loading--;
-                success = `/fullShutdown: ${text}`;
+                result = `/fullShutdown: ${text}`;
             })
             .catch((e) => {
                 loading--;
@@ -258,10 +299,10 @@
     }
 
     $effect(() => {
-        if (success) {
-            clearTimeout(successTimeout);
-            successTimeout = setTimeout(() => {
-                success = null;
+        if (result) {
+            clearTimeout(resultTimeout);
+            resultTimeout = setTimeout(() => {
+                result = null;
             }, CLEAR_SUCCESS_TIME);
         }
     });
@@ -317,18 +358,6 @@
     #ipInput:focus {
         border: 2px solid #ABD130;
         outline: none !important;
-    }
-    #connect {
-        padding: 8px;
-        background-color: #ABD130;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-    #connect:disabled {
-        background-color: #aaa;
-        cursor: not-allowed;
     }
 
     #all {
@@ -411,35 +440,24 @@
         transform: translateY(0.66px);
         accent-color: #ABD130;
     }
-    #forceDischargeDiv {
+    #splitButton {
         display: flex;
         flex-direction: row;
         gap: 5px;
     }
-    .forceDischargeButton {
-        flex: 1;
-        padding: 8px;
+
+    .normalButton {
         background-color: #ABD130;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
     }
-    .forceDischargeButton:disabled {
+    .normalButton:disabled {
         background-color: #aaa;
         cursor: not-allowed;
     }
 
-    #shutdownButton {
-        width: 100%;
-        padding: 8px;
+    .dangerButton {
         background-color: #aaa;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
     }
-    #shutdownButton:disabled {
+    .dangerButton:disabled {
         background-color: #ccc;
         cursor: not-allowed;
     }
@@ -457,6 +475,16 @@
         text-wrap: none;
         margin-left: 6px;
         padding-top: 0.1em;
+    }
+
+    button {
+        flex: 1;
+        padding: 8px;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 100%;
     }
 
     .error {
@@ -567,8 +595,8 @@
                 <hr />
             {/if}
 
-            {#if success}
-                <p>{success}</p>
+            {#if result}
+                <p>{result}</p>
                 <hr />
             {/if}
 
@@ -590,14 +618,20 @@
                     <p class="error">Bypass triggered</p>
                 {/if}
 
+                <h2>Log file</h2>
+                <div id="splitButton">
+                    <button class="normalButton" type="button" onclick={downloadLog} disabled={loading != 0}>Download Log</button>
+                    <button class="dangerButton" type="button" onclick={deleteLog}   disabled={loading != 0}>Delete Log</button>
+                </div>
+
                 <h2>Force Discharge</h2>
-                <div id="forceDischargeDiv">
-                    <button id="forceDischargeEnable"  class="forceDischargeButton" type="button" onclick={() => forceDischarge(true)}  disabled={loading != 0}>Enable</button>
-                    <button id="forceDischargeDisable" class="forceDischargeButton" type="button" onclick={() => forceDischarge(false)} disabled={loading != 0}>Disable</button>
+                <div id="splitButton">
+                    <button class="normalButton" type="button" onclick={() => forceDischarge(true)}  disabled={loading != 0}>Enable</button>
+                    <button class="normalButton" type="button" onclick={() => forceDischarge(false)} disabled={loading != 0}>Disable</button>
                 </div>
 
                 <h2>Shutdown</h2>
-                <button id="shutdownButton" type="button" onclick={shutdownButton} disabled={loading != 0}>Full Shutdown</button>
+                <button class="dangerButton" type="button" onclick={shutdownButton} disabled={loading != 0}>Full Shutdown</button>
             </div>
         </div>
     </div>
@@ -615,9 +649,9 @@
     <!-- svelte-ignore a11y_autocomplete_valid -->
     <input id="ipInput" type="text" placeholder="192.168.1.1" autocomplete="ip" bind:value={ipAddressInput} />
     {#if !loading}
-        <button id="connect" onclick={validateIpAddressInput}>Connect</button>
+        <button class="normalButton" onclick={validateIpAddressInput}>Connect</button>
     {:else}
-        <button id="connect" disabled>Connect</button>
+        <button class="normalButton" disabled>Connect</button>
     {/if}
 {/snippet}
 

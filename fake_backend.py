@@ -45,6 +45,14 @@ def forceDischargeEnable():
 def forceDischargeDisable():
 	return "disable"
 
+@app.route('/log/download', methods=['GET'])
+def logDownload():
+	return "log"
+
+@app.route('/log/delete', methods=['GET'])
+def logDelete():
+	return "ok"
+
 @app.route('/data', methods=['GET'])
 def data():
 	def random_voltage():
