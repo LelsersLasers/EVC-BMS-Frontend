@@ -566,7 +566,6 @@
             grid-template-columns: 1fr;
             gap: 0;
         }
-
         #sidebar {
             grid-column: 1;
         }
