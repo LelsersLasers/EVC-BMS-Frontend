@@ -5,12 +5,20 @@
 
     // ---------------------------------------------------------------------- //
     const LS_KEY = "ipAddress";
+
     const DATA_FETCH_TIME = 5 * 1000; // 5 seconds [also need to change fetchTimer animation duration]
     const CLEAR_SUCCESS_TIME = 5 * 1000; // 5 seconds
+
+    const OVERVIEW_DECIMALS    = 2;
+    const VOLTAGE_DECIMALS     = 4;
+    const TEMPERATURE_DECIMALS = 1;
+    
     const V_MIN = 2.8; // 3.0
     const V_MAX = 4.4; // 4.2
+    
     const T_MIN = 20;
     const T_MAX = 40;
+    
     const C_MIN = 0;
     const C_MAX = 30;
     // ---------------------------------------------------------------------- //
@@ -150,10 +158,10 @@
                     name: "Overview",
                     bars: [],
                 };
-                overviewBarSet["bars"][0] = { label: "A (current)", v: d["current"].toFixed(2) };
-                overviewBarSet["bars"][1] = { label: "V (avg)",     v: d["avg"]    .toFixed(2) };
-                overviewBarSet["bars"][2] = { label: "V (min)",     v: d["min"]    .toFixed(2) };
-                overviewBarSet["bars"][3] = { label: "V (max)",     v: d["max"]    .toFixed(2) };
+                overviewBarSet["bars"][0] = { label: "A (current)", v: d["current"].toFixed(OVERVIEW_DECIMALS) };
+                overviewBarSet["bars"][1] = { label: "V (avg)",     v: d["avg"]    .toFixed(OVERVIEW_DECIMALS) };
+                overviewBarSet["bars"][2] = { label: "V (min)",     v: d["min"]    .toFixed(OVERVIEW_DECIMALS) };
+                overviewBarSet["bars"][3] = { label: "V (max)",     v: d["max"]    .toFixed(OVERVIEW_DECIMALS) };
                 // ---------------------------------------------------------- //
                 voltageBarSets = [];
 
@@ -165,7 +173,7 @@
                     for (let j = 0; j < d["cells"][i].length; j++) {
                         voltageBarSets[i]["bars"].push({
                             label: `V (${j})`,
-                            v: d["cells"][i][j]
+                            v: d["cells"][i][j].toFixed(VOLTAGE_DECIMALS)
                         });
                     }
                 }
@@ -181,7 +189,7 @@
                 for (let key in d["therm"]) {
                     temperatureBarSet["bars"].push({
                         label: `°C (${key})`,
-                        v: d["therm"][key].toFixed(1)
+                        v: d["therm"][key].toFixed(TEMPERATURE_DECIMALS)
                     });
                 }
                 // ---------------------------------------------------------- //
