@@ -1,6 +1,6 @@
 <script>
-    import { onMount } from 'svelte';
-    import Modal from '$lib/Modal.svelte';
+    import { onMount } from "svelte";
+    import Modal from "$lib/Modal.svelte";
     // ---------------------------------------------------------------------- //
 
     // ---------------------------------------------------------------------- //
@@ -16,13 +16,13 @@
     let ipAddress = $state(null);
     let displayIpAddress = $state(null);
     let showIpAddressModal = $state(false);
-    let ipAddressInput = $state('');
+    let ipAddressInput = $state("");
     let ipAddressError = $state(null);
     let name = $state("disconnected...");
 
     $effect(() => {
         if (!ipAddress) return;
-        else if (ipAddress.startsWith('http://')) displayIpAddress = ipAddress.slice(7);
+        else if (ipAddress.startsWith("http://")) displayIpAddress = ipAddress.slice(7);
         else displayIpAddress = ipAddress;
     })
     // ---------------------------------------------------------------------- //
@@ -48,7 +48,7 @@
 
     // ---------------------------------------------------------------------- //
     onMount(async () => {
-        const ls = localStorage.getItem('ipAddress');
+        const ls = localStorage.getItem("ipAddress");
         if (ls) {
             ipAddressInput = ls;
             validateIpAddressInput();
@@ -64,21 +64,21 @@
 
         let ip = ipAddressInput;
 
-        if (!ip.startsWith('http://')) ip = `http://${ip}`;
-        if (ip.endsWith('/')) ip = ip.slice(0, -1);
+        if (!ip.startsWith("http://")) ip = `http://${ip}`;
+        if (ip.endsWith("/")) ip = ip.slice(0, -1);
 
         loading++;
         ipAddressError = null;
 
         fetch(`${ip}/name`)
             .then((res) => {
-                if (!res.ok) throw new Error('');
+                if (!res.ok) throw new Error("");
                 return res.text();
             })
             .then((text) => {
                 name = text;
                 ipAddress = ip;
-                localStorage.setItem('ipAddress', ip);
+                localStorage.setItem("ipAddress", ip);
                 loading--;
                 showIpAddressModal = false;
                 ipAddressError = null;
@@ -87,7 +87,7 @@
             .catch((e) => {
                 loading--;
                 showIpAddressModal = true;
-                ipAddressError = 'Could not connect to BMS at that IP address';
+                ipAddressError = "Could not connect to BMS at that IP address";
             });
     }
 
@@ -206,11 +206,11 @@
 
         console.log("aaaaaa", e.target.checked);
 
-        fetch(`${ipAddress}/bypass/${e.target.checked ? 'enable' : 'disable'}`)
+        fetch(`${ipAddress}/bypass/${e.target.checked ? "enable" : "disable"}`)
             .then((res) => res.text())
             .then((text) => {
                 loading--;
-                bypass = text == 'enable';
+                bypass = text == "enable";
             })
             .catch((e) => {
                 loading--;
@@ -221,7 +221,7 @@
     }
 
     function deleteLog() {
-        if (!window.confirm('Are you sure you want to delete the log file?')) return;
+        if (!window.confirm("Are you sure you want to delete the log file?")) return;
 
         loading++;
 
@@ -247,9 +247,9 @@
                 loading--;
 
                 const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
+                const a = document.createElement("a");
                 a.href = url;
-                a.download = 'evc_bms_log.csv';
+                a.download = "evc_bms_log.csv";
                 document.body.appendChild(a);
                 a.click();
                 window.URL.revokeObjectURL(url);
@@ -262,11 +262,11 @@
     }
 
     function forceDischarge(enable) {
-        if (!window.confirm(`Are you sure you want to ${enable ? 'enable' : 'disable'} force discharge?`)) return;
+        if (!window.confirm(`Are you sure you want to ${enable ? "enable" : "disable"} force discharge?`)) return;
 
         loading++;
 
-        let url = `/forceDischarge/${enable ? 'enable' : 'disable'}`;
+        let url = `/forceDischarge/${enable ? "enable" : "disable"}`;
         fetch(`${ipAddress}${url}`)
             .then((res) => res.text())
             .then((text) => {
@@ -281,7 +281,7 @@
     }
 
     function shutdownButton() {
-        if (!window.confirm('Are you sure you want to shutdown the BMS?')) return;
+        if (!window.confirm("Are you sure you want to shutdown the BMS?")) return;
 
         loading++;
 
