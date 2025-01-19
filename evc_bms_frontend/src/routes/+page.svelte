@@ -218,7 +218,7 @@
         fetch(`${ipAddress}/bypass/${e.target.checked ? "enable" : "disable"}`)
             .then((res) => res.text())
             .then((text) => {
-                loading--;
+                parameterLoading = false;
                 bypass = text == "enable";
             })
             .catch((e) => {
