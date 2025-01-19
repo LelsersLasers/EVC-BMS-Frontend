@@ -6,6 +6,7 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 
 - File upload modal
 - Svelte component for the collections of bars and bars (instead of repeating the same code)?
+	- Or snippets?
 - Parameters/GUI inputs for all hardcoded values
 	- Temp
 	- Voltage difference
