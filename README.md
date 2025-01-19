@@ -4,7 +4,6 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 
 ## TODO:
 
-- CSS for mobile
 - File upload modal
 - Svelte component for the collections of bars and bars (instead of repeating the same code)?
 - Parameters/GUI inputs for all hardcoded values
@@ -15,6 +14,7 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 - Appearance:
 	- In general, better CSS
 	- Ex: better color diversity (and maybe some less aggressive colors)
+	- Update mobile CSS
 
 ## Reference
 

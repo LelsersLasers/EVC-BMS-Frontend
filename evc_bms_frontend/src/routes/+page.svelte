@@ -388,29 +388,11 @@
 
     #all {
         display: grid;
-        grid-template-columns: 3fr 1fr;
+        grid-template-columns: 3fr 2fr;
 
         grid-gap: 10px;
 
         padding: 10px;
-    }
-
-    @media (max-width: 915px) {
-        #all {
-            grid-template-columns: 3fr 2fr;
-        }
-    }
-
-    @media (max-width: 985px) {
-        #all {
-            grid-template-columns: 1fr 1fr;
-        }
-    }
-
-    @media (max-width: 700) {
-        #all {
-            grid-template-columns: 1fr;
-        }
     }
 
     #main {
@@ -515,9 +497,6 @@
         margin-bottom: 0.25em;
     }
 
-    /* div {
-        border: 1px solid red;
-    } */
 
     .span-wrap {
         white-space: nowrap;
@@ -580,6 +559,17 @@
     @keyframes fetchTimer {
         from { width: 0%;   }
         to   { width: 100%; }
+    }
+
+    @media (max-width: 585px) {
+        #all {
+            grid-template-columns: 1fr;
+            gap: 0;
+        }
+
+        #sidebar {
+            grid-column: 1;
+        }
     }
 </style>
 
