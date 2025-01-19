@@ -383,7 +383,6 @@
     #main {
         grid-column: 1;
     }
-    /* #holder {} */
     #summaries {
         display: flex;
         flex-direction: row;
@@ -461,18 +460,22 @@
 
     .normalButton {
         background-color: #ABD130;
+        box-shadow: 2px 2px 2px #aaa;
     }
     .normalButton:disabled {
         background-color: #aaa;
         cursor: not-allowed;
+        box-shadow: none;
     }
 
     .dangerButton {
         background-color: #aaa;
+        box-shadow: 2px 2px 2px #777;
     }
     .dangerButton:disabled {
         background-color: #ccc;
         cursor: not-allowed;
+        box-shadow: none;
     }
 
     .modalTitle {

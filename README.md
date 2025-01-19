@@ -7,12 +7,9 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 - File upload
 - Auto graph from `log.csv`
 - Appearance:
-	- Improve look of "waiting for ip" and loading displays
-	- Improve the look of buttons
-		- More button-y, drop shadow
 	- In general, better CSS
-		- Ex: better color diversity
-		- Maybe make the whole thing dark mode
+	- Ex: better color diversity
+	- Maybe make the whole thing dark mode
 - Svelte component for the collections of bars (instead of repeating the same code)?
 - CSS for mobile
 
