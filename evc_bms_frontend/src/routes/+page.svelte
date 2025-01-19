@@ -159,7 +159,7 @@
 
                 for (let i = 0; i < d["cells"].length; i++) {
                     voltageBarSets[i] = {
-                        name: `Pack ${i} Voltages`,
+                        name: `Pack ${i + 1} Voltages`,
                         bars: [],
                     };
                     for (let j = 0; j < d["cells"][i].length; j++) {
