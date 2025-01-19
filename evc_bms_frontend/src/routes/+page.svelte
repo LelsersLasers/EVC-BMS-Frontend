@@ -389,9 +389,28 @@
     #all {
         display: grid;
         grid-template-columns: 3fr 1fr;
+
         grid-gap: 10px;
 
         padding: 10px;
+    }
+
+    @media (max-width: 915px) {
+        #all {
+            grid-template-columns: 3fr 2fr;
+        }
+    }
+
+    @media (max-width: 985px) {
+        #all {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+
+    @media (max-width: 700) {
+        #all {
+            grid-template-columns: 1fr;
+        }
     }
 
     #main {

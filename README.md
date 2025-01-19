@@ -4,14 +4,17 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 
 ## TODO:
 
-- File upload
-- Auto graph from `log.csv`
+- CSS for mobile
+- File upload modal
+- Svelte component for the collections of bars and bars (instead of repeating the same code)?
+- Parameters/GUI inputs for all hardcoded values
+	- Temp
+	- Voltage difference
+	- Current
+- Automatically create a graph from `log.csv`
 - Appearance:
 	- In general, better CSS
-	- Ex: better color diversity
-	- Maybe make the whole thing dark mode
-- Svelte component for the collections of bars (instead of repeating the same code)?
-- CSS for mobile
+	- Ex: better color diversity (and maybe some less aggressive colors)
 
 ## Reference
 
