@@ -30,7 +30,8 @@
     // ---------------------------------------------------------------------- //
 
     // ---------------------------------------------------------------------- //
-    let loading = $state(0);
+    let dataLoading = $state(false);
+    let parameterLoading = $state(false);
     // ---------------------------------------------------------------------- //
 
     // ---------------------------------------------------------------------- //
@@ -71,7 +72,7 @@
         if (!ip.startsWith("http://")) ip = `http://${ip}`;
         if (ip.endsWith("/")) ip = ip.slice(0, -1);
 
-        loading++;
+        parameterLoading = true;
         ipAddressError = null;
 
         fetch(`${ip}/name`)
@@ -80,16 +81,16 @@
                 return res.text();
             })
             .then((text) => {
+                parameterLoading = false;
                 name = text;
                 ipAddress = ip;
                 localStorage.setItem("ipAddress", ip);
-                loading--;
                 showIpAddressModal = false;
                 ipAddressError = null;
                 setTimeout(setupAfterConnected, 10);
             })
             .catch((e) => {
-                loading--;
+                parameterLoading = false;
                 showIpAddressModal = true;
                 ipAddressError = "Could not connect to BMS at that IP address";
             });
@@ -119,13 +120,13 @@
     }
 
     function fetchData() {
-        loading++;
+        dataLoading = true;
 
         fetch(`${ipAddress}/data`)
             .then((res) => res.json())
             .then((d) => {
                 // ---------------------------------------------------------- //
-                loading--;
+                dataLoading = false;
                 error = null;
 
                 data = d;
@@ -176,7 +177,7 @@
                 // ---------------------------------------------------------- //
             })
             .catch((e) => {
-                loading--;
+                dataLoading = false;
                 console.error(e);
                 error = e;
             });
@@ -186,24 +187,23 @@
 
     // ---------------------------------------------------------------------- //
     function stateParameter(e) {
-        loading++;
+        parameterLoading = true;
 
         fetch(`${ipAddress}/state/${e.target.value}`)
             .then((res) => res.text())
             .then((text) => {
-                loading--;
+                parameterLoading = false;
                 state = text;
             })
             .catch((e) => {
-                loading--;
-
+                parameterLoading = false;
                 console.error(e);
                 error = e;
             });
     }
 
     function bypassParameter(e) {
-        loading++;
+        parameterLoading = true;
 
         console.log("aaaaaa", e.target.checked);
 
@@ -214,8 +214,7 @@
                 bypass = text == "enable";
             })
             .catch((e) => {
-                loading--;
-
+                parameterLoading = false;
                 console.error(e);
                 error = e;
             });
@@ -224,28 +223,28 @@
     function deleteLog() {
         if (!window.confirm("Are you sure you want to delete the log file?")) return;
 
-        loading++;
+        parameterLoading = true;
 
         fetch(`${ipAddress}/log/delete`)
             .then((res) => res.text())
             .then((text) => {
-                loading--;
+                parameterLoading = false;
                 result = `/log/delete: ${text}`;
             })
             .catch((e) => {
-                loading--;
+                parameterLoading = false;
                 console.error(e);
                 error = e;
             });
     }
 
     function downloadLog() {
-        loading++;
+        parameterLoading = true;
 
         fetch(`${ipAddress}/log/download`)
             .then((res) => res.blob())
             .then((blob) => {
-                loading--;
+                parameterLoading = false;
 
                 const url = window.URL.createObjectURL(blob);
                 const a = document.createElement("a");
@@ -256,7 +255,7 @@
                 window.URL.revokeObjectURL(url);
             })
             .catch((e) => {
-                loading--;
+                parameterLoading = false;
                 console.error(e);
                 error = e;
             });
@@ -265,17 +264,17 @@
     function forceDischarge(enable) {
         if (!window.confirm(`Are you sure you want to ${enable ? "enable" : "disable"} force discharge?`)) return;
 
-        loading++;
+        parameterLoading = true;
 
         let url = `/forceDischarge/${enable ? "enable" : "disable"}`;
         fetch(`${ipAddress}${url}`)
             .then((res) => res.text())
             .then((text) => {
-                loading--;
+                parameterLoading = false;
                 result = `${url}: ${text}`;
             })
             .catch((e) => {
-                loading--;
+                parameterLoading = false;
                 console.error(e);
                 error = e;
             });
@@ -284,16 +283,16 @@
     function shutdownButton() {
         if (!window.confirm("Are you sure you want to shutdown the BMS?")) return;
 
-        loading++;
+        parameterLoading = true;
 
         fetch(`${ipAddress}/fullShutdown`)
             .then((res) => res.text())
             .then((text) => {
-                loading--;
+                parameterLoading = false;
                 result = `/fullShutdown: ${text}`;
             })
             .catch((e) => {
-                loading--;
+                parameterLoading = false;
                 console.error(e);
                 error = e;
             });
@@ -533,7 +532,7 @@
 
 
 
-<div id="loading" style="display: {loading != 0 ? 'block' : 'none'}">Fetching...</div>
+<div id="loading" style="display: {(dataLoading || parameterLoading) ? 'block' : 'none'}">Fetching...</div>
 
 
 <div id="navbar">
@@ -617,7 +616,7 @@
 
             <div>
                 <h2>State</h2>
-                <select id="stateSelect" bind:value={state} onchange={stateParameter} disabled={loading != 0}>
+                <select id="stateSelect" bind:value={state} onchange={stateParameter} disabled={parameterLoading}>
                     <option value="idle">Idle</option>
                     <option value="monitor">Monitor</option>
                     <option value="charging">Charging</option>
@@ -626,7 +625,7 @@
                 <h2>Bypass</h2>
                 <div id="bypassDiv">    
                     <label id="bypassLabel" for="bypass">Enabled</label>
-                    <input type="checkbox" id="bypass" bind:checked={bypass} onchange={bypassParameter} disabled={loading != 0} />
+                    <input type="checkbox" id="bypass" bind:checked={bypass} onchange={bypassParameter} disabled={parameterLoading} />
                 </div>
                 {#if data["anyBypassed"]}
                     <p class="error">Bypass triggered</p>
@@ -634,18 +633,18 @@
 
                 <h2>Log file</h2>
                 <div id="splitButton">
-                    <button class="normalButton" type="button" onclick={downloadLog} disabled={loading != 0}>Download Log</button>
-                    <button class="dangerButton" type="button" onclick={deleteLog}   disabled={loading != 0}>Delete Log</button>
+                    <button class="normalButton" type="button" onclick={downloadLog} disabled={parameterLoading}>Download Log</button>
+                    <button class="dangerButton" type="button" onclick={deleteLog}   disabled={parameterLoading}>Delete Log</button>
                 </div>
 
                 <h2>Force Discharge</h2>
                 <div id="splitButton">
-                    <button class="normalButton" type="button" onclick={() => forceDischarge(true)}  disabled={loading != 0}>Enable</button>
-                    <button class="normalButton" type="button" onclick={() => forceDischarge(false)} disabled={loading != 0}>Disable</button>
+                    <button class="normalButton" type="button" onclick={() => forceDischarge(true)}  disabled={parameterLoading}>Enable</button>
+                    <button class="normalButton" type="button" onclick={() => forceDischarge(false)} disabled={parameterLoading}>Disable</button>
                 </div>
 
                 <h2>Shutdown</h2>
-                <button class="dangerButton" type="button" onclick={shutdownButton} disabled={loading != 0}>Full Shutdown</button>
+                <button class="dangerButton" type="button" onclick={shutdownButton} disabled={parameterLoading}>Full Shutdown</button>
             </div>
         </div>
     </div>
@@ -662,7 +661,7 @@
     {/if}
     <!-- svelte-ignore a11y_autocomplete_valid -->
     <input id="ipInput" type="text" placeholder="192.168.1.1" autocomplete="ip" bind:value={ipAddressInput} />
-    {#if !loading}
+    {#if !parameterLoading}
         <button class="normalButton" onclick={validateIpAddressInput}>Connect</button>
     {:else}
         <button class="normalButton" disabled>Connect</button>

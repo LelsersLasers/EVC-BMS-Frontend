@@ -55,6 +55,8 @@ def logDelete():
 
 @app.route('/data', methods=['GET'])
 def data():
+	time.sleep(0.5)
+
 	def random_voltage():
 		return random.random() * (4.4 - 2.8) + 2.8
 	def random_temperature():
