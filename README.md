@@ -4,7 +4,8 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 
 ## TODO:
 
-- File upload modal
+- File upload (modal)
+- Favicon
 - Svelte component for the collections of bars and bars (instead of repeating the same code)?
 	- Or snippets?
 - Parameters/GUI inputs for all hardcoded values
@@ -12,6 +13,8 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 	- Voltage difference
 	- Current
 - Automatically create a graph from `log.csv`
+- A "currently balancing" bar color?
+	- How to determine if it's balancing?
 - Appearance:
 	- In general, better CSS
 	- Ex: better color diversity (and maybe some less aggressive colors)
