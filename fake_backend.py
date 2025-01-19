@@ -58,9 +58,11 @@ def data():
 	time.sleep(0.5)
 
 	def random_voltage():
-		return random.random() * (4.4 - 2.8) + 2.8
+		# return random.random() * (4.4 - 2.8) + 2.8
+		return random.random() * (4.0 - 3.9) + 3.9
 	def random_temperature():
-		return random.random() * (40 - 20) + 20
+		# return random.random() * (40 - 20) + 20
+		return random.random() * (30 - 28) + 28
 
 	doc = {}
 
