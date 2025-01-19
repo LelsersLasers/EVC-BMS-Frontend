@@ -578,11 +578,14 @@
 <div id="loading" style="display: {(dataLoading || parameterLoading) ? 'block' : 'none'}">Fetching...</div>
 
 
+<!-- svelte-ignore a11y_click_events_have_key_events -->
 <div id="navbar">
     <div id="logo">
         <h1 id="name">EVC</h1>
         <h1>BMS</h1>
     </div>
+    <!-- svelte-ignore a11y_click_events_have_key_events -->
+    <!-- svelte-ignore a11y_no_static_element_interactions -->
     <div id="ip" onclick={triggerDisconnect}>
         <span id="address">{name} ({displayIpAddress})</span>
     </div>
