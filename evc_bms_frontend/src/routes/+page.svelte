@@ -163,7 +163,10 @@
                         bars: [],
                     };
                     for (let j = 0; j < d["cells"][i].length; j++) {
-                        voltageBarSets[i]["bars"].push({ label: `V (${j})`, v: d["cells"][i][j] });
+                        voltageBarSets[i]["bars"].push({
+                            label: `V (${j})`,
+                            v: d["cells"][i][j]
+                        });
                     }
                 }
                 // ---------------------------------------------------------- //
@@ -176,7 +179,10 @@
 
                 temperatureBarSet["bars"] = [];
                 for (let key in d["therm"]) {
-                    temperatureBarSet["bars"].push({ label: `C (${key})`, v: d["therm"][key] });
+                    temperatureBarSet["bars"].push({
+                        label: `°C (${key})`,
+                        v: d["therm"][key].toFixed(1)
+                    });
                 }
                 // ---------------------------------------------------------- //
 
