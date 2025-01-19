@@ -5,7 +5,6 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 ## TODO:
 
 - Change the ip address even if currently connected
-- Bar of the current (amps)
 - Loading back to T/F instead of a count?
 	- Or 2 separate loading states? (one for data loop one for parameters)
 - Section dividers (`// ------------...---------- //`s)

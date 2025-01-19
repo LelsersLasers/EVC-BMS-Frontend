@@ -72,7 +72,7 @@ def data():
 	doc["max"] = random_voltage()
 	doc["avg"] = random_voltage()
 	doc["sum"] = random_voltage() * 12 * 2
-	doc["current"] = random.random() * 100
+	doc["current"] = random.random() * 30
 
 	doc["therm"] = {}
 	doc["therm"]["1"] = random_temperature()

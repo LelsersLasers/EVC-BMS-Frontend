@@ -10,6 +10,8 @@
     const V_MAX = 4.4; // 4.2
     const T_MIN = 20;
     const T_MAX = 40;
+    const C_MIN = 0;
+    const C_MAX = 30;
     // ---------------------------------------------------------------------- //
 
     // ---------------------------------------------------------------------- //
@@ -34,6 +36,8 @@
     // ---------------------------------------------------------------------- //
     let dataLoopInterval = null;
     let data = $state({});
+
+    let overviewBarSet = $state({});
     let voltageBarSets = $state([]);
     let temperatureBarSet = $state({});
 
@@ -133,19 +137,16 @@
                 // ---------------------------------------------------------- //
 
                 // ---------------------------------------------------------- //
-                // TODO: current
-                // ---------------------------------------------------------- //
-
-                // ---------------------------------------------------------- //            
-                voltageBarSets = [];
-
-                voltageBarSets["overview"] = {
-                    name: "Voltage Overview",
+                overviewBarSet = {
+                    name: "Overview",
                     bars: [],
                 };
-                voltageBarSets["overview"]["bars"][0] = { label: "avg", v: d["avg"].toFixed(2) };
-                voltageBarSets["overview"]["bars"][1] = { label: "max", v: d["max"].toFixed(2) };
-                voltageBarSets["overview"]["bars"][2] = { label: "min", v: d["min"].toFixed(2) };
+                overviewBarSet["bars"][0] = { label: "A (current)", v: d["current"].toFixed(2) };
+                overviewBarSet["bars"][1] = { label: "V (avg)",     v: d["avg"]    .toFixed(2) };
+                overviewBarSet["bars"][2] = { label: "V (min)",     v: d["min"]    .toFixed(2) };
+                overviewBarSet["bars"][3] = { label: "V (max)",     v: d["max"]    .toFixed(2) };
+                // ---------------------------------------------------------- //
+                voltageBarSets = [];
 
                 for (let i = 0; i < d["cells"].length; i++) {
                     voltageBarSets[i] = {
@@ -153,7 +154,7 @@
                         bars: [],
                     };
                     for (let j = 0; j < d["cells"][i].length; j++) {
-                        voltageBarSets[i]["bars"].push({ label: j, v: d["cells"][i][j] });
+                        voltageBarSets[i]["bars"].push({ label: `V (${j})`, v: d["cells"][i][j] });
                     }
                 }
                 // ---------------------------------------------------------- //
@@ -166,7 +167,7 @@
 
                 temperatureBarSet["bars"] = [];
                 for (let key in d["therm"]) {
-                    temperatureBarSet["bars"].push({ label: key, v: d["therm"][key] });
+                    temperatureBarSet["bars"].push({ label: `°C (${key})`, v: d["therm"][key] });
                 }
                 // ---------------------------------------------------------- //
 
@@ -313,6 +314,10 @@
         return (v - V_MIN) / (V_MAX - V_MIN) * 100;
     }
 
+    function currentWidth(v) {
+        return (v - C_MIN) / (C_MAX - C_MIN) * 100;
+    }
+
     function temperatureWidth(v) {
         return (v - T_MIN) / (T_MAX - T_MIN) * 100;
     }
@@ -402,6 +407,9 @@
         max-width: 100%;
         
         background-color: #ABD130;
+    }
+    #current {
+        background-color: #4DA6FF;
     }
     /* .barText {} */
     
@@ -548,12 +556,18 @@
             <div id="holder">
                 <div id="summaries"> <!-- Voltage overview and temperatures in horizontal -->
                     <div class="summary">
-                        <h2>Voltage Overview</h2>
+                        <h2>Overview</h2>
                         <div class="bars">
-                            {#each voltageBarSets["overview"].bars as bar (bar.label)}
-                                <div class="bar" style="width: {voltageWidth(bar.v)}%">
-                                    <span class="barText">{bar.v}V ({bar.label})</span>
-                                </div>
+                            {#each overviewBarSet.bars as bar, i (bar.label)}
+                                {#if i == 0}
+                                    <div id="current" class="bar" style="width: {currentWidth(bar.v)}%">
+                                        <span class="barText">{bar.v}{bar.label}</span>
+                                    </div>
+                                {:else}
+                                    <div class="bar" style="width: {voltageWidth(bar.v)}%">
+                                        <span class="barText">{bar.v}{bar.label}</span>
+                                    </div>
+                                {/if}
                             {/each}
                         </div>
                     </div>
@@ -563,7 +577,7 @@
                         <div class="bars">
                             {#each temperatureBarSet.bars as bar (bar.label)}
                                 <div class="bar" style="width: {temperatureWidth(bar.v)}%">
-                                    <span class="barText">{bar.v}°C ({bar.label})</span>
+                                    <span class="barText">{bar.v}{bar.label}</span>
                                 </div>
                             {/each}
                         </div>
@@ -577,7 +591,7 @@
                             <div class="bars">
                                 {#each pack.bars as bar (bar.label)}
                                     <div class="bar" style="width: {voltageWidth(bar.v)}%">
-                                        <span class="barText">{bar.v}V ({bar.label})</span>
+                                        <span class="barText">{bar.v}{bar.label}</span>
                                     </div>
                                 {/each}
                             </div>
