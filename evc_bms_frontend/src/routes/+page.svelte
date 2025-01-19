@@ -176,7 +176,7 @@
 
                 temperatureBarSet["bars"] = [];
                 for (let key in d["therm"]) {
-                    temperatureBarSet["bars"].push({ label: `°C (${key})`, v: d["therm"][key] });
+                    temperatureBarSet["bars"].push({ label: `C (${key})`, v: d["therm"][key] });
                 }
                 // ---------------------------------------------------------- //
 
@@ -418,8 +418,6 @@
     #current {
         background-color: #4DA6FF;
     }
-    /* .barText {} */
-    
 
 
     #sidebar {
@@ -485,12 +483,24 @@
         border: 1px solid red;
     } */
 
+    .span-wrap {
+        white-space: nowrap;
+        text-wrap: none;
+    }
     span {
         white-space: nowrap;
         text-wrap: none;
-        margin-left: 6px;
         padding-top: 0.1em;
     }
+    .barV {
+        margin-left: 6px;
+    }
+    .barLabel {
+        font-size: smaller;
+        font-style: italic;
+        color: #333;        
+    }
+
 
     button {
         flex: 1;
@@ -568,11 +578,15 @@
                             {#each overviewBarSet.bars as bar, i (bar.label)}
                                 {#if i == 0}
                                     <div id="current" class="bar" style="width: {currentWidth(bar.v)}%">
-                                        <span class="barText">{bar.v}{bar.label}</span>
+                                        <div class="span-wrap">
+                                            <span class="barV">{bar.v}</span><span class="barLabel">{bar.label}</span>
+                                        </div>
                                     </div>
                                 {:else}
                                     <div class="bar" style="width: {voltageWidth(bar.v)}%">
-                                        <span class="barText">{bar.v}{bar.label}</span>
+                                        <div class="span-wrap">
+                                            <span class="barV">{bar.v}</span><span class="barLabel">{bar.label}</span>
+                                        </div>
                                     </div>
                                 {/if}
                             {/each}
@@ -584,7 +598,9 @@
                         <div class="bars">
                             {#each temperatureBarSet.bars as bar (bar.label)}
                                 <div class="bar" style="width: {temperatureWidth(bar.v)}%">
-                                    <span class="barText">{bar.v}{bar.label}</span>
+                                    <div class="span-wrap">
+                                        <span class="barV">{bar.v}</span><span class="barLabel">{bar.label}</span>
+                                    </div>
                                 </div>
                             {/each}
                         </div>
@@ -598,7 +614,9 @@
                             <div class="bars">
                                 {#each pack.bars as bar (bar.label)}
                                     <div class="bar" style="width: {voltageWidth(bar.v)}%">
-                                        <span class="barText">{bar.v}{bar.label}</span>
+                                        <div class="span-wrap">
+                                            <span class="barV">{bar.v}</span><span class="barLabel">{bar.label}</span>
+                                        </div>
                                     </div>
                                 {/each}
                             </div>
