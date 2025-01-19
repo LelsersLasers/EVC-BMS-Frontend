@@ -4,6 +4,8 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 
 ## TODO:
 
+- File upload
+- Auto graph from `log.csv`
 - Appearance:
 	- More readable bars
 		- Make the unit (V, A, C, etc) and label (1, FET, avg, etc) smaller/italtics/ligher font/something
@@ -12,8 +14,12 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 		- More button-y, drop shadow
 	- In general, better CSS
 		- Ex: better color diversity
+		- Maybe make the whole thing dark mode
 - Svelte component for the collections of bars (instead of repeating the same code)?
-- File upload
-- Fix graphing
-- WEBSOCKETS?????
-- MOBILE CSS
+- Websockets?
+	- Instead of `GET /data` every 5 seconds, send an update over the WS whenever `readTempatures()`/`readBattery()` is called
+- CSS for mobile
+## Reference
+
+- https://github.com/espressif/arduino-esp32/blob/master/libraries/HTTPUpdateServer/src/HTTPUpdateServer.h
+- https://arduinojson.org/
