@@ -20,6 +20,7 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 	- Problem: need to keep the parameter states``
 - Fix: 5 sec fetch timer??
 	- The fetch seems to not go off at exactly 5 seconds??
+- `/` redirects to the frontend web app
 - Appearance:
 	- In general, better CSS
 	- Ex: better color diversity (and maybe some less aggressive colors)
