@@ -59,7 +59,7 @@
     let state  = $state(null);
     let bypass = $state(null);
 
-    let error   = $state(null);
+    let error  = $state(null);
     let result = $state(null);
     let resultTimeout = null;
     // ---------------------------------------------------------------------- //
