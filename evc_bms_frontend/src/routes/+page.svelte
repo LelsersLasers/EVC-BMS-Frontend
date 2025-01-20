@@ -57,7 +57,8 @@
     let temperatureBarSet = $state({});
 
     let state  = $state(null);
-    let bypass = $state(null);
+
+    let parameters = $state(null);
 
     let error  = $state(null);
     let result = $state(null);
@@ -190,8 +191,8 @@
                 // ---------------------------------------------------------- //
 
                 // ---------------------------------------------------------- //
-                if (state == null) state   = d["state"];
-                if (bypass == null) bypass = d["bypass"];
+                if (state == null) state = d["state"];
+                if (parameters == null) parameters = d["parameters"];
                 // ---------------------------------------------------------- //
 
                 // ---------------------------------------------------------- //
@@ -275,7 +276,7 @@
             .then((res) => res.text())
             .then((text) => {
                 parameterLoading = false;
-                bypass = text == "enable";
+                parameters["bypass"] = text == "enable";
             })
             .catch((e) => {
                 parameterLoading = false;
@@ -727,7 +728,7 @@
                 <h2>Bypass</h2>
                 <div id="bypassDiv">    
                     <label id="bypassLabel" for="bypass">Enabled</label>
-                    <input type="checkbox" id="bypass" bind:checked={bypass} onchange={bypassParameter} disabled={parameterLoading} />
+                    <input type="checkbox" id="bypass" bind:checked={parameters["bypass"]} onchange={bypassParameter} disabled={parameterLoading} />
                 </div>
                 {#if data["anyBypassed"]}
                     <p class="error">Bypass triggered</p>

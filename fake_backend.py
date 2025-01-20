@@ -92,13 +92,15 @@ def data():
 	doc["therm"]["3"] = random_temperature()
 	doc["therm"]["FET"] = random_temperature()
 
-	doc["bypass"] = False # random.choice([True, False])
 	doc["anyBypassed"] = False # random.choice([True, False])
 
 	doc["state"] = "monitor" # random.choice(["idle", "monitor", "charging"] )
 
 	doc["SSS"] = False # random.choice([True, False])
 	doc["HCS"] = False # random.choice([True, False])
+
+	doc["parameters"] = {}
+	doc["parameters"]["bypass"] = False
 
 	return flask.jsonify(doc)
 
