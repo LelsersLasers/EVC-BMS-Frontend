@@ -214,7 +214,8 @@
                     for (let j = 0; j < d["cells"][i].length; j++) {
                         voltageBarSets[i]["bars"].push({
                             label: `V (${j})`,
-                            v: d["cells"][i][j].toFixed(VOLTAGE_DECIMALS)
+                            v: d["cells"][i][j].toFixed(VOLTAGE_DECIMALS),
+                            discharge: (d["discharge"][i] & (1 << j)) != 0,
                         });
                     }
                 }
@@ -470,6 +471,9 @@
         
         background-color: #ABD130;
     }
+    .discharge {
+        background-color: #90d5ff;
+    }
     #current {
         background-color: #4DA6FF;
     }
@@ -682,7 +686,10 @@
                             <h2>{pack.name}</h2>
                             <div class="bars">
                                 {#each pack.bars as bar (bar.label)}
-                                    <div class="bar" style="width: {voltageWidth(bar.v)}%">
+                                    <div
+                                        class="bar {bar.discharge ? 'discharge' : ''}"
+                                        style="width: {voltageWidth(bar.v)}%"
+                                    >
                                         <div class="span-wrap">
                                             <span class="barV">{bar.v}</span><span class="barLabel">{bar.label}</span>
                                         </div>

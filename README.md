@@ -17,8 +17,6 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 - Automatically create a graph from `log.csv`
 - Fix: 5 sec fetch timer??
 	- The fetch seems to not go off at exactly 5 seconds??
-- A "currently balancing" bar color?
-	- How to determine if it's balancing?
 - Appearance:
 	- In general, better CSS
 	- Ex: better color diversity (and maybe some less aggressive colors)

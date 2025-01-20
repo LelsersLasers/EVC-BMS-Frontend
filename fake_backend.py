@@ -71,9 +71,13 @@ def data():
 	doc = {}
 
 	doc["cells"] = []
+	doc["discharge"] = []
 	for i in range(2):
-		doc["cells"].append([])
-		for j in range(12):
+		discharge = 1 << 8
+		doc["discharge"].append(discharge)
+		
+		doc["cells"].append([])		
+		for _j in range(12):
 			doc["cells"][i].append(random_voltage())
 
 	doc["min"] = random_voltage()
