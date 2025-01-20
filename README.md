@@ -8,9 +8,12 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 - Svelte component for the collections of bars and bars (instead of repeating the same code)?
 	- Or snippets?
 - Parameters/GUI inputs for all hardcoded values
-	- Temp
-	- Voltage difference
-	- Current
+	- Temp high cutoff
+	- Max - min voltage
+	- Max - avg voltage (balancing cutoff)
+	- Voltage low cutoff
+	- Voltage high cutoff
+	- Max charging current
 - Automatically create a graph from `log.csv`
 - Fix: 5 sec fetch timer??
 	- The fetch seems to not go off at exactly 5 seconds??
