@@ -28,14 +28,10 @@ def charging():
 def fullShutdown():
 	return "ok"
 
-@app.route('/bypass/enable', methods=['GET'])
-def bypassEnable():
-	return "enable"
-
-@app.route('/bypass/disable', methods=['GET'])
-def bypassDisable():
-	time.sleep(2)
-	return "disable"
+@app.route('/parameters/<param>/<value>', methods=['GET'])
+def parameter(param, value):
+	time.sleep(1)
+	return "ok"
 
 @app.route('/forceDischarge/enable', methods=['GET'])
 def forceDischargeEnable():
@@ -100,7 +96,8 @@ def data():
 	doc["HCS"] = False # random.choice([True, False])
 
 	doc["parameters"] = {}
-	doc["parameters"]["bypass"] = False
+	doc["parameters"]["bypass"] = False 
+	doc["parameters"]["vMin"] = 3.0
 
 	return flask.jsonify(doc)
 

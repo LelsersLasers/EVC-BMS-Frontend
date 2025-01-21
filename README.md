@@ -4,6 +4,9 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 
 ## TODO:
 
+- Disconnect is a button and not a click on the current IP
+- Defines for starting parameters
+- Actually use the Parameters struct
 - Parameters/GUI inputs for all hardcoded values
 	- Temp high cutoff
 	- Max - min voltage
@@ -12,6 +15,9 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 	- Voltage high cutoff
 	- Max charging current
 	- Bypass minium voltage
+- Hover over State header -> tooltip that says that state changes are immediate
+- Will CORS be a problem?
+	- Why can I not use things from: https://github.com/espressif/arduino-esp32/blob/master/libraries/WebServer/examples/Middleware/Middleware.ino ??????
 - Better usage of error vs result messages
 - Svelte component for the collections of bars and bars (instead of repeating the same code)?
 	- Or snippets?

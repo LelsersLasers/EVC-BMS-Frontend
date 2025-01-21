@@ -59,6 +59,9 @@
     let state  = $state(null);
 
     let parameters = $state(null);
+    let oldParmeters = $state(null);
+
+    let parametersDifferent = $derived(JSON.stringify(parameters) != JSON.stringify(oldParmeters));
 
     let error  = $state(null);
     let result = $state(null);
@@ -192,7 +195,10 @@
 
                 // ---------------------------------------------------------- //
                 if (state == null) state = d["state"];
-                if (parameters == null) parameters = d["parameters"];
+                if (parameters == null) {
+                    parameters = d["parameters"];
+                    oldParmeters = JSON.parse(JSON.stringify(parameters)); // deep copy
+                }
                 // ---------------------------------------------------------- //
 
                 // ---------------------------------------------------------- //
@@ -259,6 +265,7 @@
             .then((text) => {
                 parameterLoading = false;
                 state = text;
+                result = `State: ${state}`;
             })
             .catch((e) => {
                 parameterLoading = false;
@@ -267,22 +274,30 @@
             });
     }
 
-    function bypassParameter(e) {
-        parameterLoading = true;
+    async function saveParameters(e) {
+        if (!parametersDifferent) return;
 
-        console.log("aaaaaa", e.target.checked);
+        let r = "";
 
-        fetch(`${ipAddress}/bypass/${e.target.checked ? "enable" : "disable"}`)
-            .then((res) => res.text())
-            .then((text) => {
-                parameterLoading = false;
-                parameters["bypass"] = text == "enable";
-            })
-            .catch((e) => {
-                parameterLoading = false;
-                console.error(e);
-                error = e;
-            });
+        for (let key in parameters) {
+            if (parameters[key] == oldParmeters[key]) continue;
+
+            parameterLoading = true;
+
+            await fetch(`${ipAddress}/parameters/${key}/${parameters[key]}`)
+                .then((res) => res.text())
+                .then((text) => {
+                    parameterLoading = false;
+                    r += `${key}/${parameters[key]}: ${text}<br />`;
+                    result = r;
+                    oldParmeters[key] = parameters[key];
+                })
+                .catch((e) => {
+                    parameterLoading = false;
+                    console.error(e);
+                    error = e;
+                });
+        }
     }
 
     function deleteLog() {
@@ -519,6 +534,23 @@
         gap: 5px;
     }
 
+    .labelInputHolder {
+        display: flex;
+        flex-direction: row;
+        gap: 5px;
+    }
+    .numberInput {
+        flex-grow: 1;
+        padding-left: 5px;
+        outline: none !important;
+        border: 2px solid #aaa;
+        border-radius: 5px;
+    }
+    .numberInput:focus {
+        border: 2px solid #ABD130;
+        outline: none !important;
+    }
+
     .normalButton {
         background-color: #ABD130;
         box-shadow: 2px 2px 2px #aaa;
@@ -537,6 +569,25 @@
         background-color: #ccc;
         cursor: not-allowed;
         box-shadow: none;
+    }
+    .saveButton {
+        cursor: not-allowed;
+    }
+    .saveButtonActive {
+        background-color: #4DA6FF;
+        cursor: pointer;
+        animation: bob 1s infinite ease-out;
+    }
+    @keyframes bob {
+        0% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-3px);
+        }
+        100% {
+            transform: translateY(0);
+        }
     }
 
     .modalTitle {
@@ -712,7 +763,7 @@
             {/if}
 
             {#if result}
-                <p>{result}</p>
+                <p>{@html result}</p>
                 <hr />
             {/if}
 
@@ -728,11 +779,25 @@
                 <h2>Bypass</h2>
                 <div id="bypassDiv">    
                     <label id="bypassLabel" for="bypass">Enabled</label>
-                    <input type="checkbox" id="bypass" bind:checked={parameters["bypass"]} onchange={bypassParameter} disabled={parameterLoading} />
+                    <input type="checkbox" id="bypass" bind:checked={parameters["bypass"]} disabled={parameterLoading} />
                 </div>
                 {#if data["anyBypassed"]}
                     <p class="error">Bypass triggered</p>
                 {/if}
+
+                <h2>Voltage</h2>
+                <div class="labelInputHolder">
+                    <label for="vMin">Low cutoff:</label>
+                    <input class="numberInput" type="number" name ="vMin" min="0" max="100" bind:value={parameters["vMin"]} disabled={parameterLoading} />
+                </div>
+
+                <h2>Save</h2>
+                <button
+                    class="normalButton saveButton {parametersDifferent ? 'saveButtonActive' : ''}"
+                    type="button"
+                    onclick={saveParameters}
+                    disabled={parameterLoading}
+                >Save</button>
 
                 <h2>File Upload</h2>
                 <button class="normalButton" type="button" onclick={() => showFileUploadModal = true} disabled={parameterLoading}>Upload File</button>
