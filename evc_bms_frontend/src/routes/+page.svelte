@@ -12,15 +12,10 @@
     const OVERVIEW_DECIMALS    = 2;
     const VOLTAGE_DECIMALS     = 4;
     const TEMPERATURE_DECIMALS = 1;
-    
-    const V_MIN = 2.8; // 3.0
-    const V_MAX = 4.4; // 4.2
-    
-    const T_MIN = 20;
-    const T_MAX = 40;
-    
-    const C_MIN = 0;
-    const C_MAX = 30;
+
+    const V_PADDING = 0.1;
+    const T_PADDING = 5;
+    const C_PADDING = 0.1;    
     // ---------------------------------------------------------------------- //
 
     // ---------------------------------------------------------------------- //
@@ -396,16 +391,20 @@
     // ---------------------------------------------------------------------- //
 
     // ---------------------------------------------------------------------- //
+    function calcWidth(v, min, max) {
+        return (v - min) / (max - min) * 100;
+    }
+
     function voltageWidth(v) {
-        return (v - V_MIN) / (V_MAX - V_MIN) * 100;
+        return calcWidth(v, parameters["vMin"] - V_PADDING, 4.2 + V_PADDING);
     }
 
     function currentWidth(v) {
-        return (v - C_MIN) / (C_MAX - C_MIN) * 100;
+        calcWidth(v, 0 - C_PADDING, 30 + C_PADDING);
     }
 
     function temperatureWidth(v) {
-        return (v - T_MIN) / (T_MAX - T_MIN) * 100;
+        return calcWidth(v, 0 - T_PADDING, 50 + T_PADDING);
     }
     // ---------------------------------------------------------------------- //
 </script>
