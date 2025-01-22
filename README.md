@@ -11,7 +11,9 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 - Parameters/GUI inputs for all hardcoded values
 	- Temp high cutoff
 	- Max - min voltage
+		- Add bar?
 	- Max - avg voltage (balancing cutoff)
+		- Add bar? (maybe combine with above)
 	- Voltage low cutoff
 	- Voltage high cutoff
 	- Max charging current
