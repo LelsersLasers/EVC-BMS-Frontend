@@ -61,6 +61,13 @@
     let parameters = $state(null);
     let oldParmeters = $state(null);
 
+    /*
+    parameters = {
+        "bypass": false,
+        "vMin": 3.0
+    };
+    */
+
     let parametersDifferent = $derived(JSON.stringify(parameters) != JSON.stringify(oldParmeters));
 
     let error  = $state(null);

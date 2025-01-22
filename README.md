@@ -6,6 +6,8 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 
 - Defines for starting parameters
 - Actually use the Parameters struct
+	- Frontend
+	- And Arduino
 - Parameters/GUI inputs for all hardcoded values
 	- Temp high cutoff
 	- Max - min voltage
