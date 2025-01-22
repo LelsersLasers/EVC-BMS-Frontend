@@ -97,6 +97,7 @@ def data():
 
 	doc["parameters"] = {}
 	doc["parameters"]["bypass"] = False 
+	doc["parameters"]["vBypass"] = 5.0 
 	doc["parameters"]["vMin"] = 3.0
 
 	return flask.jsonify(doc)

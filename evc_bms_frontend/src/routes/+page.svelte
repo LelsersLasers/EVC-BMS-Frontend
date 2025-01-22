@@ -59,6 +59,7 @@
     /*
     parameters = {
         "bypass": false,
+        "vBypass": 5.0,
         "vMin": 3.0
     };
     */
@@ -788,6 +789,12 @@
                     <label id="bypassLabel" for="bypass">Enabled</label>
                     <input type="checkbox" id="bypass" bind:checked={parameters["bypass"]} disabled={parameterLoading} />
                 </div>
+                {#if parameters["bypass"]}
+                    <div class="labelInputHolder">
+                        <label for="vBypass">Bypass Voltage:</label>
+                        <input class="numberInput" type="number" name ="vBypass" bind:value={parameters["vBypass"]} disabled={parameterLoading} />
+                    </div>
+                {/if}
                 {#if data["anyBypassed"]}
                     <p class="error">Bypass triggered</p>
                 {/if}
@@ -795,7 +802,7 @@
                 <h2>Voltage</h2>
                 <div class="labelInputHolder">
                     <label for="vMin">Low cutoff:</label>
-                    <input class="numberInput" type="number" name ="vMin" min="0" max="100" bind:value={parameters["vMin"]} disabled={parameterLoading} />
+                    <input class="numberInput" type="number" name ="vMin" bind:value={parameters["vMin"]} disabled={parameterLoading} />
                 </div>
 
                 <h2>Save</h2>
