@@ -4,7 +4,6 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 
 ## TODO:
 
-- Disconnect is a button and not a click on the current IP
 - Defines for starting parameters
 - Actually use the Parameters struct
 - Parameters/GUI inputs for all hardcoded values

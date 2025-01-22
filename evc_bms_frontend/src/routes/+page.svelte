@@ -681,9 +681,7 @@
         <h1 id="name">EVC</h1>
         <h1>BMS</h1>
     </div>
-    <!-- svelte-ignore a11y_click_events_have_key_events -->
-    <!-- svelte-ignore a11y_no_static_element_interactions -->
-    <div id="ip" onclick={triggerDisconnect}>
+    <div id="ip">
         <span id="address">{name} ({displayIpAddress})</span>
     </div>
 </div>
@@ -769,6 +767,9 @@
 
 
             <div>
+                <h2>Disconnect</h2>
+                <button class="dangerButton" type="button" onclick={triggerDisconnect}>Disconnect</button>
+
                 <h2>State</h2>
                 <select id="stateSelect" bind:value={state} onchange={stateParameter} disabled={parameterLoading}>
                     <option value="idle">Idle</option>
