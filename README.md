@@ -15,7 +15,7 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 		- Add bar?
 	- Max - avg voltage (balancing cutoff)
 		- Add bar? (maybe combine with above)
-	- Voltage low cutoff
+	- [x] Voltage low cutoff
 	- Voltage high cutoff
 	- Max charging current
 	- Bypass minium voltage
