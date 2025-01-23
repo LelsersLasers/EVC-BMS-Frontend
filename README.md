@@ -37,13 +37,13 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 - Styling: use a table for stacked inputs so they all line up
 - Will CORS be a problem?
 	- Why can I not use things from: https://github.com/espressif/arduino-esp32/blob/master/libraries/WebServer/examples/Middleware/Middleware.ino ??????
-- Better usage of error vs result messages
-- Svelte component for the collections of bars and bars (instead of repeating the same code)?
-	- Or snippets?
 - Automatically create a graph from `log.csv`
 - Fix: 5 sec fetch timer??
 	- The fetch seems to not go off at exactly 5 seconds??
-- `/` redirects to the frontend web app
+- Svelte component for:
+	- The collections of bars and bars (instead of repeating the same code)?
+		- Or snippets?
+	- And all the inputs?
 - Appearance:
 	- In general, better CSS
 	- Ex: better color diversity (and maybe some less aggressive colors)
