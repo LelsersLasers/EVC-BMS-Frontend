@@ -8,8 +8,8 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 	- Voltage
 		- [x] Per cell min [`vMin`]
 		- [x] Per cell max [`vMax`]
-		- Average cell min [`vMinAvg`]
-		- Average cell max [`vMaxAvg`]
+		- [x] Average cell min [`vMinAvg`]
+		- [x] Average cell max [`vMaxAvg`]
 		- Max cell delta [`vDelta`]
 	- Temperature
 		- Per thermistor min [`tMin`]
@@ -31,6 +31,7 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 			- Not critical
 	- Notes:
 		- Defines for starting parameters in battery.h
+			- Fix define names
 		- Actually use the Parameters struct/dict when doing the checks
 			- On the frontend and the Arduino
 - Way to hide/not hide the side bar
@@ -43,6 +44,7 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 - Automatically create a graph from `log.csv`
 - Handle multiple people connecting?
 	- Problem: need to keep the parameter states synced
+	- Solution (for now): display if the fetched data doesn't match the parameters
 - Fix: 5 sec fetch timer??
 	- The fetch seems to not go off at exactly 5 seconds??
 - `/` redirects to the frontend web app
