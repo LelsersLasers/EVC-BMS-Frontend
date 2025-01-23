@@ -96,10 +96,16 @@ def data():
 	doc["HCS"] = False # random.choice([True, False])
 
 	doc["parameters"] = {}
+
 	doc["parameters"]["bypass"] = False 
 	doc["parameters"]["vBypass"] = 5.0 
+	
 	doc["parameters"]["vMin"] = 3.0
 	doc["parameters"]["vMax"] = 4.2
+	doc["parameters"]["vMinAvg"] = 3.0
+	doc["parameters"]["vMaxAvg"] = 4.2
+	
+	
 	doc["parameters"]["tMax"] = 50.0
 
 	return flask.jsonify(doc)

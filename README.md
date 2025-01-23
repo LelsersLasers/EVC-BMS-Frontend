@@ -10,7 +10,7 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 		- [x] Per cell max [`vMax`]
 		- Average cell min [`vMinAvg`]
 		- Average cell max [`vMaxAvg`]
-		- Max cell delta [`vMaxDelta`]
+		- Max cell delta [`vDelta`]
 	- Temperature
 		- Per thermistor min [`tMin`]
 		- [x] Per thermistor max [`tMax`]
@@ -28,11 +28,13 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 	- Bypass
 		- [x] Bypass enabled [`bypass`]
 		- [x] Bypass voltage [`vBypass`]
+			- Not critical
 	- Notes:
 		- Defines for starting parameters in battery.h
 		- Actually use the Parameters struct/dict when doing the checks
 			- On the frontend and the Arduino
 - Way to hide/not hide the side bar
+- Styling: use a table for stacked inputs so they all line up
 - Will CORS be a problem?
 	- Why can I not use things from: https://github.com/espressif/arduino-esp32/blob/master/libraries/WebServer/examples/Middleware/Middleware.ino ??????
 - Better usage of error vs result messages

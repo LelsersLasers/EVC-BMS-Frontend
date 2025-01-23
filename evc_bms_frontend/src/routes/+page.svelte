@@ -60,8 +60,12 @@
     parameters = {
         "bypass": false,
         "vBypass": 5.0,
+
         "vMin": 3.0,
         "vMax": 4.2,
+        "vMinAvg": 3.0,
+        "vMaxAvg": 4.2,
+        
         "tMax": 50,
     };
     */
@@ -841,7 +845,7 @@
 
                 <h2>Voltage</h2>
                 <div class="labelInputHolder">
-                    <label for="vMin">Low cutoff:</label>
+                    <label for="vMin">Cell min:</label>
                     <input
                         class="numberInput"
                         type="number"
@@ -851,13 +855,33 @@
                         disabled={parameterLoading} />
                 </div>
                 <div class="labelInputHolder">
-                    <label for="vMax">High cutoff:</label>
+                    <label for="vMax">Cell max:</label>
                     <input
                         class="numberInput"
                         type="number"
                         name="vMax"
                         placeholder={oldParmeters["vMax"]}
                         bind:value={parameters["vMax"]}
+                        disabled={parameterLoading} />
+                </div>
+                <div class="labelInputHolder">
+                    <label for="vMinAvg">Avg min:</label>
+                    <input
+                        class="numberInput"
+                        type="number"
+                        name="vMinAvg"
+                        placeholder={oldParmeters["vMinAvg"]}
+                        bind:value={parameters["vMinAvg"]}
+                        disabled={parameterLoading} />
+                </div>
+                <div class="labelInputHolder">
+                    <label for="vMaxAvg">Avg max:</label>
+                    <input
+                        class="numberInput"
+                        type="number"
+                        name="vMaxAvg"
+                        placeholder={oldParmeters["vMaxAvg"]}
+                        bind:value={parameters["vMaxAvg"]}
                         disabled={parameterLoading} />
                 </div>
 
