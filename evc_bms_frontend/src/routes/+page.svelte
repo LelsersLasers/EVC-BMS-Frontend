@@ -792,7 +792,13 @@
                 {#if parameters["bypass"]}
                     <div class="labelInputHolder">
                         <label for="vBypass">Bypass Voltage:</label>
-                        <input class="numberInput" type="number" name ="vBypass" bind:value={parameters["vBypass"]} disabled={parameterLoading} />
+                        <input
+                            class="numberInput"
+                            type="number"
+                            name="vBypass"
+                            placeholder={oldParmeters["vBypass"]}
+                            bind:value={parameters["vBypass"]}
+                            disabled={parameterLoading} />
                     </div>
                 {/if}
                 {#if data["anyBypassed"]}
@@ -802,7 +808,13 @@
                 <h2>Voltage</h2>
                 <div class="labelInputHolder">
                     <label for="vMin">Low cutoff:</label>
-                    <input class="numberInput" type="number" name ="vMin" bind:value={parameters["vMin"]} disabled={parameterLoading} />
+                    <input
+                        class="numberInput"
+                        type="number"
+                        name="vMin"
+                        placeholder={oldParmeters["vMin"]}
+                        bind:value={parameters["vMin"]}
+                        disabled={parameterLoading} />
                 </div>
 
                 <h2>Save</h2>
