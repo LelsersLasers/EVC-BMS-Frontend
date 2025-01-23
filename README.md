@@ -11,9 +11,9 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 - Parameters/GUI inputs for all hardcoded values
 	- Temp high cutoff (tMax)
 	- [x] Bypass voltage (vBypass)
-	- Max - min voltage (tDiff)
+	- Max - min voltage (vDiff)
 		- Add bar?
-	- Max - avg voltage (balancing cutoff) (tDiffBal)
+	- Max - avg voltage (balancing cutoff) (vDiffBal)
 		- Add bar? (maybe combine with above)
 	- [x] Voltage low cutoff (vMin)
 	- [x] Voltage high cutoff (vMax)
