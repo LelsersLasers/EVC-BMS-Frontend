@@ -60,7 +60,8 @@
     parameters = {
         "bypass": false,
         "vBypass": 5.0,
-        "vMin": 3.0
+        "vMin": 3.0,
+        "vMax": 4.2,
     };
     */
 
@@ -397,7 +398,9 @@
     }
 
     function voltageWidth(v) {
-        return calcWidth(v, parameters["vMin"] - V_PADDING, 4.2 + V_PADDING);
+        const min = parameters["vMin"] ? parameters["vMin"] : oldParmeters["vMin"];
+        const max = parameters["vMax"] ? parameters["vMax"] : oldParmeters["vMax"];
+        return calcWidth(v, min - V_PADDING, max + V_PADDING);
     }
 
     function currentWidth(v) {
@@ -814,6 +817,16 @@
                         name="vMin"
                         placeholder={oldParmeters["vMin"]}
                         bind:value={parameters["vMin"]}
+                        disabled={parameterLoading} />
+                </div>
+                <div class="labelInputHolder">
+                    <label for="vMax">High cutoff:</label>
+                    <input
+                        class="numberInput"
+                        type="number"
+                        name="vMax"
+                        placeholder={oldParmeters["vMax"]}
+                        bind:value={parameters["vMax"]}
                         disabled={parameterLoading} />
                 </div>
 
