@@ -9,14 +9,14 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 	- Frontend
 	- And Arduino
 - Parameters/GUI inputs for all hardcoded values
-	- Temp high cutoff (tHigh)
+	- Temp high cutoff (tMax)
 	- [x] Bypass voltage (vBypass)
 	- Max - min voltage (tDiff)
 		- Add bar?
 	- Max - avg voltage (balancing cutoff) (tDiffBal)
 		- Add bar? (maybe combine with above)
-	- [x] Voltage low cutoff (vLow)
-	- Voltage high cutoff (vHigh)
+	- [x] Voltage low cutoff (vMin)
+	- [x] Voltage high cutoff (vMax)
 	- Max charging current (iMax)
 - Hover over State header -> tooltip that says that state changes are immediate
 - Way to hide/not hide the side bar
