@@ -640,6 +640,35 @@
         color: red;
     }
 
+    .stateToolTip {
+        position: relative;
+        display: inline-block;
+        border-bottom: 1px dotted black;
+        line-height: 0.75em;
+        font-size: 1.5em;
+        margin-top: 0.25em;
+    }
+
+    .stateToolTip:after {
+        content: "immediate effect";
+        position: absolute;
+        top: -0.2em;
+        right: 0;
+        left: 105%;
+        display: none;
+        text-align: center;
+        background-color: #333;
+        color: #fff;
+        border-radius: 4px;
+        padding: 2px;
+        font-size: 12px;
+        font-style: italic;
+        width: 100px;
+    }
+    .stateToolTip:hover:after {
+        display: block;
+    }
+
     #loading {
         width: fit-content;
 
@@ -782,7 +811,7 @@
                 <h2>Disconnect</h2>
                 <button class="dangerButton" type="button" onclick={triggerDisconnect}>Disconnect</button>
 
-                <h2>State</h2>
+                <h2 class="stateToolTip">State</h2>
                 <select id="stateSelect" bind:value={state} onchange={stateParameter} disabled={parameterLoading}>
                     <option value="idle">Idle</option>
                     <option value="monitor">Monitor</option>
