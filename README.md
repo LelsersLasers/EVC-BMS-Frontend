@@ -27,7 +27,7 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 	- Or snippets?
 - Automatically create a graph from `log.csv`
 - Handle multiple people connecting?
-	- Problem: need to keep the parameter states``
+	- Problem: need to keep the parameter states synced
 - Fix: 5 sec fetch timer??
 	- The fetch seems to not go off at exactly 5 seconds??
 - `/` redirects to the frontend web app
