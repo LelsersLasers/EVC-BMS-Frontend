@@ -31,7 +31,6 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 			- Not critical
 	- Notes:
 		- Defines for starting parameters in battery.h
-			- Fix define names
 		- Actually use the Parameters struct/dict when doing the checks
 			- On the frontend and the Arduino
 - Way to hide/not hide the side bar
