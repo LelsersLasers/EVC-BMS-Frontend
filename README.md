@@ -17,7 +17,10 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 		- Add bar? (maybe combine with above)
 	- [x] Voltage low cutoff (vMin)
 	- [x] Voltage high cutoff (vMax)
-	- Max charging current (iMax)
+	- Loop poll times?
+	- Max discharge current (iMax)
+	- Max charge current (iMaxCharge)
+	- Balancing count
 - Hover over State header -> tooltip that says that state changes are immediate
 - Way to hide/not hide the side bar
 - Will CORS be a problem?

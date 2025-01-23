@@ -100,7 +100,7 @@ def data():
 	doc["parameters"]["vBypass"] = 5.0 
 	doc["parameters"]["vMin"] = 3.0
 	doc["parameters"]["vMax"] = 4.2
-	doc["parameters"]["tMax"] = 50
+	doc["parameters"]["tMax"] = 50.0
 
 	return flask.jsonify(doc)
 
