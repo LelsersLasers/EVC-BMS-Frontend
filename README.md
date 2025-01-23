@@ -10,7 +10,7 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 	- And Arduino
 - Parameters/GUI inputs for all hardcoded values
 	- Temp high cutoff
-	- Bypass voltage
+	- [x] Bypass voltage
 	- Max - min voltage
 		- Add bar?
 	- Max - avg voltage (balancing cutoff)
