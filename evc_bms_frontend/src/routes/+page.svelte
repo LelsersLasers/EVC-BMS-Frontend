@@ -53,6 +53,8 @@
 
     let state  = $state(null);
 
+    let outOfSync = $state(false);
+
     let parameters = $state(null);
     let oldParmeters = $state(null);
 
@@ -207,6 +209,8 @@
                 if (parameters == null) {
                     parameters = d["parameters"];
                     oldParmeters = JSON.parse(JSON.stringify(parameters)); // deep copy
+                } else {
+                    outOfSync = JSON.stringify(d["parameters"]) != JSON.stringify(oldParmeters);
                 }
                 // ---------------------------------------------------------- //
 
@@ -799,6 +803,14 @@
         
         <div id="sidebar">
             <hr id="fetchTimer" />
+
+            {#if outOfSync}
+                <p class="error">
+                    Out of sync! Parameters have been changed on the BMS.
+                    Please refresh the page to resync.
+                </p>
+                <hr />
+            {/if}
 
             {#if error}
                 <p class="error">{error}</p>

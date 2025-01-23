@@ -41,9 +41,6 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 - Svelte component for the collections of bars and bars (instead of repeating the same code)?
 	- Or snippets?
 - Automatically create a graph from `log.csv`
-- Handle multiple people connecting?
-	- Problem: need to keep the parameter states synced
-	- Solution (for now): display if the fetched data doesn't match the parameters
 - Fix: 5 sec fetch timer??
 	- The fetch seems to not go off at exactly 5 seconds??
 - `/` redirects to the frontend web app
