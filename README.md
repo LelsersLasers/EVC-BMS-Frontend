@@ -10,21 +10,21 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 		- [x] Per cell max [`vMax`]
 		- [x] Average cell min [`vMinAvg`]
 		- [x] Average cell max [`vMaxAvg`]
-		- Max cell delta [`vDelta`]
+		- [ ] Max cell delta [`vDelta`]
 	- Temperature
-		- Per thermistor min [`tMin`]
+		- [ ] Per thermistor min [`tMin`]
 		- [x] Per thermistor max [`tMax`]
-		- Max temp delta [`tMaxDelta`]
+		- [ ] Max temp delta [`tMaxDelta`]
 			- Doesn't apply to FET
 			- Not critical (no cutoff) but should throw fault code
-		- Max solid state switching temp [`tMaxSS`]
+		- [ ] Max solid state switching temp [`tMaxSS`]
 			- IDK what this is rn
-		- Max balance temp [`tMaxBal`]
+		- [ ] Max balance temp [`tMaxBal`]
 	- Current
-		- Max instantaneous current [`iMax`]
-		- Max continuous current [`iMaxCont`]
-		- We will need to change some logic for that
-	- Logging speed [`logSpeed`]
+		- [ ] Max instantaneous current [`iMax`]
+		- [ ] Max continuous current [`iMaxCont`]
+		- We will need to change some logic for this
+	- [ ] Logging speed [`logSpeed`]
 	- Bypass
 		- [x] Bypass enabled [`bypass`]
 		- [x] Bypass voltage [`vBypass`]
