@@ -31,7 +31,7 @@ def fullShutdown():
 @app.route('/parameters/<param>/<value>', methods=['GET'])
 def parameter(param, value):
 	time.sleep(1)
-	return "ok"
+	return "ok -> " + value
 
 @app.route('/forceDischarge/enable', methods=['GET'])
 def forceDischargeEnable():
