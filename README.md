@@ -4,23 +4,34 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 
 ## TODO:
 
-- Defines for starting parameters
-- Actually use the Parameters struct
-	- Frontend
-	- And Arduino
-- Parameters/GUI inputs for all hardcoded values
-	- [x] Temp high cutoff (tMax)
-	- [x] Bypass voltage (vBypass)
-	- Max - min voltage (vDiff)
-		- Add bar?
-	- Max - avg voltage (balancing cutoff) (vDiffBal)
-		- Add bar? (maybe combine with above)
-	- [x] Voltage low cutoff (vMin)
-	- [x] Voltage high cutoff (vMax)
-	- Loop poll times?
-	- Max discharge current (iMax)
-	- Max charge current (iMaxCharge)
-	- Balancing count
+- Parameters/GUI inputs for all hardcoded values:
+	- Voltage
+		- [x] Per cell min [`vMin`]
+		- [x] Per cell max [`vMax`]
+		- Average cell min [`vMinAvg`]
+		- Average cell max [`vMaxAvg`]
+		- Max cell delta [`vMaxDelta`]
+	- Temperature
+		- Per thermistor min [`tMin`]
+		- [x] Per thermistor max [`tMax`]
+		- Max temp delta [`tMaxDelta`]
+			- Doesn't apply to FET
+			- Not critical (no cutoff) but should throw fault code
+		- Max solid state switching temp [`tMaxSS`]
+			- IDK what this is rn
+		- Max balance temp [`tMaxBal`]
+	- Current
+		- Max instantaneous current [`iMax`]
+		- Max continuous current [`iMaxCont`]
+		- We will need to change some logic for that
+	- Logging speed [`logSpeed`]
+	- Bypass
+		- [x] Bypass enabled [`bypass`]
+		- [x] Bypass voltage [`vBypass`]
+	- Notes:
+		- Defines for starting parameters in battery.h
+		- Actually use the Parameters struct/dict when doing the checks
+			- On the frontend and the Arduino
 - Way to hide/not hide the side bar
 - Will CORS be a problem?
 	- Why can I not use things from: https://github.com/espressif/arduino-esp32/blob/master/libraries/WebServer/examples/Middleware/Middleware.ino ??????
