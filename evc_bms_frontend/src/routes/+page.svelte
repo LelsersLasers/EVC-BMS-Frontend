@@ -14,8 +14,8 @@
     const TEMPERATURE_DECIMALS = 1;
 
     const V_PADDING = 0.1;
-    const T_PADDING = 5;
-    const C_PADDING = 0.1;    
+    const T_PADDING = 2;
+    const C_PADDING = 0.1;
     // ---------------------------------------------------------------------- //
 
     // ---------------------------------------------------------------------- //
@@ -62,6 +62,7 @@
         "vBypass": 5.0,
         "vMin": 3.0,
         "vMax": 4.2,
+        "tMax": 50,
     };
     */
 
@@ -408,7 +409,8 @@
     }
 
     function temperatureWidth(v) {
-        return calcWidth(v, 0 - T_PADDING, 50 + T_PADDING);
+        const max = parameters["tMax"] ? parameters["tMax"] : oldParmeters["tMax"];
+        return calcWidth(v, 0, max + T_PADDING);
     }
     // ---------------------------------------------------------------------- //
 </script>
@@ -827,6 +829,18 @@
                         name="vMax"
                         placeholder={oldParmeters["vMax"]}
                         bind:value={parameters["vMax"]}
+                        disabled={parameterLoading} />
+                </div>
+
+                <h2>Temperature</h2>
+                <div class="labelInputHolder">
+                    <label for="tMax">Max:</label>
+                    <input
+                        class="numberInput"
+                        type="number"
+                        name="tMax"
+                        placeholder={oldParmeters["tMax"]}
+                        bind:value={parameters["tMax"]}
                         disabled={parameterLoading} />
                 </div>
 
