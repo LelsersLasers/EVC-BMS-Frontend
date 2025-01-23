@@ -68,7 +68,8 @@
         "vMinAvg": 3.0,
         "vMaxAvg": 4.2,
         
-        "tMax": 50,
+        "tMin": 10.0,
+        "tMax": 50.0,
     };
     */
 
@@ -417,8 +418,9 @@
     }
 
     function temperatureWidth(v) {
+        const min = parameters["tMin"] ? parameters["tMin"] : oldParmeters["tMin"];
         const max = parameters["tMax"] ? parameters["tMax"] : oldParmeters["tMax"];
-        return calcWidth(v, 0, max + T_PADDING);
+        return calcWidth(v, min - T_PADDING, max + T_PADDING);
     }
     // ---------------------------------------------------------------------- //
 </script>
@@ -898,6 +900,16 @@
                 </div>
 
                 <h2>Temperature</h2>
+                <div class="labelInputHolder">
+                    <label for="tMin">Min:</label>
+                    <input
+                        class="numberInput"
+                        type="number"
+                        name="tMin"
+                        placeholder={oldParmeters["tMin"]}
+                        bind:value={parameters["tMin"]}
+                        disabled={parameterLoading} />
+                </div>
                 <div class="labelInputHolder">
                     <label for="tMax">Max:</label>
                     <input

@@ -58,10 +58,10 @@ def data():
 	time.sleep(0.5)
 
 	def random_voltage():
-		# return random.random() * (4.4 - 2.8) + 2.8
+		# return random.random() * (4.2 - 3.0) + 3.0
 		return random.random() * (4.0 - 3.9) + 3.9
 	def random_temperature():
-		# return random.random() * (40 - 20) + 20
+		# return random.random() * (50 - 10) + 10
 		return random.random() * (30 - 28) + 28
 
 	doc = {}
@@ -105,7 +105,7 @@ def data():
 	doc["parameters"]["vMinAvg"] = 3.0
 	doc["parameters"]["vMaxAvg"] = 4.2
 	
-	
+	doc["parameters"]["tMin"] = 10.0
 	doc["parameters"]["tMax"] = 50.0
 
 	return flask.jsonify(doc)
