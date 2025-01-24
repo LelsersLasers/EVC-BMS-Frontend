@@ -10,7 +10,8 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 		- [x] Per cell max [`vMax`]
 		- [x] Average cell min [`vMinAvg`]
 		- [x] Average cell max [`vMaxAvg`]
-		- [ ] Max cell delta [`vDelta`]
+		- [x] Max cell delta [`vDelta`]
+			- [ ] Add bar
 	- Temperature
 		- [x] Per thermistor min [`tMin`]
 		- [x] Per thermistor max [`tMax`]

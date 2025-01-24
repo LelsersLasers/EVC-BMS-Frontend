@@ -67,6 +67,7 @@
         "vMax": 4.2,
         "vMinAvg": 3.0,
         "vMaxAvg": 4.2,
+        "vDiff": 0.2,
         
         "tMin": 10.0,
         "tMax": 50.0,
@@ -896,6 +897,16 @@
                         name="vMaxAvg"
                         placeholder={oldParmeters["vMaxAvg"]}
                         bind:value={parameters["vMaxAvg"]}
+                        disabled={parameterLoading} />
+                </div>
+                <div class="labelInputHolder">
+                    <label for="vDiff">Cell difference:</label>
+                    <input
+                        class="numberInput"
+                        type="number"
+                        name="vDiff"
+                        placeholder={oldParmeters["vDiff"]}
+                        bind:value={parameters["vDiff"]}
                         disabled={parameterLoading} />
                 </div>
 

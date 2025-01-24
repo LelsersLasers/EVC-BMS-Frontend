@@ -104,6 +104,7 @@ def data():
 	doc["parameters"]["vMax"] = 4.2
 	doc["parameters"]["vMinAvg"] = 3.0
 	doc["parameters"]["vMaxAvg"] = 4.2
+	doc["parameters"]["vDiff"] = 0.2
 	
 	doc["parameters"]["tMin"] = 10.0
 	doc["parameters"]["tMax"] = 50.0
