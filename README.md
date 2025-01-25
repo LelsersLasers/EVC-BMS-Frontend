@@ -34,6 +34,7 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 		- Defines for starting parameters in battery.h
 		- Actually use the Parameters struct/dict when doing the checks
 			- On the frontend and the Arduino
+- Results notifcation and not shift the whole side bar
 - Way to hide/not hide the side bar
 - Styling: use a table for stacked inputs so they all line up
 - Will CORS be a problem?

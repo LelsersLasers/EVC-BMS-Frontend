@@ -74,6 +74,8 @@
         "tMax": 50.0,
         "tDiff": 30.0,
         "tDiffTriggered": false, # set
+
+        "logSpeed": 1000,
     };
     */
 
@@ -862,6 +864,9 @@
                 <button class="normalButton" type="button" onclick={() => showFileUploadModal = true} disabled={parameterLoading}>Upload File</button>
 
                 <h2>Log file</h2>
+                {#if state == "monitor"}
+                    <NumberInput l="Log speed:" k="logSpeed" p={parameters} op={oldParmeters} pl={parameterLoading} />
+                {/if}
                 <div id="splitButton">
                     <button class="normalButton" type="button" onclick={downloadLog} disabled={parameterLoading}>Download Log</button>
                     <button class="dangerButton" type="button" onclick={deleteLog}   disabled={parameterLoading}>Delete Log</button>

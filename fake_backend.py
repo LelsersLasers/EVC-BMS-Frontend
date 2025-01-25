@@ -109,7 +109,9 @@ def data():
 	doc["parameters"]["tMin"] = 10.0
 	doc["parameters"]["tMax"] = 50.0
 	doc["parameters"]["tDiff"] = 30.0
-	doc["parameters"]["tDiffTriggered"] = True
+	doc["parameters"]["tDiffTriggered"] = False
+
+	doc["parameters"]["logSpeed"] = 1000
 
 	return flask.jsonify(doc)
 
