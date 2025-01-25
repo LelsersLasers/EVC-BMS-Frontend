@@ -21,6 +21,11 @@
     // ---------------------------------------------------------------------- //
 
     // ---------------------------------------------------------------------- //
+    let showSideBar = $state(true);
+    let innerW = $state(0);
+    // ---------------------------------------------------------------------- //
+
+    // ---------------------------------------------------------------------- //
     let ipAddress = $state(null);
     let displayIpAddress = $state(null);
     let showIpAddressModal = $state(false);
@@ -454,7 +459,6 @@
     #logo {
         display: flex;
         flex-direction: row;
-
         background-color: #333;
         color: white;
         padding-left: 5px;
@@ -489,9 +493,7 @@
     #all {
         display: grid;
         grid-template-columns: 3fr 2fr;
-
         grid-gap: 10px;
-
         padding: 10px;
     }
 
@@ -526,7 +528,6 @@
         padding-bottom: 0.1em;
         min-width: 20px;
         max-width: 100%;
-        
         background-color: #ABD130;
     }
     .discharge {
@@ -613,6 +614,26 @@
         100% {
             transform: translateY(0);
         }
+    }
+
+    .sidebarToggle {
+        background-color: #333;
+        color: white;
+        position: absolute;
+        top: 55px;
+        right: 16px;
+        cursor: pointer;
+        width: 20px;
+        height: 20px;
+        border-radius: 5px;
+        padding-bottom: 2px;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .sidebarToggle:hover {
+        background-color: #555;
     }
 
     .modalTitle {
@@ -738,8 +759,15 @@
             width: 80vw;
         }
     }
+
+    .allNoSideBar {
+        grid-template-columns: 1fr !important;
+    }
 </style>
 
+
+
+<svelte:window bind:innerWidth={innerW} />
 
 
 
@@ -762,8 +790,17 @@
 {:else if !data["ready"]}
     <p>Loading...</p>
 {:else}
-    <div id="all">
+    <div id="all" class="{showSideBar ? '' : 'allNoSideBar'}">
         <div id="main">
+            {#if !showSideBar && innerW >= 585}
+                <!-- svelte-ignore a11y_click_events_have_key_events -->
+                <!-- svelte-ignore a11y_no_static_element_interactions -->
+                <div
+                    class="sidebarToggle"
+                    onclick={() => showSideBar = true}
+                >&#8249;</div>
+            {/if}
+
             <div id="holder">
                 <div id="summaries"> <!-- Voltage overview and temperatures in horizontal -->
                     <div class="summary">
@@ -823,96 +860,107 @@
             </div>
         </div>
         
-        <div id="sidebar">
-            <hr id="fetchTimer" />
+        {#if showSideBar || innerW < 585}
+            <div id="sidebar">
+                <hr id="fetchTimer" />
 
-            <!-- {#if outOfSync}
-                <p class="error">
-                    Out of sync! Parameters have been changed on the BMS.
-                    Please refresh the page to resync.
-                </p>
-                <hr />
-            {/if}
+                <!-- {#if outOfSync}
+                    <p class="error">
+                        Out of sync! Parameters have been changed on the BMS.
+                        Please refresh the page to resync.
+                    </p>
+                    <hr />
+                {/if}
 
-            {#if error}
-                <p class="error">{error}</p>
-                <hr />
-            {/if}
+                {#if error}
+                    <p class="error">{error}</p>
+                    <hr />
+                {/if}
 
-            {#if result}
-                <p>{@html result}</p>
-                <hr />
-            {/if} -->
+                {#if result}
+                    <p>{@html result}</p>
+                    <hr />
+                {/if} -->
 
 
-            <div>
-                <h2>Disconnect</h2>
-                <button class="dangerButton" type="button" onclick={triggerDisconnect}>Disconnect</button>
+                <div>
+                    {#if innerW >= 585}
+                        <!-- svelte-ignore a11y_click_events_have_key_events -->
+                        <!-- svelte-ignore a11y_no_static_element_interactions -->
+                        <div
+                            class="sidebarToggle"
+                            onclick={() => showSideBar = false}
+                        >&#8250;</div>
+                    {/if}
 
-                <h2 class="stateToolTip">State</h2>
-                <select id="stateSelect" bind:value={state} onchange={stateParameter} disabled={parameterLoading}>
-                    <option value="idle">Idle</option>
-                    <option value="monitor">Monitor</option>
-                    <option value="charging">Charging</option>
-                </select>
+                    <h2>Disconnect</h2>
+                    <button class="dangerButton" type="button" onclick={triggerDisconnect}>Disconnect</button>
 
-                <h2>Bypass</h2>
-                <div id="bypassDiv">    
-                    <label id="bypassLabel" for="bypass">Enabled</label>
-                    <input type="checkbox" id="bypass" bind:checked={parameters["bypass"]} disabled={parameterLoading} />
+                    <h2 class="stateToolTip">State</h2>
+                    <select id="stateSelect" bind:value={state} onchange={stateParameter} disabled={parameterLoading}>
+                        <option value="idle">Idle</option>
+                        <option value="monitor">Monitor</option>
+                        <option value="charging">Charging</option>
+                    </select>
+
+                    <h2>Bypass</h2>
+                    <div id="bypassDiv">    
+                        <label id="bypassLabel" for="bypass">Enabled</label>
+                        <input type="checkbox" id="bypass" bind:checked={parameters["bypass"]} disabled={parameterLoading} />
+                    </div>
+                    {#if parameters["bypass"]}
+                        <NumberInput l="Bypass Voltage:" k="vBypass" p={parameters} op={oldParmeters} pl={parameterLoading} />
+                    {/if}
+                    {#if data["anyBypassed"]}
+                        <p class="error">Bypass triggered</p>
+                    {/if}
+
+                    <h2>Voltage</h2>
+                    <NumberInput l="Cell min:" k="vMin" p={parameters} op={oldParmeters} pl={parameterLoading} />
+                    <NumberInput l="Cell max:" k="vMax" p={parameters} op={oldParmeters} pl={parameterLoading} />
+                    <NumberInput l="Avg min:" k="vMinAvg" p={parameters} op={oldParmeters} pl={parameterLoading} />
+                    <NumberInput l="Avg max:" k="vMaxAvg" p={parameters} op={oldParmeters} pl={parameterLoading} />
+                    <NumberInput l="Cell diff:" k="vDiff" p={parameters} op={oldParmeters} pl={parameterLoading} />
+
+                    <h2>Temperature</h2>
+                    <NumberInput l="Min:" k="tMin" p={parameters} op={oldParmeters} pl={parameterLoading} />
+                    <NumberInput l="Max:" k="tMax" p={parameters} op={oldParmeters} pl={parameterLoading} />
+                    <NumberInput l="Temp diff:" k="tDiff" p={parameters} op={oldParmeters} pl={parameterLoading} />
+                    {#if parameters["tDiffTriggered"]}
+                        <p class="error">Temperature difference triggered</p>
+                    {/if}
+
+                    <h2>Save</h2>
+                    <button
+                        class="normalButton saveButton {parametersDifferent ? 'saveButtonActive' : ''}"
+                        type="button"
+                        onclick={saveParameters}
+                        disabled={parameterLoading}
+                    >Save</button>
+
+                    <h2>File Upload</h2>
+                    <button class="normalButton" type="button" onclick={() => showFileUploadModal = true} disabled={parameterLoading}>Upload File</button>
+
+                    <h2>Log file</h2>
+                    {#if state == "monitor"}
+                        <NumberInput l="Log speed:" k="logSpeed" p={parameters} op={oldParmeters} pl={parameterLoading} />
+                    {/if}
+                    <div id="splitButton">
+                        <button class="normalButton" type="button" onclick={downloadLog} disabled={parameterLoading}>Download Log</button>
+                        <button class="dangerButton" type="button" onclick={deleteLog}   disabled={parameterLoading}>Delete Log</button>
+                    </div>
+
+                    <h2>Force Discharge</h2>
+                    <div id="splitButton">
+                        <button class="normalButton" type="button" onclick={() => forceDischarge(true)}  disabled={parameterLoading}>Enable</button>
+                        <button class="normalButton" type="button" onclick={() => forceDischarge(false)} disabled={parameterLoading}>Disable</button>
+                    </div>
+
+                    <h2>Shutdown</h2>
+                    <button class="dangerButton" type="button" onclick={shutdownButton} disabled={parameterLoading}>Full Shutdown</button>
                 </div>
-                {#if parameters["bypass"]}
-                    <NumberInput l="Bypass Voltage:" k="vBypass" p={parameters} op={oldParmeters} pl={parameterLoading} />
-                {/if}
-                {#if data["anyBypassed"]}
-                    <p class="error">Bypass triggered</p>
-                {/if}
-
-                <h2>Voltage</h2>
-                <NumberInput l="Cell min:" k="vMin" p={parameters} op={oldParmeters} pl={parameterLoading} />
-                <NumberInput l="Cell max:" k="vMax" p={parameters} op={oldParmeters} pl={parameterLoading} />
-                <NumberInput l="Avg min:" k="vMinAvg" p={parameters} op={oldParmeters} pl={parameterLoading} />
-                <NumberInput l="Avg max:" k="vMaxAvg" p={parameters} op={oldParmeters} pl={parameterLoading} />
-                <NumberInput l="Cell diff:" k="vDiff" p={parameters} op={oldParmeters} pl={parameterLoading} />
-
-                <h2>Temperature</h2>
-                <NumberInput l="Min:" k="tMin" p={parameters} op={oldParmeters} pl={parameterLoading} />
-                <NumberInput l="Max:" k="tMax" p={parameters} op={oldParmeters} pl={parameterLoading} />
-                <NumberInput l="Temp diff:" k="tDiff" p={parameters} op={oldParmeters} pl={parameterLoading} />
-                {#if parameters["tDiffTriggered"]}
-                    <p class="error">Temperature difference triggered</p>
-                {/if}
-
-                <h2>Save</h2>
-                <button
-                    class="normalButton saveButton {parametersDifferent ? 'saveButtonActive' : ''}"
-                    type="button"
-                    onclick={saveParameters}
-                    disabled={parameterLoading}
-                >Save</button>
-
-                <h2>File Upload</h2>
-                <button class="normalButton" type="button" onclick={() => showFileUploadModal = true} disabled={parameterLoading}>Upload File</button>
-
-                <h2>Log file</h2>
-                {#if state == "monitor"}
-                    <NumberInput l="Log speed:" k="logSpeed" p={parameters} op={oldParmeters} pl={parameterLoading} />
-                {/if}
-                <div id="splitButton">
-                    <button class="normalButton" type="button" onclick={downloadLog} disabled={parameterLoading}>Download Log</button>
-                    <button class="dangerButton" type="button" onclick={deleteLog}   disabled={parameterLoading}>Delete Log</button>
-                </div>
-
-                <h2>Force Discharge</h2>
-                <div id="splitButton">
-                    <button class="normalButton" type="button" onclick={() => forceDischarge(true)}  disabled={parameterLoading}>Enable</button>
-                    <button class="normalButton" type="button" onclick={() => forceDischarge(false)} disabled={parameterLoading}>Disable</button>
-                </div>
-
-                <h2>Shutdown</h2>
-                <button class="dangerButton" type="button" onclick={shutdownButton} disabled={parameterLoading}>Full Shutdown</button>
             </div>
-        </div>
+        {/if}
     </div>
 {/if}
 

@@ -34,8 +34,6 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 		- Defines for starting parameters in battery.h
 		- Actually use the Parameters struct/dict when doing the checks
 			- On the frontend and the Arduino
-- Way to hide/not hide the side bar
-- Styling: use a table for stacked inputs so they all line up
 - Will CORS be a problem?
 	- Why can I not use things from: https://github.com/espressif/arduino-esp32/blob/master/libraries/WebServer/examples/Middleware/Middleware.ino ??????
 - Automatically create a graph from `log.csv`
@@ -46,6 +44,7 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 		- Or snippets?
 	- And all the inputs?
 - Appearance:
+	- Use a table for stacked inputs so they all line up
 	- In general, better CSS
 	- Ex: better color diversity (and maybe some less aggressive colors)
 	- Update mobile CSS
