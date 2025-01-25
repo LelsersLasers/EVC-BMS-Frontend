@@ -61,7 +61,7 @@
 
     /*
     parameters = {
-        "bypass": false,
+        "bypass": false, # set
         "vBypass": 5.0,
 
         "vMin": 3.0,
@@ -72,6 +72,8 @@
         
         "tMin": 10.0,
         "tMax": 50.0,
+        "tDiff": 30.0,
+        "tDiffTriggered": false, # set
     };
     */
 
@@ -838,11 +840,15 @@
                 <NumberInput l="Cell max:" k="vMax" p={parameters} op={oldParmeters} pl={parameterLoading} />
                 <NumberInput l="Avg min:" k="vMinAvg" p={parameters} op={oldParmeters} pl={parameterLoading} />
                 <NumberInput l="Avg max:" k="vMaxAvg" p={parameters} op={oldParmeters} pl={parameterLoading} />
-                <NumberInput l="Cell difference:" k="vDiff" p={parameters} op={oldParmeters} pl={parameterLoading} />
+                <NumberInput l="Cell diff:" k="vDiff" p={parameters} op={oldParmeters} pl={parameterLoading} />
 
                 <h2>Temperature</h2>
                 <NumberInput l="Min:" k="tMin" p={parameters} op={oldParmeters} pl={parameterLoading} />
                 <NumberInput l="Max:" k="tMax" p={parameters} op={oldParmeters} pl={parameterLoading} />
+                <NumberInput l="Temp diff:" k="tDiff" p={parameters} op={oldParmeters} pl={parameterLoading} />
+                {#if parameters["tDiffTriggered"]}
+                    <p class="error">Temperature difference triggered</p>
+                {/if}
 
                 <h2>Save</h2>
                 <button
