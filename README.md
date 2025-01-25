@@ -4,10 +4,11 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 
 ## TODO:
 
+- [ ] FIX CORS!!!!!!!!
+	- Why can I not use things from: https://github.com/espressif/arduino-esp32/blob/master/libraries/WebServer/examples/Middleware/Middleware.ino ??????
 - Logging errors (as codes)
 - Display all faults (high voltage, big diff, etc)
 	- And make it persistent
-- [x] 192.168.4.1 as default port
 - Parameters/GUI inputs for all hardcoded values:
 	- [ ] Name change (apSSID)
 	- Voltage
@@ -41,8 +42,6 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 		- Defines for starting parameters in battery.h
 		- Actually use the Parameters struct/dict when doing the checks
 			- On the frontend and the Arduino
-- Will CORS be a problem?
-	- Why can I not use things from: https://github.com/espressif/arduino-esp32/blob/master/libraries/WebServer/examples/Middleware/Middleware.ino ??????
 - Automatically create a graph from `log.csv`
 - Fix: 5 sec fetch timer??
 	- The fetch seems to not go off at exactly 5 seconds??
