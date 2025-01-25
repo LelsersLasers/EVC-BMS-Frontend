@@ -236,10 +236,11 @@
                     name: "Overview",
                     bars: [],
                 };
-                overviewBarSet["bars"][0] = { label: "A (current)", v: d["current"].toFixed(OVERVIEW_DECIMALS) };
-                overviewBarSet["bars"][1] = { label: "V (avg)",     v: d["avg"]    .toFixed(OVERVIEW_DECIMALS) };
-                overviewBarSet["bars"][2] = { label: "V (min)",     v: d["min"]    .toFixed(OVERVIEW_DECIMALS) };
-                overviewBarSet["bars"][3] = { label: "V (max)",     v: d["max"]    .toFixed(OVERVIEW_DECIMALS) };
+                overviewBarSet["bars"][0] = { label: "A (current)", v: d["current"]         .toFixed(OVERVIEW_DECIMALS) };
+                overviewBarSet["bars"][1] = { label: "V (avg)",     v: d["avg"]             .toFixed(OVERVIEW_DECIMALS) };
+                overviewBarSet["bars"][2] = { label: "V (min)",     v: d["min"]             .toFixed(OVERVIEW_DECIMALS) };
+                overviewBarSet["bars"][3] = { label: "V (max)",     v: d["max"]             .toFixed(OVERVIEW_DECIMALS) };
+                overviewBarSet["bars"][4] = { label: "V (diff)",    v: (d["max"] - d["min"]).toFixed(OVERVIEW_DECIMALS) };
                 // ---------------------------------------------------------- //
                 voltageBarSets = [];
 
@@ -271,6 +272,13 @@
                         v: d["therm"][key].toFixed(TEMPERATURE_DECIMALS)
                     });
                 }
+
+                const maxTemp = Math.max(...Object.values(d["therm"]));
+                const minTemp = Math.min(...Object.values(d["therm"]));
+                temperatureBarSet["bars"].push({
+                    label: "°C (diff)",
+                    v: (maxTemp - minTemp).toFixed(TEMPERATURE_DECIMALS)
+                });
                 // ---------------------------------------------------------- //
 
                 // ---------------------------------------------------------- //
@@ -438,6 +446,11 @@
         return calcWidth(v, min - V_PADDING, max + V_PADDING);
     }
 
+    function voltageDiffWidth(v) {
+        const max = parameters["vDiff"] ? parameters["vDiff"] : oldParmeters["vDiff"];
+        return calcWidth(v, 0, max);
+    }
+
     function currentWidth(v) {
         calcWidth(v, 0 - C_PADDING, 30 + C_PADDING);
     }
@@ -446,6 +459,11 @@
         const min = parameters["tMin"] ? parameters["tMin"] : oldParmeters["tMin"];
         const max = parameters["tMax"] ? parameters["tMax"] : oldParmeters["tMax"];
         return calcWidth(v, min - T_PADDING, max + T_PADDING);
+    }
+
+    function temperatureDiffWidth(v) {
+        const max = parameters["tDiff"] ? parameters["tDiff"] : oldParmeters["tDiff"];
+        return calcWidth(v, 0, max);
     }
     // ---------------------------------------------------------------------- //
 </script>
@@ -535,6 +553,9 @@
     }
     #current {
         background-color: #4DA6FF;
+    }
+    .diff {
+        background-color: #ff8080;
     }
 
 
@@ -813,6 +834,12 @@
                                             <span class="barV">{bar.v}</span><span class="barLabel">{bar.label}</span>
                                         </div>
                                     </div>
+                                {:else if i == overviewBarSet.bars.length - 1}
+                                    <div class="bar diff" style="width: {voltageDiffWidth(bar.v)}%">
+                                        <div class="span-wrap">
+                                            <span class="barV">{bar.v}</span><span class="barLabel">{bar.label}</span>
+                                        </div>
+                                    </div>
                                 {:else}
                                     <div class="bar" style="width: {voltageWidth(bar.v)}%">
                                         <div class="span-wrap">
@@ -827,12 +854,20 @@
                     <div class="summary">
                         <h2>Temperatures</h2>
                         <div class="bars">
-                            {#each temperatureBarSet.bars as bar (bar.label)}
-                                <div class="bar" style="width: {temperatureWidth(bar.v)}%">
-                                    <div class="span-wrap">
-                                        <span class="barV">{bar.v}</span><span class="barLabel">{bar.label}</span>
+                            {#each temperatureBarSet.bars as bar, i (bar.label)}
+                                {#if i == temperatureBarSet.bars.length - 1}
+                                    <div class="bar diff" style="width: {temperatureDiffWidth(bar.v)}%">
+                                        <div class="span-wrap">
+                                            <span class="barV">{bar.v}</span><span class="barLabel">{bar.label}</span>
+                                        </div>
                                     </div>
-                                </div>
+                                {:else}
+                                    <div class="bar" style="width: {temperatureWidth(bar.v)}%">
+                                        <div class="span-wrap">
+                                            <span class="barV">{bar.v}</span><span class="barLabel">{bar.label}</span>
+                                        </div>
+                                    </div>
+                                {/if}
                             {/each}
                         </div>
                     </div>

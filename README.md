@@ -11,13 +11,14 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 		- [x] Average cell min [`vMinAvg`]
 		- [x] Average cell max [`vMaxAvg`]
 		- [x] Max cell delta [`vDiff`]
-			- [ ] Add bar
+			- [x] Add bar
 	- Temperature
 		- [x] Per thermistor min [`tMin`]
 		- [x] Per thermistor max [`tMax`]
 		- [x] Max temp delta [`tDiff`]
 			- Doesn't apply to FET
 			- Not critical (no cutoff) but should throw fault code
+			- [x] Add bar
 		- [ ] Max solid state switching temp [`tMaxSS`]
 			- IDK what this is rn
 		- [ ] Max balance temp [`tMaxBal`]

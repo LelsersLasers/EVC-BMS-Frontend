@@ -76,8 +76,8 @@ def data():
 		for _j in range(12):
 			doc["cells"][i].append(random_voltage())
 
-	doc["min"] = random_voltage()
-	doc["max"] = random_voltage()
+	doc["min"] = min([min(doc["cells"][i]) for i in range(2)])
+	doc["max"] = max([max(doc["cells"][i]) for i in range(2)])
 	doc["avg"] = random_voltage()
 	doc["sum"] = random_voltage() * 12 * 2
 	doc["current"] = random.random() * 30
