@@ -5,7 +5,6 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 ## TODO:
 
 - Logging errors (as codes)
-- Restore readCells
 - Display all faults (high voltage, big diff, etc)
 	- And make it persistent
 - Parameters/GUI inputs for all hardcoded values:
@@ -30,7 +29,7 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 		- [ ] Max instantaneous current [`iMax`]
 		- [ ] Max continuous current [`iMaxCont`]
 		- We will need to change some logic for this
-	- If BMS sees current being drawn and it shouldn't -> complain
+	- [ ] If BMS sees current being drawn and it shouldn't -> complain
 	- [x] Logging speed [`logSpeed`]
 	- Bypass
 		- [x] Bypass enabled [`bypass`]
