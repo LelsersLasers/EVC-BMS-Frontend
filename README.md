@@ -25,7 +25,7 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 		- [ ] Max instantaneous current [`iMax`]
 		- [ ] Max continuous current [`iMaxCont`]
 		- We will need to change some logic for this
-	- [ ] Logging speed [`logSpeed`]
+	- [x] Logging speed [`logSpeed`]
 	- Bypass
 		- [x] Bypass enabled [`bypass`]
 		- [x] Bypass voltage [`vBypass`]
