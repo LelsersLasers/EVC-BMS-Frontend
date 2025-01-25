@@ -2,6 +2,11 @@
     let { l, k, p, op, pl } = $props();
 </script>
 <style>
+    label {
+        white-space: nowrap;
+        text-wrap: none;
+    }
+
     .labelInputHolder {
         display: flex;
         flex-direction: row;
