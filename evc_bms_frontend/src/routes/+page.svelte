@@ -1,5 +1,6 @@
 <script>
     import { onMount } from "svelte";
+    import { slide, fade } from 'svelte/transition';
     import Modal from "$lib/Modal.svelte";
     import NumberInput from "$lib/NumberInput.svelte";
     // ---------------------------------------------------------------------- //
@@ -936,7 +937,11 @@
 {#if notifications && notifications.length > 0}
     <div class="notifications">
         {#each notifications as notification}
-            <div class="notification">{notification}</div>
+            <div
+                class="notification"
+                in:slide
+                out:fade
+            >{notification}</div>
         {/each}
     </div>
 {/if}
