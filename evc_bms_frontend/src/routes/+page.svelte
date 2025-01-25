@@ -1009,7 +1009,7 @@
         <p class="error">{ipAddressError}</p>
     {/if}
     <!-- svelte-ignore a11y_autocomplete_valid -->
-    <input id="ipInput" type="text" placeholder="192.168.1.1" autocomplete="ip" bind:value={ipAddressInput} />
+    <input id="ipInput" type="text" placeholder="192.168.4.1" autocomplete="ip" bind:value={ipAddressInput} />
     {#if !parameterLoading}
         <button class="normalButton" onclick={validateIpAddressInput}>Connect</button>
     {:else}

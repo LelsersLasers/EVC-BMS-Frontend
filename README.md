@@ -7,7 +7,9 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 - Logging errors (as codes)
 - Display all faults (high voltage, big diff, etc)
 	- And make it persistent
+- [x] 192.168.4.1 as default port
 - Parameters/GUI inputs for all hardcoded values:
+	- [ ] Name change (apSSID)
 	- Voltage
 		- [x] Per cell min [`vMin`]
 		- [x] Per cell max [`vMax`]
