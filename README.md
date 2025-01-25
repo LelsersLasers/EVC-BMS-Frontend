@@ -39,15 +39,15 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 - Automatically create a graph from `log.csv`
 - Fix: 5 sec fetch timer??
 	- The fetch seems to not go off at exactly 5 seconds??
-- Svelte component for:
-	- The collections of bars and bars (instead of repeating the same code)?
-		- Or snippets?
-	- And all the inputs?
+- Svelte components (or snippets) for:
+	- [] The collections of bars and bars (instead of repeating the same code)?
+	- [x] And all the inputs
+		- Did this with a component, might make more sense to use a snippet
 - Appearance:
-	- Use a table for stacked inputs so they all line up
+	- [ ] Use a table for stacked inputs so they all line up
 	- In general, better CSS
 	- Ex: better color diversity (and maybe some less aggressive colors)
-	- Update mobile CSS
+	- [x] Update mobile CSS
 
 ## Reference
 
