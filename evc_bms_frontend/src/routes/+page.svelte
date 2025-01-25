@@ -1,6 +1,7 @@
 <script>
     import { onMount } from "svelte";
     import Modal from "$lib/Modal.svelte";
+    import NumberInput from "$lib/NumberInput.svelte";
     // ---------------------------------------------------------------------- //
 
     // ---------------------------------------------------------------------- //
@@ -557,23 +558,6 @@
         gap: 5px;
     }
 
-    .labelInputHolder {
-        display: flex;
-        flex-direction: row;
-        gap: 5px;
-    }
-    .numberInput {
-        flex-grow: 1;
-        padding-left: 5px;
-        outline: none !important;
-        border: 2px solid #aaa;
-        border-radius: 5px;
-    }
-    .numberInput:focus {
-        border: 2px solid #ABD130;
-        outline: none !important;
-    }
-
     .normalButton {
         background-color: #ABD130;
         box-shadow: 2px 2px 2px #aaa;
@@ -843,94 +827,22 @@
                     <input type="checkbox" id="bypass" bind:checked={parameters["bypass"]} disabled={parameterLoading} />
                 </div>
                 {#if parameters["bypass"]}
-                    <div class="labelInputHolder">
-                        <label for="vBypass">Bypass Voltage:</label>
-                        <input
-                            class="numberInput"
-                            type="number"
-                            name="vBypass"
-                            placeholder={oldParmeters["vBypass"]}
-                            bind:value={parameters["vBypass"]}
-                            disabled={parameterLoading} />
-                    </div>
+                    <NumberInput l="Bypass Voltage:" k="vBypass" p={parameters} op={oldParmeters} pl={parameterLoading} />
                 {/if}
                 {#if data["anyBypassed"]}
                     <p class="error">Bypass triggered</p>
                 {/if}
 
                 <h2>Voltage</h2>
-                <div class="labelInputHolder">
-                    <label for="vMin">Cell min:</label>
-                    <input
-                        class="numberInput"
-                        type="number"
-                        name="vMin"
-                        placeholder={oldParmeters["vMin"]}
-                        bind:value={parameters["vMin"]}
-                        disabled={parameterLoading} />
-                </div>
-                <div class="labelInputHolder">
-                    <label for="vMax">Cell max:</label>
-                    <input
-                        class="numberInput"
-                        type="number"
-                        name="vMax"
-                        placeholder={oldParmeters["vMax"]}
-                        bind:value={parameters["vMax"]}
-                        disabled={parameterLoading} />
-                </div>
-                <div class="labelInputHolder">
-                    <label for="vMinAvg">Avg min:</label>
-                    <input
-                        class="numberInput"
-                        type="number"
-                        name="vMinAvg"
-                        placeholder={oldParmeters["vMinAvg"]}
-                        bind:value={parameters["vMinAvg"]}
-                        disabled={parameterLoading} />
-                </div>
-                <div class="labelInputHolder">
-                    <label for="vMaxAvg">Avg max:</label>
-                    <input
-                        class="numberInput"
-                        type="number"
-                        name="vMaxAvg"
-                        placeholder={oldParmeters["vMaxAvg"]}
-                        bind:value={parameters["vMaxAvg"]}
-                        disabled={parameterLoading} />
-                </div>
-                <div class="labelInputHolder">
-                    <label for="vDiff">Cell difference:</label>
-                    <input
-                        class="numberInput"
-                        type="number"
-                        name="vDiff"
-                        placeholder={oldParmeters["vDiff"]}
-                        bind:value={parameters["vDiff"]}
-                        disabled={parameterLoading} />
-                </div>
+                <NumberInput l="Cell min:" k="vMin" p={parameters} op={oldParmeters} pl={parameterLoading} />
+                <NumberInput l="Cell max:" k="vMax" p={parameters} op={oldParmeters} pl={parameterLoading} />
+                <NumberInput l="Avg min:" k="vMinAvg" p={parameters} op={oldParmeters} pl={parameterLoading} />
+                <NumberInput l="Avg max:" k="vMaxAvg" p={parameters} op={oldParmeters} pl={parameterLoading} />
+                <NumberInput l="Cell difference:" k="vDiff" p={parameters} op={oldParmeters} pl={parameterLoading} />
 
                 <h2>Temperature</h2>
-                <div class="labelInputHolder">
-                    <label for="tMin">Min:</label>
-                    <input
-                        class="numberInput"
-                        type="number"
-                        name="tMin"
-                        placeholder={oldParmeters["tMin"]}
-                        bind:value={parameters["tMin"]}
-                        disabled={parameterLoading} />
-                </div>
-                <div class="labelInputHolder">
-                    <label for="tMax">Max:</label>
-                    <input
-                        class="numberInput"
-                        type="number"
-                        name="tMax"
-                        placeholder={oldParmeters["tMax"]}
-                        bind:value={parameters["tMax"]}
-                        disabled={parameterLoading} />
-                </div>
+                <NumberInput l="Min:" k="tMin" p={parameters} op={oldParmeters} pl={parameterLoading} />
+                <NumberInput l="Max:" k="tMax" p={parameters} op={oldParmeters} pl={parameterLoading} />
 
                 <h2>Save</h2>
                 <button
