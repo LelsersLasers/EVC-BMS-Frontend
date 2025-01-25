@@ -54,7 +54,7 @@
 
     let state  = $state(null);
 
-    let outOfSync = $state(false);
+    let outOfSync = $state("");
 
     let parameters = $state(null);
     let oldParmeters = $state(null);
@@ -217,7 +217,11 @@
                     parameters = d["parameters"];
                     oldParmeters = JSON.parse(JSON.stringify(parameters)); // deep copy
                 } else {
-                    outOfSync = JSON.stringify(d["parameters"]) != JSON.stringify(oldParmeters);
+                    if (JSON.stringify(d["parameters"]) != JSON.stringify(oldParmeters)) {
+                        outOfSync = "Out of sync! Parameters have been changed on the BMS. Please refresh the page to resync.";
+                    } else {
+                        outOfSync = "";
+                    }
                 }
                 // ---------------------------------------------------------- //
 
@@ -308,7 +312,7 @@
                 .then((res) => res.text())
                 .then((text) => {
                     parameterLoading = false;
-                    r += `${key}/${parameters[key]}: ${text}<br />`;
+                    r += `${key}/${parameters[key]}: ${text}`;
                     result = r;
                     oldParmeters[key] = parameters[key];
                 })
@@ -406,6 +410,15 @@
             }, CLEAR_SUCCESS_TIME);
         }
     });
+
+    function calcNotifications(a, b, c) {
+        let n = [];
+        if (a) n.push(a);
+        if (b) n.push(b);
+        if (c) n.push(c);
+        return n;
+    }
+    let notifications = $derived(calcNotifications(outOfSync, error, result));
     // ---------------------------------------------------------------------- //
 
     // ---------------------------------------------------------------------- //
@@ -639,6 +652,20 @@
         color: red;
     }
 
+    .notifications {
+        position: fixed;
+        top: 1%;
+        left: 1%;
+        max-width: 25vw;
+    }
+    .notification {
+        background-color: #aaa;
+        border: 1px solid #333;
+        padding: 8px;
+        margin-bottom: 5px;
+        border-radius: 5px;
+    }
+
     .stateToolTip {
         position: relative;
         display: inline-block;
@@ -705,6 +732,9 @@
         }
         #sidebar {
             grid-column: 1;
+        }
+        .notification {
+            width: 80vw;
         }
     }
 </style>
@@ -795,7 +825,7 @@
         <div id="sidebar">
             <hr id="fetchTimer" />
 
-            {#if outOfSync}
+            <!-- {#if outOfSync}
                 <p class="error">
                     Out of sync! Parameters have been changed on the BMS.
                     Please refresh the page to resync.
@@ -811,7 +841,7 @@
             {#if result}
                 <p>{@html result}</p>
                 <hr />
-            {/if}
+            {/if} -->
 
 
             <div>
@@ -902,6 +932,14 @@
         <button class="normalButton" disabled>Connect</button>
     {/if}
 {/snippet}
+
+{#if notifications && notifications.length > 0}
+    <div class="notifications">
+        {#each notifications as notification}
+            <div class="notification">{notification}</div>
+        {/each}
+    </div>
+{/if}
 
 <Modal showModal={showIpAddressModal} close={ipAddressDialogClose} children={ipAddressPromptSlot}>
 </Modal>
