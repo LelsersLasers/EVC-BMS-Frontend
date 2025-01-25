@@ -4,6 +4,7 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 
 ## TODO:
 
+- Notifications fase out
 - Parameters/GUI inputs for all hardcoded values:
 	- Voltage
 		- [x] Per cell min [`vMin`]
