@@ -620,7 +620,7 @@
         background-color: #333;
         color: white;
         position: absolute;
-        top: 55px;
+        top: 62px;
         right: 16px;
         cursor: pointer;
         width: 20px;
