@@ -5,7 +5,7 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 ## TODO:
 
 - [ ] FIX CORS!!!!!!!!
-	[ ] Just link to the chrmoe extension...
+	- [ ] Just link to the chrmoe extension...
 		- https://chromewebstore.google.com/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf?hl=en
 - Display all faults (high voltage, big diff, etc)
 	- And make it persistent
