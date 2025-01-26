@@ -273,8 +273,9 @@
                     });
                 }
 
-                const maxTemp = Math.max(...Object.values(d["therm"]));
-                const minTemp = Math.min(...Object.values(d["therm"]));
+                const thermTemps = Object.values(d["therm"]).slice(0, -1);
+                const minTemp = Math.min(...thermTemps);
+                const maxTemp = Math.max(...thermTemps);
                 temperatureBarSet["bars"].push({
                     label: "°C (diff)",
                     v: (maxTemp - minTemp).toFixed(TEMPERATURE_DECIMALS)
