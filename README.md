@@ -20,7 +20,7 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 	- Temperature
 		- [x] Per thermistor min [`tMin`]
 		- [x] Per thermistor max [`tMax`]
-			- Doesn't apply to temp fet
+			- [x] Doesn't apply to temp fet
 		- [x] Max temp delta [`tDiff`]
 			- Doesn't apply to FET
 			- Not critical (no cutoff) but should throw fault code
@@ -31,6 +31,7 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 		- [ ] Max instantaneous current [`iMax`]
 		- [ ] Max continuous current [`iMaxCont`]
 		- We will need to change some logic for this
+		- NOTE: negative current is fine (charging vs discharging)
 	- [ ] If BMS sees current being drawn and it shouldn't -> complain
 	- [x] Logging speed [`logSpeed`]
 	- Bypass
@@ -42,10 +43,11 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 		- Actually use the Parameters struct/dict when doing the checks
 			- On the frontend and the Arduino
 - Automatically create a graph from `log.csv`
-- Fix: 5 sec fetch timer??
+- Fix: 5 sec fetch timer?
 	- The fetch seems to not go off at exactly 5 seconds??
+	- [ ] Also it would be interesting to have an input for the fetch timer
 - Svelte components (or snippets) for:
-	- [] The collections of bars and bars (instead of repeating the same code)?
+	- [ ] The collections of bars and bars (instead of repeating the same code)?
 	- [x] And all the inputs
 		- Did this with a component, might make more sense to use a snippet
 - Appearance:
