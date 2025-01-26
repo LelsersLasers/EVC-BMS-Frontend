@@ -544,7 +544,7 @@
         padding: 0;
         padding-top: 0.1em;
         padding-bottom: 0.1em;
-        min-width: 20px;
+        min-width: 2px;
         max-width: 100%;
         background-color: #ABD130;
     }
