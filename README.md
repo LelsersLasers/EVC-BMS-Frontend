@@ -5,7 +5,8 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 ## TODO:
 
 - [ ] FIX CORS!!!!!!!!
-	- Why can I not use things from: https://github.com/espressif/arduino-esp32/blob/master/libraries/WebServer/examples/Middleware/Middleware.ino ??????
+	[ ] Just link to the chrmoe extension...
+		- https://chromewebstore.google.com/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf?hl=en
 - Display all faults (high voltage, big diff, etc)
 	- And make it persistent
 - Parameters/GUI inputs for all hardcoded values:
