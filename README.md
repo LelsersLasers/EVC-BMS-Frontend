@@ -45,6 +45,7 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 			- On the frontend and the Arduino
 - Automatically create a graph from `log.csv`
 - Save all past valid IPs
+- Actually fix CORS
 - Fix: 5 sec fetch timer?
 	- The fetch seems to not go off at exactly 5 seconds??
 	- [ ] Also it would be interesting to have an input for the fetch timer
