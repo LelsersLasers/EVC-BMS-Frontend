@@ -27,7 +27,10 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 			- Not critical (no cutoff) but should throw fault code
 			- [x] Add bar
 		- [ ] Max FET temp [`tMaxFET`]
+			- 50-80C
 		- [ ] Max balance temp [`tMaxBal`]
+			- 40C restart
+			- 50C stop
 	- Current
 		- [ ] Max instantaneous current [`iMax`]
 		- [ ] Max continuous current [`iMaxCont`]
