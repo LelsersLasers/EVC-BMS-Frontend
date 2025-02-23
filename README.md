@@ -26,9 +26,12 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 			- Doesn't apply to FET
 			- Not critical (no cutoff) but should throw fault code
 			- [x] Add bar
+		- TODO: 4 temps now
+		- 2 new balance temps
 		- [ ] Max FET temp [`tMaxFET`]
 			- 50-80C
 		- [ ] Max balance temp [`tMaxBal`]
+			- TODO: implement into the UI
 			- 40C restart
 			- 50C stop
 	- Current
