@@ -45,6 +45,8 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 		- [x] Bypass enabled [`bypass`]
 		- [x] Bypass voltage [`vBypass`]
 			- Not critical
+	- [ ] Battery/fault check rate
+	- [ ] Change wifi (apssid name)
 	- Notes:
 		- Defines for starting parameters in battery.h
 		- Actually use the Parameters struct/dict when doing the checks
