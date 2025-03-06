@@ -50,12 +50,11 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 		- [x] Bypass voltage [`vBypass`]
 			- Not critical
 	- [ ] Battery/fault check rate
-	- [ ] Change wifi (apssid name)
 	- Notes:
 		- Defines for starting parameters in battery.h
 		- Actually use the Parameters struct/dict when doing the checks
 			- On the frontend and the Arduino
-- Automatically create a graph from `log.csv`
+- [ ] Automatically create a graph from `log.csv`
 - Save all past valid IPs
 - Actually fix CORS
 - Fix: 5 sec fetch timer?
