@@ -5,8 +5,14 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 ## TODO:
 
 - [ ] FIX CORS!!!!!!!!
-	[ ] Just link to the chrmoe extension...
+	- [ ] Just link to the chrome extension...
 		- https://chromewebstore.google.com/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf?hl=en
+- [x] Output to a single HTML file
+	- https://svelte.dev/docs/kit/configuration#output
+	- https://github.com/Rich-Harris/snek
+	- Should mean CORS problems will go away (in the long term)
+		- However, for testing, we will use the extension
+	- [ ] Fix VERCEL
 - Display all faults (high voltage, big diff, etc)
 	- And make it persistent
 - Parameters/GUI inputs for all hardcoded values:
@@ -26,8 +32,14 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 			- Doesn't apply to FET
 			- Not critical (no cutoff) but should throw fault code
 			- [x] Add bar
+		- TODO: 4 temps now
+		- 2 new balance temps
 		- [ ] Max FET temp [`tMaxFET`]
+			- 50-80C
 		- [ ] Max balance temp [`tMaxBal`]
+			- TODO: implement into the UI
+			- 40C restart
+			- 50C stop
 	- Current
 		- [ ] Max instantaneous current [`iMax`]
 		- [ ] Max continuous current [`iMaxCont`]
@@ -39,12 +51,14 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 		- [x] Bypass enabled [`bypass`]
 		- [x] Bypass voltage [`vBypass`]
 			- Not critical
+	- [ ] Battery/fault check rate
 	- Notes:
 		- Defines for starting parameters in battery.h
 		- Actually use the Parameters struct/dict when doing the checks
 			- On the frontend and the Arduino
-- Automatically create a graph from `log.csv`
+- [ ] Automatically create a graph from `log.csv`
 - Save all past valid IPs
+- Actually fix CORS
 - Fix: 5 sec fetch timer?
 	- The fetch seems to not go off at exactly 5 seconds??
 	- [ ] Also it would be interesting to have an input for the fetch timer

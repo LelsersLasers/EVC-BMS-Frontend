@@ -111,7 +111,13 @@ def data():
 	doc["parameters"]["tDiff"] = 30.0
 	doc["parameters"]["tDiffTriggered"] = False
 
+	doc["parameters"]["tMaxBal"] = 50.0
+	doc["parameters"]["tResetBal"] = 40.0
+	doc["parameters"]["balTempsOk"] = True
+
 	doc["parameters"]["logSpeed"] = 1000
+
+	doc["name"] = "apSSID"
 
 	return flask.jsonify(doc)
 
