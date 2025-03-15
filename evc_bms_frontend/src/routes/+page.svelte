@@ -397,7 +397,7 @@
     }
 
     function currentWidth(v) {
-        calcWidth(v, 0 - C_PADDING, 30 + C_PADDING);
+        return calcWidth(v, -30 - C_PADDING, 30 + C_PADDING);
     }
 
     function temperatureWidth(v) {
