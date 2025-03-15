@@ -212,7 +212,7 @@
                 for (let key in d["therm"]) {
                     temperatureBarSet["bars"].push({
                         label: `°C (${key})`,
-                        v: d["therm"][key].toFixed(TEMPERATURE_DECIMALS)
+                        v: d["therm"][key]?.toFixed(TEMPERATURE_DECIMALS)
                     });
                 }
 
