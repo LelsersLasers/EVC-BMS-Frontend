@@ -4,15 +4,7 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 
 ## TODO:
 
-- [ ] FIX CORS!!!!!!!!
-	- [ ] Just link to the chrome extension...
-		- https://chromewebstore.google.com/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf?hl=en
-- [x] Output to a single HTML file
-	- https://svelte.dev/docs/kit/configuration#output
-	- https://github.com/Rich-Harris/snek
-	- Should mean CORS problems will go away (in the long term)
-		- However, for testing, we will use the extension
-	- [ ] Fix VERCEL
+- [ ] Build system to automatically push to BMS SPIFFS if connected?
 - Display all faults (high voltage, big diff, etc)
 	- And make it persistent
 - Parameters/GUI inputs for all hardcoded values:
@@ -67,6 +59,7 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 	- [x] And all the inputs
 		- Did this with a component, might make more sense to use a snippet
 - Appearance:
+	- [ ] Better button colors
 	- [ ] Use a table for stacked inputs so they all line up
 	- In general, better CSS
 	- Ex: better color diversity (and maybe some less aggressive colors)
