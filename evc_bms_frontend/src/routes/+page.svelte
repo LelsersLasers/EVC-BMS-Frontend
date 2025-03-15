@@ -28,18 +28,7 @@
     // ---------------------------------------------------------------------- //
 
     // ---------------------------------------------------------------------- //
-    let ipAddress = $state(null);
-    let displayIpAddress = $state(null);
-    let showIpAddressModal = $state(false);
-    let ipAddressInput = $state("");
-    let ipAddressError = $state(null);
-    let name = $state("disconnected...");
-
-    $effect(() => {
-        if (!ipAddress) return;
-        else if (ipAddress.startsWith("http://")) displayIpAddress = ipAddress.slice(7);
-        else displayIpAddress = ipAddress;
-    })
+    let name = $state(null);
     // ---------------------------------------------------------------------- //
 
     // ---------------------------------------------------------------------- //
@@ -50,6 +39,11 @@
     // ---------------------------------------------------------------------- //
     let dataLoading = $state(false);
     let parameterLoading = $state(false);
+
+    $effect(() => {
+        console.log("dataLoading: ", dataLoading);
+        console.log("parameterLoading: ", parameterLoading);
+    });
     // ---------------------------------------------------------------------- //
 
     // ---------------------------------------------------------------------- //
@@ -100,63 +94,9 @@
 
 
     // ---------------------------------------------------------------------- //
-    // onMount(async () => {
-    //     const ls = localStorage.getItem(LS_KEY);
-    //     if (ls) {
-    //         ipAddressInput = ls;
-    //         validateIpAddressInput();
-    //     }
-    // });
-
-    // function validateIpAddressInput() {
-    //     if (ipAddressInput == "") {
-    //         showIpAddressModal = true;
-    //         ipAddressError = "Could not connect to saved Ip address";
-    //         return;
-    //     }
-
-    //     let ip = ipAddressInput;
-
-    //     if (!ip.startsWith("http://")) ip = `http://${ip}`;
-    //     if (ip.endsWith("/")) ip = ip.slice(0, -1);
-
-    //     parameterLoading = true;
-    //     ipAddressError = null;
-
-    //     fetch(`${ip}/name`)
-    //         .then((res) => {
-    //             if (!res.ok) throw new Error("");
-    //             return res.text();
-    //         })
-    //         .then((text) => {
-    //             parameterLoading = false;
-    //             name = text;
-    //             ipAddress = ip;
-    //             localStorage.setItem(LS_KEY, ip);
-    //             showIpAddressModal = false;
-    //             ipAddressError = null;
-    //             setTimeout(setupAfterConnected, 10);
-    //         })
-    //         .catch((e) => {
-    //             parameterLoading = false;
-    //             showIpAddressModal = true;
-    //             ipAddressError = "Could not connect to BMS at that IP address";
-    //         });
-    // }
-
-    function ipAddressDialogClose() {
-        showIpAddressModal = false;
-        if (ipAddress == null) {
-            setTimeout(() => {
-                showIpAddressModal = true;
-            }, 10);
-        }
-    }
-
-    $effect(() => {
-        if (!showIpAddressModal && ipAddress == null) {
-            showIpAddressModal = true;
-        }
+    onMount(async () => {
+        fetchData();
+        setInterval(fetchData, DATA_FETCH_TIME);
     });
 
     function triggerDisconnect() {
@@ -205,11 +145,6 @@
 
     
     // ---------------------------------------------------------------------- //
-    function setupAfterConnected() {
-        fetchData(); // set interval doesn't run immediately
-        setInterval(fetchData, DATA_FETCH_TIME);
-    }
-
     function fetchData() {
         dataLoading = true;
 
@@ -797,14 +732,12 @@
         <h1>BMS</h1>
     </div>
     <div id="ip">
-        <span id="address">{name} ({displayIpAddress})</span>
+        <span id="address">{name ? name : "disconnected..."} ({DISPLAY_IP})</span>
     </div>
 </div>
 
-{#if !ipAddress}
-    <p>Waiting for ip address...</p>
-{:else if !data["ready"]}
-    <p>Loading...</p>
+{#if !data["ready"]}
+    <p>Attempting to connect...</p>
 {:else}
     <div id="all" class="{showSideBar ? '' : 'allNoSideBar'}">
         <div id="main">
