@@ -6,7 +6,8 @@
     // ---------------------------------------------------------------------- //
 
     // ---------------------------------------------------------------------- //
-    const LS_KEY = "ipAddress";
+    // const LS_KEY = "ipAddress";
+    const IP = "http://192.168.4.1/";
 
     const DATA_FETCH_TIME = 5 * 1000; // 5 seconds [also need to change fetchTimer animation duration]
     const CLEAR_SUCCESS_TIME = 5 * 1000; // 5 seconds
@@ -98,49 +99,49 @@
 
 
     // ---------------------------------------------------------------------- //
-    onMount(async () => {
-        const ls = localStorage.getItem(LS_KEY);
-        if (ls) {
-            ipAddressInput = ls;
-            validateIpAddressInput();
-        }
-    });
+    // onMount(async () => {
+    //     const ls = localStorage.getItem(LS_KEY);
+    //     if (ls) {
+    //         ipAddressInput = ls;
+    //         validateIpAddressInput();
+    //     }
+    // });
 
-    function validateIpAddressInput() {
-        if (ipAddressInput == "") {
-            showIpAddressModal = true;
-            ipAddressError = "Could not connect to saved Ip address";
-            return;
-        }
+    // function validateIpAddressInput() {
+    //     if (ipAddressInput == "") {
+    //         showIpAddressModal = true;
+    //         ipAddressError = "Could not connect to saved Ip address";
+    //         return;
+    //     }
 
-        let ip = ipAddressInput;
+    //     let ip = ipAddressInput;
 
-        if (!ip.startsWith("http://")) ip = `http://${ip}`;
-        if (ip.endsWith("/")) ip = ip.slice(0, -1);
+    //     if (!ip.startsWith("http://")) ip = `http://${ip}`;
+    //     if (ip.endsWith("/")) ip = ip.slice(0, -1);
 
-        parameterLoading = true;
-        ipAddressError = null;
+    //     parameterLoading = true;
+    //     ipAddressError = null;
 
-        fetch(`${ip}/name`)
-            .then((res) => {
-                if (!res.ok) throw new Error("");
-                return res.text();
-            })
-            .then((text) => {
-                parameterLoading = false;
-                name = text;
-                ipAddress = ip;
-                localStorage.setItem(LS_KEY, ip);
-                showIpAddressModal = false;
-                ipAddressError = null;
-                setTimeout(setupAfterConnected, 10);
-            })
-            .catch((e) => {
-                parameterLoading = false;
-                showIpAddressModal = true;
-                ipAddressError = "Could not connect to BMS at that IP address";
-            });
-    }
+    //     fetch(`${ip}/name`)
+    //         .then((res) => {
+    //             if (!res.ok) throw new Error("");
+    //             return res.text();
+    //         })
+    //         .then((text) => {
+    //             parameterLoading = false;
+    //             name = text;
+    //             ipAddress = ip;
+    //             localStorage.setItem(LS_KEY, ip);
+    //             showIpAddressModal = false;
+    //             ipAddressError = null;
+    //             setTimeout(setupAfterConnected, 10);
+    //         })
+    //         .catch((e) => {
+    //             parameterLoading = false;
+    //             showIpAddressModal = true;
+    //             ipAddressError = "Could not connect to BMS at that IP address";
+    //         });
+    // }
 
     function ipAddressDialogClose() {
         showIpAddressModal = false;
@@ -500,7 +501,7 @@
     #address {
         color: #aaa;
     }
-    #ipInput {
+    /* #ipInput {
         width: 100%;
         padding: 8px;
         outline: none !important;
@@ -511,7 +512,7 @@
     #ipInput:focus {
         border: 2px solid #ABD130;
         outline: none !important;
-    }
+    } */
 
     #all {
         display: grid;
@@ -1008,19 +1009,18 @@
 
 
 
-{#snippet ipAddressPromptSlot()}
+<!-- {#snippet ipAddressPromptSlot()}
     <h2 class="modalTitle">Enter IP of BMS</h2>
     {#if ipAddressError}
         <p class="error">{ipAddressError}</p>
     {/if}
-    <!-- svelte-ignore a11y_autocomplete_valid -->
     <input id="ipInput" type="text" placeholder="192.168.4.1" autocomplete="ip" bind:value={ipAddressInput} />
     {#if !parameterLoading}
         <button class="normalButton" onclick={validateIpAddressInput}>Connect</button>
     {:else}
         <button class="normalButton" disabled>Connect</button>
     {/if}
-{/snippet}
+{/snippet} -->
 
 {#if notifications && notifications.length > 0}
     <div class="notifications">
@@ -1034,8 +1034,8 @@
     </div>
 {/if}
 
-<Modal showModal={showIpAddressModal} close={ipAddressDialogClose} children={ipAddressPromptSlot}>
-</Modal>
+<!-- <Modal showModal={showIpAddressModal} close={ipAddressDialogClose} children={ipAddressPromptSlot}>
+</Modal> -->
 
 
 {#snippet fileUploadSlot()}
