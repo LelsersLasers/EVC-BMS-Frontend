@@ -39,11 +39,6 @@
     // ---------------------------------------------------------------------- //
     let dataLoading = $state(false);
     let parameterLoading = $state(false);
-
-    $effect(() => {
-        console.log("dataLoading: ", dataLoading);
-        console.log("parameterLoading: ", parameterLoading);
-    });
     // ---------------------------------------------------------------------- //
 
     // ---------------------------------------------------------------------- //
