@@ -415,6 +415,19 @@
         flex-direction: row;
         border-bottom: 1px solid #333;
     }
+    #logoHolder {
+        width: fit-content;
+        background-color: #333;
+    }
+    #fetchTimer {
+        background: #ABD130;
+        animation: fetchTimer 5s linear infinite;
+        padding-bottom: 2px;
+    }
+    @keyframes fetchTimer {
+        from { width: 0%;   }
+        to   { width: 100%; }
+    }
     #logo {
         display: flex;
         flex-direction: row;
@@ -686,17 +699,6 @@
         to { background-size: 100% 3px }
     }
 
-    #fetchTimer {
-        width: 0%;
-        animation: fetchTimer 5s linear infinite;
-        border: 2px solid #ABD130;
-        border-radius: 5px;
-    }
-    @keyframes fetchTimer {
-        from { width: 0%;   }
-        to   { width: 100%; }
-    }
-
     @media (max-width: 585px) {
         #all {
             grid-template-columns: 1fr;
@@ -726,9 +728,13 @@
 
 <!-- svelte-ignore a11y_click_events_have_key_events -->
 <div id="navbar">
-    <div id="logo">
-        <h1 id="name">EVC</h1>
-        <h1>BMS</h1>
+    <div id="logoHolder">
+        <div id="fetchTimer">
+            <div id="logo">
+                <h1 id="name">EVC</h1>
+                <h1>BMS</h1>
+            </div>
+        </div>
     </div>
     <div id="ip">
         <span id="address">{name ? name : "disconnected..."} ({DISPLAY_IP})</span>
@@ -824,8 +830,6 @@
         
         {#if showSideBar || innerW < 585}
             <div id="sidebar">
-                <hr id="fetchTimer" />
-
                 <!-- {#if outOfSync}
                     <p class="error">
                         Out of sync! Parameters have been changed on the BMS.
