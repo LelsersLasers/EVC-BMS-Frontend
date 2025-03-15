@@ -501,18 +501,6 @@
     #address {
         color: #aaa;
     }
-    /* #ipInput {
-        width: 100%;
-        padding: 8px;
-        outline: none !important;
-        border: 2px solid #aaa;
-        border-radius: 5px;
-        margin-bottom: 0.25em;
-    }
-    #ipInput:focus {
-        border: 2px solid #ABD130;
-        outline: none !important;
-    } */
 
     #all {
         display: grid;
@@ -1008,20 +996,6 @@
 
 
 
-
-<!-- {#snippet ipAddressPromptSlot()}
-    <h2 class="modalTitle">Enter IP of BMS</h2>
-    {#if ipAddressError}
-        <p class="error">{ipAddressError}</p>
-    {/if}
-    <input id="ipInput" type="text" placeholder="192.168.4.1" autocomplete="ip" bind:value={ipAddressInput} />
-    {#if !parameterLoading}
-        <button class="normalButton" onclick={validateIpAddressInput}>Connect</button>
-    {:else}
-        <button class="normalButton" disabled>Connect</button>
-    {/if}
-{/snippet} -->
-
 {#if notifications && notifications.length > 0}
     <div class="notifications">
         {#each notifications as notification}
@@ -1033,9 +1007,6 @@
         {/each}
     </div>
 {/if}
-
-<!-- <Modal showModal={showIpAddressModal} close={ipAddressDialogClose} children={ipAddressPromptSlot}>
-</Modal> -->
 
 
 {#snippet fileUploadSlot()}
