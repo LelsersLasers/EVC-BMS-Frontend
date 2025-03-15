@@ -7,7 +7,8 @@
 
     // ---------------------------------------------------------------------- //
     // const LS_KEY = "ipAddress";
-    const IP = "http://192.168.4.1/";
+    const IP = "http://192.168.4.1";
+    const DISPLAY_IP = "192.168.4.1";
 
     const DATA_FETCH_TIME = 5 * 1000; // 5 seconds [also need to change fetchTimer animation duration]
     const CLEAR_SUCCESS_TIME = 5 * 1000; // 5 seconds
@@ -185,7 +186,7 @@
 
         parameterLoading = true;
 
-        fetch(`${ipAddress}/upload`, {
+        fetch(`${IP}/upload`, {
             method: "POST",
             body: formData,
         })
@@ -212,7 +213,7 @@
     function fetchData() {
         dataLoading = true;
 
-        fetch(`${ipAddress}/data`)
+        fetch(`${IP}/data`)
             .then((res) => res.json())
             .then((d) => {
                 // ---------------------------------------------------------- //
@@ -293,7 +294,7 @@
             })
             .catch((e) => {
                 dataLoading = false;
-                console.error(e);
+                console.warn(e);
                 error = e;
             });
     }
@@ -304,7 +305,7 @@
     function stateParameter(e) {
         parameterLoading = true;
 
-        fetch(`${ipAddress}/state/${e.target.value}`)
+        fetch(`${IP}/state/${e.target.value}`)
             .then((res) => res.text())
             .then((text) => {
                 parameterLoading = false;
@@ -328,7 +329,7 @@
 
             parameterLoading = true;
 
-            await fetch(`${ipAddress}/parameters/${key}/${parameters[key]}`)
+            await fetch(`${IP}/parameters/${key}/${parameters[key]}`)
                 .then((res) => res.text())
                 .then((text) => {
                     parameterLoading = false;
@@ -365,7 +366,7 @@
     function downloadLog() {
         parameterLoading = true;
 
-        fetch(`${ipAddress}/log/download`)
+        fetch(`${IP}/log/download`)
             .then((res) => res.blob())
             .then((blob) => {
                 parameterLoading = false;
@@ -391,7 +392,7 @@
         parameterLoading = true;
 
         let url = `/forceDischarge/${enable ? "enable" : "disable"}`;
-        fetch(`${ipAddress}${url}`)
+        fetch(`${IP}${url}`)
             .then((res) => res.text())
             .then((text) => {
                 parameterLoading = false;
@@ -409,7 +410,7 @@
 
         parameterLoading = true;
 
-        fetch(`${ipAddress}/fullShutdown`)
+        fetch(`${IP}/fullShutdown`)
             .then((res) => res.text())
             .then((text) => {
                 parameterLoading = false;
