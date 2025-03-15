@@ -6,7 +6,9 @@
     // ---------------------------------------------------------------------- //
 
     // ---------------------------------------------------------------------- //
-    const LS_KEY = "ipAddress";
+    const IP = "http://192.168.4.1";
+    // const IP = "http://127.0.0.1:5000";
+    const DISPLAY_IP = "192.168.4.1";
 
     const DATA_FETCH_TIME = 5 * 1000; // 5 seconds [also need to change fetchTimer animation duration]
     const CLEAR_SUCCESS_TIME = 5 * 1000; // 5 seconds
@@ -26,18 +28,8 @@
     // ---------------------------------------------------------------------- //
 
     // ---------------------------------------------------------------------- //
-    let ipAddress = $state(null);
-    let displayIpAddress = $state(null);
-    let showIpAddressModal = $state(false);
-    let ipAddressInput = $state("");
-    let ipAddressError = $state(null);
-    let name = $state("disconnected...");
-
-    $effect(() => {
-        if (!ipAddress) return;
-        else if (ipAddress.startsWith("http://")) displayIpAddress = ipAddress.slice(7);
-        else displayIpAddress = ipAddress;
-    })
+    let name = $state(null);
+    let connected = $state(false);
     // ---------------------------------------------------------------------- //
 
     // ---------------------------------------------------------------------- //
@@ -99,62 +91,8 @@
 
     // ---------------------------------------------------------------------- //
     onMount(async () => {
-        const ls = localStorage.getItem(LS_KEY);
-        if (ls) {
-            ipAddressInput = ls;
-            validateIpAddressInput();
-        }
-    });
-
-    function validateIpAddressInput() {
-        if (ipAddressInput == "") {
-            showIpAddressModal = true;
-            ipAddressError = "Could not connect to saved Ip address";
-            return;
-        }
-
-        let ip = ipAddressInput;
-
-        if (!ip.startsWith("http://")) ip = `http://${ip}`;
-        if (ip.endsWith("/")) ip = ip.slice(0, -1);
-
-        parameterLoading = true;
-        ipAddressError = null;
-
-        fetch(`${ip}/name`)
-            .then((res) => {
-                if (!res.ok) throw new Error("");
-                return res.text();
-            })
-            .then((text) => {
-                parameterLoading = false;
-                name = text;
-                ipAddress = ip;
-                localStorage.setItem(LS_KEY, ip);
-                showIpAddressModal = false;
-                ipAddressError = null;
-                setTimeout(setupAfterConnected, 10);
-            })
-            .catch((e) => {
-                parameterLoading = false;
-                showIpAddressModal = true;
-                ipAddressError = "Could not connect to BMS at that IP address";
-            });
-    }
-
-    function ipAddressDialogClose() {
-        showIpAddressModal = false;
-        if (ipAddress == null) {
-            setTimeout(() => {
-                showIpAddressModal = true;
-            }, 10);
-        }
-    }
-
-    $effect(() => {
-        if (!showIpAddressModal && ipAddress == null) {
-            showIpAddressModal = true;
-        }
+        fetchData();
+        setInterval(fetchData, DATA_FETCH_TIME);
     });
 
     function triggerDisconnect() {
@@ -184,7 +122,7 @@
 
         parameterLoading = true;
 
-        fetch(`${ipAddress}/upload`, {
+        fetch(`${IP}/upload`, {
             method: "POST",
             body: formData,
         })
@@ -203,22 +141,23 @@
 
     
     // ---------------------------------------------------------------------- //
-    function setupAfterConnected() {
-        fetchData(); // set interval doesn't run immediately
-        setInterval(fetchData, DATA_FETCH_TIME);
-    }
-
     function fetchData() {
         dataLoading = true;
 
-        fetch(`${ipAddress}/data`)
+        fetch(`${IP}/data`)
             .then((res) => res.json())
             .then((d) => {
                 // ---------------------------------------------------------- //
                 dataLoading = false;
                 error = null;
 
+                connected = true;
+
                 data = d;
+                // ---------------------------------------------------------- //
+
+                // ---------------------------------------------------------- //
+                name = d["name"];
                 // ---------------------------------------------------------- //
 
                 // ---------------------------------------------------------- //
@@ -285,15 +224,16 @@
                     v: (maxTemp - minTemp).toFixed(TEMPERATURE_DECIMALS)
                 });
                 // ---------------------------------------------------------- //
-
-                // ---------------------------------------------------------- //
-                data["ready"] = true;
-                // ---------------------------------------------------------- //
             })
             .catch((e) => {
                 dataLoading = false;
-                console.error(e);
-                error = e;
+                console.warn(e);
+                if (e.message == "Failed to fetch") {
+                    connected = false;
+                } else {
+                    error = e;
+                }
+                connected = false;
             });
     }
     // ---------------------------------------------------------------------- //
@@ -303,7 +243,7 @@
     function stateParameter(e) {
         parameterLoading = true;
 
-        fetch(`${ipAddress}/state/${e.target.value}`)
+        fetch(`${IP}/state/${e.target.value}`)
             .then((res) => res.text())
             .then((text) => {
                 parameterLoading = false;
@@ -327,7 +267,7 @@
 
             parameterLoading = true;
 
-            await fetch(`${ipAddress}/parameters/${key}/${parameters[key]}`)
+            await fetch(`${IP}/parameters/${key}/${parameters[key]}`)
                 .then((res) => res.text())
                 .then((text) => {
                     parameterLoading = false;
@@ -364,7 +304,7 @@
     function downloadLog() {
         parameterLoading = true;
 
-        fetch(`${ipAddress}/log/download`)
+        fetch(`${IP}/log/download`)
             .then((res) => res.blob())
             .then((blob) => {
                 parameterLoading = false;
@@ -390,7 +330,7 @@
         parameterLoading = true;
 
         let url = `/forceDischarge/${enable ? "enable" : "disable"}`;
-        fetch(`${ipAddress}${url}`)
+        fetch(`${IP}${url}`)
             .then((res) => res.text())
             .then((text) => {
                 parameterLoading = false;
@@ -408,7 +348,7 @@
 
         parameterLoading = true;
 
-        fetch(`${ipAddress}/fullShutdown`)
+        fetch(`${IP}/fullShutdown`)
             .then((res) => res.text())
             .then((text) => {
                 parameterLoading = false;
@@ -479,6 +419,19 @@
         flex-direction: row;
         border-bottom: 1px solid #333;
     }
+    #logoHolder {
+        width: fit-content;
+        background-color: #333;
+    }
+    #fetchTimer {
+        background: #ABD130;
+        animation: fetchTimer 5s linear infinite;
+        padding-bottom: 2px;
+    }
+    @keyframes fetchTimer {
+        from { width: 0%;   }
+        to   { width: 100%; }
+    }
     #logo {
         display: flex;
         flex-direction: row;
@@ -499,18 +452,6 @@
     }
     #address {
         color: #aaa;
-    }
-    #ipInput {
-        width: 100%;
-        padding: 8px;
-        outline: none !important;
-        border: 2px solid #aaa;
-        border-radius: 5px;
-        margin-bottom: 0.25em;
-    }
-    #ipInput:focus {
-        border: 2px solid #ABD130;
-        outline: none !important;
     }
 
     #all {
@@ -762,17 +703,6 @@
         to { background-size: 100% 3px }
     }
 
-    #fetchTimer {
-        width: 0%;
-        animation: fetchTimer 5s linear infinite;
-        border: 2px solid #ABD130;
-        border-radius: 5px;
-    }
-    @keyframes fetchTimer {
-        from { width: 0%;   }
-        to   { width: 100%; }
-    }
-
     @media (max-width: 585px) {
         #all {
             grid-template-columns: 1fr;
@@ -802,19 +732,21 @@
 
 <!-- svelte-ignore a11y_click_events_have_key_events -->
 <div id="navbar">
-    <div id="logo">
-        <h1 id="name">EVC</h1>
-        <h1>BMS</h1>
+    <div id="logoHolder">
+        <div id="fetchTimer">
+            <div id="logo">
+                <h1 id="name">EVC</h1>
+                <h1>BMS</h1>
+            </div>
+        </div>
     </div>
     <div id="ip">
-        <span id="address">{name} ({displayIpAddress})</span>
+        <span id="address">{name ? name : "disconnected..."} ({DISPLAY_IP})</span>
     </div>
 </div>
 
-{#if !ipAddress}
-    <p>Waiting for ip address...</p>
-{:else if !data["ready"]}
-    <p>Loading...</p>
+{#if !connected}
+    <p>Attempting to connect...</p>
 {:else}
     <div id="all" class="{showSideBar ? '' : 'allNoSideBar'}">
         <div id="main">
@@ -902,8 +834,6 @@
         
         {#if showSideBar || innerW < 585}
             <div id="sidebar">
-                <hr id="fetchTimer" />
-
                 <!-- {#if outOfSync}
                     <p class="error">
                         Out of sync! Parameters have been changed on the BMS.
@@ -1007,21 +937,6 @@
 
 
 
-
-{#snippet ipAddressPromptSlot()}
-    <h2 class="modalTitle">Enter IP of BMS</h2>
-    {#if ipAddressError}
-        <p class="error">{ipAddressError}</p>
-    {/if}
-    <!-- svelte-ignore a11y_autocomplete_valid -->
-    <input id="ipInput" type="text" placeholder="192.168.4.1" autocomplete="ip" bind:value={ipAddressInput} />
-    {#if !parameterLoading}
-        <button class="normalButton" onclick={validateIpAddressInput}>Connect</button>
-    {:else}
-        <button class="normalButton" disabled>Connect</button>
-    {/if}
-{/snippet}
-
 {#if notifications && notifications.length > 0}
     <div class="notifications">
         {#each notifications as notification}
@@ -1033,9 +948,6 @@
         {/each}
     </div>
 {/if}
-
-<Modal showModal={showIpAddressModal} close={ipAddressDialogClose} children={ipAddressPromptSlot}>
-</Modal>
 
 
 {#snippet fileUploadSlot()}

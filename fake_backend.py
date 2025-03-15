@@ -117,6 +117,8 @@ def data():
 
 	doc["parameters"]["logSpeed"] = 1000
 
+	doc["name"] = "apSSID"
+
 	return flask.jsonify(doc)
 
 if __name__ == '__main__':
