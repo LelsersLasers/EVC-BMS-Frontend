@@ -228,7 +228,11 @@
             .catch((e) => {
                 dataLoading = false;
                 console.warn(e);
-                error = e;
+                if (e.message == "Failed to fetch") {
+                    connected = false;
+                } else {
+                    error = e;
+                }
                 connected = false;
             });
     }
