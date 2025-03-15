@@ -1,6 +1,6 @@
 // import adapter from '@sveltejs/adapter-auto';
-// import adapter from '@sveltejs/adapter-static';
-import adapter from '@sveltejs/adapter-vercel';
+import adapter from '@sveltejs/adapter-static';
+// import adapter from '@sveltejs/adapter-vercel';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -12,7 +12,14 @@ const config = {
 		// prerender: {
 		// 	entries: ['*'], // Pre-render all routes
 		// },
-	}
+		output: {
+			bundleStrategy: 'inline'
+		},
+
+		router: {
+			type: 'hash'
+		}
+	},
 };
 
 export default config;
