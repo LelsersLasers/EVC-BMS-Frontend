@@ -870,7 +870,7 @@
                     <select id="stateSelect" bind:value={state} onchange={stateParameter} disabled={parameterLoading}>
                         <option value="idle">Idle</option>
                         <option value="monitor">Monitor</option>
-                        <option value="charging">Charging</option>
+                        <option value="balancing">Balancing</option>
                     </select>
 
                     <h2>Bypass</h2>
@@ -905,7 +905,8 @@
                         class="normalButton saveButton {parametersDifferent ? 'saveButtonActive' : ''}"
                         type="button"
                         onclick={saveParameters}
-                        disabled={parameterLoading}
+                        disabled={true}
+                        _disabled={parameterLoading}
                     >Save</button>
 
                     <h2>File Upload</h2>
