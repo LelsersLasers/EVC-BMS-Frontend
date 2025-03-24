@@ -59,8 +59,9 @@
 
     /*
     parameters = {
-        "bypass": false, # set
+        "bypass": false,
         "vBypass": 5.0,
+        "anyBypassed": false, # set
 
         "vMin": 3.0,
         "vMax": 4.2,
