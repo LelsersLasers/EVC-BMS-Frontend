@@ -906,8 +906,7 @@
                         class="normalButton saveButton {parametersDifferent ? 'saveButtonActive' : ''}"
                         type="button"
                         onclick={saveParameters}
-                        disabled={true}
-                        _disabled={parameterLoading}
+                        disabled={parameterLoading}
                     >Save</button>
 
                     <h2>File Upload</h2>
