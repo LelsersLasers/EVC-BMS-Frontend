@@ -57,6 +57,8 @@
     let parameters = $state(null);
     let oldParmeters = $state(null);
 
+    let faults = $state({});
+
     /*
     parameters = {
         "bypass": false,
@@ -163,6 +165,15 @@
                         outOfSync = "Out of sync! Parameters have been changed on the BMS. Please refresh the page to resync.";
                     } else {
                         outOfSync = "";
+                    }
+                }
+                // ---------------------------------------------------------- //
+
+                // ---------------------------------------------------------- //
+                faults = {};
+                for (let key in d["faults"]) {
+                    if (d["faults"][key]) {
+                        faults[key] = d["faults"][key];
                     }
                 }
                 // ---------------------------------------------------------- //
@@ -854,6 +865,15 @@
                             class="sidebarToggle"
                             onclick={() => showSideBar = false}
                         >&#8250;</div>
+                    {/if}
+
+                    <h2>Faults</h2>
+                    {#if Object.keys(faults).length == 0}
+                        <p>No faults</p>
+                    {:else}
+                        {#each Object.keys(faults) as fault}
+                            <li class="error">{fault}</li>
+                        {/each}
                     {/if}
 
                     <h2 class="stateToolTip">State</h2>

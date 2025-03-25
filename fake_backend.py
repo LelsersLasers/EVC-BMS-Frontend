@@ -117,6 +117,16 @@ def data():
 
 	doc["parameters"]["logSpeed"] = 1000
 
+	doc["faults"] = {}
+
+	doc["faults"]["batteryMinVoltage"]     = False
+	doc["faults"]["batteryMaxVoltage"]     = False
+	doc["faults"]["batteryAverageVoltage"] = False
+	doc["faults"]["batteryVoltageDiff"]    = True
+	doc["faults"]["batteryTherm1Temp"]     = False
+	doc["faults"]["batteryTherm2Temp"]     = False
+	doc["faults"]["batteryTherm3Temp"]     = True
+
 	doc["name"] = "apSSID"
 
 	return flask.jsonify(doc)
