@@ -94,13 +94,6 @@
         fetchData();
         setInterval(fetchData, DATA_FETCH_TIME);
     });
-
-    function triggerDisconnect() {
-        if (window.confirm("Are you sure you want to disconnect?")) {
-            localStorage.removeItem(LS_KEY);
-            window.location.reload();
-        }
-    }
     // ---------------------------------------------------------------------- //
 
 
@@ -862,9 +855,6 @@
                             onclick={() => showSideBar = false}
                         >&#8250;</div>
                     {/if}
-
-                    <h2>Disconnect</h2>
-                    <button class="dangerButton" type="button" onclick={triggerDisconnect}>Disconnect</button>
 
                     <h2 class="stateToolTip">State</h2>
                     <select id="stateSelect" bind:value={state} onchange={stateParameter} disabled={parameterLoading}>
