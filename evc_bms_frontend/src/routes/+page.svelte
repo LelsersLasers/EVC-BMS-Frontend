@@ -196,7 +196,7 @@
                 overviewBarSet["bars"][2] = { label: "V (min)",     v: d["min"]             .toFixed(OVERVIEW_DECIMALS) };
                 overviewBarSet["bars"][3] = { label: "V (max)",     v: d["max"]             .toFixed(OVERVIEW_DECIMALS) };
                 overviewBarSet["bars"][4] = { label: "V (diff)",    v: (d["max"] - d["min"]).toFixed(OVERVIEW_DECIMALS) };
-                overviewBarSet["bars"][5] = { label: "V (total)",   v: (d["avg"] * 24)      .toFixed(OVERVIEW_DECIMALS) };
+                overviewBarSet["bars"][5] = { label: "V (total)",   v: d["sum"]             .toFixed(OVERVIEW_DECIMALS) };
                 // ---------------------------------------------------------- //
                 voltageBarSets = [];
 
