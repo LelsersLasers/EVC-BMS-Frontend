@@ -10,6 +10,8 @@
     const IP = "http://127.0.0.1:5000";
     const DISPLAY_IP = "192.168.4.1";
 
+    const CELLS = 24;
+
     const DATA_FETCH_TIME = 5 * 1000; // 5 seconds [also need to change fetchTimer animation duration]
     const CLEAR_SUCCESS_TIME = 5 * 1000; // 5 seconds
 
@@ -428,8 +430,8 @@
     function voltageTotalWidth(v) {
         const minCell = parameters["vMin"] ? parameters["vMin"] : oldParmeters["vMin"];
         const maxCell = parameters["vMax"] ? parameters["vMax"] : oldParmeters["vMax"];
-        const min = minCell * 24;
-        const max = maxCell * 24;
+        const min = minCell * CELLS;
+        const max = maxCell * CELLS;
         return calcWidth(v, min - V_PADDING, max + V_PADDING);
     }
 
