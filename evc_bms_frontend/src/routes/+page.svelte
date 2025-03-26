@@ -180,7 +180,7 @@
 
                 pFaults = {};
                 for (let key in d["pFaults"]) {
-                    if (d["pFaults"][key]) {
+                    if (d["pFaults"][key] && !faults[key]) {
                         pFaults[key] = d["pFaults"][key];
                     }
                 }
