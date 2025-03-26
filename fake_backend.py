@@ -53,6 +53,11 @@ def logDelete():
 def upload():
 	return "ok"
 
+@app.route('/acknowledge/<fault>', methods=['GET'])
+def acknowledge(fault):
+	time.sleep(1)
+	return "ok"
+
 @app.route('/data', methods=['GET'])
 def data():
 	time.sleep(0.5)
@@ -126,6 +131,16 @@ def data():
 	doc["faults"]["batteryTherm1Temp"]     = False
 	doc["faults"]["batteryTherm2Temp"]     = False
 	doc["faults"]["batteryTherm3Temp"]     = True
+
+	doc["pFaults"] = {}
+
+	doc["pFaults"]["batteryMinVoltage"]     = False
+	doc["pFaults"]["batteryMaxVoltage"]     = False
+	doc["pFaults"]["batteryAverageVoltage"] = False
+	doc["pFaults"]["batteryVoltageDiff"]    = True
+	doc["pFaults"]["batteryTherm1Temp"]     = False
+	doc["pFaults"]["batteryTherm2Temp"]     = False
+	doc["pFaults"]["batteryTherm3Temp"]     = True
 
 	doc["name"] = "apSSID"
 
