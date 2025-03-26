@@ -6,8 +6,8 @@
     // ---------------------------------------------------------------------- //
 
     // ---------------------------------------------------------------------- //
-    const IP = "http://192.168.4.1";
-    // const IP = "http://127.0.0.1:5000";
+    // const IP = "http://192.168.4.1";
+    const IP = "http://127.0.0.1:5000";
     const DISPLAY_IP = "192.168.4.1";
 
     const DATA_FETCH_TIME = 5 * 1000; // 5 seconds [also need to change fetchTimer animation duration]
@@ -196,6 +196,7 @@
                 overviewBarSet["bars"][2] = { label: "V (min)",     v: d["min"]             .toFixed(OVERVIEW_DECIMALS) };
                 overviewBarSet["bars"][3] = { label: "V (max)",     v: d["max"]             .toFixed(OVERVIEW_DECIMALS) };
                 overviewBarSet["bars"][4] = { label: "V (diff)",    v: (d["max"] - d["min"]).toFixed(OVERVIEW_DECIMALS) };
+                overviewBarSet["bars"][5] = { label: "V (total)",   v: (d["avg"] * 24)      .toFixed(OVERVIEW_DECIMALS) };
                 // ---------------------------------------------------------- //
                 voltageBarSets = [];
 
@@ -422,6 +423,14 @@
     function voltageDiffWidth(v) {
         const max = parameters["vDiff"] ? parameters["vDiff"] : oldParmeters["vDiff"];
         return calcWidth(v, 0, max);
+    }
+
+    function voltageTotalWidth(v) {
+        const minCell = parameters["vMin"] ? parameters["vMin"] : oldParmeters["vMin"];
+        const maxCell = parameters["vMax"] ? parameters["vMax"] : oldParmeters["vMax"];
+        const min = minCell * 24;
+        const max = maxCell * 24;
+        return calcWidth(v, min - V_PADDING, max + V_PADDING);
     }
 
     function currentWidth(v) {
@@ -809,8 +818,14 @@
                                             <span class="barV">{bar.v}</span><span class="barLabel">{bar.label}</span>
                                         </div>
                                     </div>
-                                {:else if i == overviewBarSet.bars.length - 1}
+                                {:else if i == overviewBarSet.bars.length - 2}
                                     <div class="bar diff" style="width: {voltageDiffWidth(bar.v)}%">
+                                        <div class="span-wrap">
+                                            <span class="barV">{bar.v}</span><span class="barLabel">{bar.label}</span>
+                                        </div>
+                                    </div>
+                                {:else if i == overviewBarSet.bars.length - 1}
+                                    <div class="bar" style="width: {voltageTotalWidth(bar.v)}%">
                                         <div class="span-wrap">
                                             <span class="barV">{bar.v}</span><span class="barLabel">{bar.label}</span>
                                         </div>
