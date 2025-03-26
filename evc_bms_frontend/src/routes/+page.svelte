@@ -58,6 +58,7 @@
     let oldParmeters = $state(null);
 
     let faults = $state({});
+    let pFaults = $state({});
 
     /*
     parameters = {
@@ -174,6 +175,13 @@
                 for (let key in d["faults"]) {
                     if (d["faults"][key]) {
                         faults[key] = d["faults"][key];
+                    }
+                }
+
+                pFaults = {};
+                for (let key in d["pFaults"]) {
+                    if (d["pFaults"][key]) {
+                        pFaults[key] = d["pFaults"][key];
                     }
                 }
                 // ---------------------------------------------------------- //
@@ -357,6 +365,22 @@
             .then((text) => {
                 parameterLoading = false;
                 result = `/fullShutdown: ${text}`;
+            })
+            .catch((e) => {
+                parameterLoading = false;
+                console.error(e);
+                error = e;
+            });
+    }
+
+    function acknowledgeFault(fault) {
+        parameterLoading = true;
+
+        fetch(`${IP}/acknowledge/${fault}`)
+            .then((res) => res.text())
+            .then((text) => {
+                parameterLoading = false;
+                result = `/acknowledge/${fault}: ${text}`;
             })
             .catch((e) => {
                 parameterLoading = false;
@@ -688,6 +712,16 @@
         display: block;
     }
 
+    .acknowledgeButton {
+        background-color: #eee;
+        color: #ABD130;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        padding: 0.25em;
+        width: fit-content;
+    }
+
     #loading {
         width: fit-content;
 
@@ -868,6 +902,8 @@
                     {/if}
 
                     <h2>Faults</h2>
+                    
+                    <h3>Live</h3>
                     {#if Object.keys(faults).length == 0}
                         <p>No faults</p>
                     {:else}
@@ -875,6 +911,24 @@
                             <li class="error">{fault}</li>
                         {/each}
                     {/if}
+
+                    <h3>Persistent</h3>
+                    {#if Object.keys(pFaults).length == 0}
+                        <p>No persistent faults</p>
+                    {:else}
+                        {#each Object.keys(pFaults) as fault}
+                            <li class="error">
+                                {fault}
+                                <button
+                                    class="acknowledgeButton"
+                                    type="button"
+                                    onclick={() => acknowledgeFault(fault)}
+                                    disabled={parameterLoading}
+                                >Acknowledge</button>
+                            </li>
+                        {/each}
+                    {/if}
+
 
                     <h2 class="stateToolTip">State</h2>
                     <select id="stateSelect" bind:value={state} onchange={stateParameter} disabled={parameterLoading}>
