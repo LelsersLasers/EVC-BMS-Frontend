@@ -53,7 +53,6 @@
     let temperatureBarSet = $state({});
 
     let state  = $state(null);
-    let oldState = $state(null);
 
     let outOfSync = $state("");
 
@@ -162,9 +161,8 @@
                 // ---------------------------------------------------------- //
                 if (state == null) {
                     state = d["state"];
-                    oldState = state;
                 } else {
-                    if (state != oldState) {
+                    if (d["state"] != state) {
                         outOfSync = "Out of sync! State has been changed on the BMS. Please refresh the page to resync.";
                     } else {
                         outOfSync = "";
