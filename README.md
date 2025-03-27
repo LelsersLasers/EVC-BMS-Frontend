@@ -37,6 +37,9 @@ SvelteKit webapp for the BMS for Purdue's Electric Vehicle Club's high voltage b
 		- [ ] Max continuous current [`iMaxCont`]
 		- We will need to change some logic for this
 		- NOTE: negative current is fine (charging vs discharging)
+		- [ ] Better current bar
+			- Maybe uses the abs for the width and a color for the direction
+				- (And maybe different sets of colors for balancing vs monitor mode)
 	- [ ] If BMS sees current being drawn and it shouldn't -> complain
 	- [x] Logging speed [`logSpeed`]
 	- Bypass
