@@ -303,7 +303,7 @@
 
         parameterLoading = true;
 
-        fetch(`${ipAddress}/log/delete`)
+        fetch(`${IP}/log/delete`)
             .then((res) => res.text())
             .then((text) => {
                 parameterLoading = false;
