@@ -388,7 +388,7 @@
     function acknowledgeFault(fault) {
         parameterLoading = true;
 
-        fetch(`${IP}/acknowledge/${fault}`)
+        fetch(`${IP}/acknowledge/${fault}/`)
             .then((res) => res.text())
             .then((text) => {
                 parameterLoading = false;
