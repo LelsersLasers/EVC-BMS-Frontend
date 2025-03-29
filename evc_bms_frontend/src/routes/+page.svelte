@@ -19,9 +19,13 @@
     const VOLTAGE_DECIMALS     = 4;
     const TEMPERATURE_DECIMALS = 1;
 
+    const C_MAX_BALANCING = 25;
+    const C_MAX_REGEN = 120;
+    const C_MAX_DISCHARGE = 400;
+
     const V_PADDING = 0.1;
     const T_PADDING = 2;
-    const C_PADDING = 0.1;
+    const C_PADDING = 1.0;
     // ---------------------------------------------------------------------- //
 
     // ---------------------------------------------------------------------- //
@@ -445,7 +449,15 @@
     }
 
     function currentWidth(v) {
-        return calcWidth(v, -30 - C_PADDING, 30 + C_PADDING);
+        if (state == "balancing") {
+            return calcWidth(Math.abs(v), -C_PADDING, C_MAX_BALANCING);
+        } else {
+            if (v < 0) {
+                return calcWidth(-v, -C_PADDING, C_MAX_REGEN);
+            } else {
+                return calcWidth(v, -C_PADDING, C_MAX_DISCHARGE);
+            }
+        }
     }
 
     function temperatureWidth(v) {
