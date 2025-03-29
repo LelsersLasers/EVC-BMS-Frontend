@@ -80,7 +80,6 @@
         "tMin": 10.0,
         "tMax": 50.0,
         "tDiff": 30.0,
-        "tDiffTriggered": false, # set
 
         "tMaxBal": 50.0,
         "tResetBal": 40.0,
@@ -998,9 +997,11 @@
                     <NumberInput l="Min:" k="tMin" p={parameters} op={oldParmeters} pl={parameterLoading} />
                     <NumberInput l="Max:" k="tMax" p={parameters} op={oldParmeters} pl={parameterLoading} />
                     <NumberInput l="Temp diff:" k="tDiff" p={parameters} op={oldParmeters} pl={parameterLoading} />
-                    {#if parameters["tDiffTriggered"]}
+                    {#if data["tDiffTriggered"]}
                         <p class="error">Temperature difference triggered</p>
                     {/if}
+
+                    <h2>Temperature</h2>
 
                     <h2>Save</h2>
                     <button
