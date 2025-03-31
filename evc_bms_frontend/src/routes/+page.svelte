@@ -12,7 +12,8 @@
 
     const CELLS = 24;
 
-    const DATA_FETCH_TIME = 5 * 1000; // 5 seconds [also need to change fetchTimer animation duration]
+    const START_DATA_FETCH_TIME = 5 * 1000;
+    const FETCH_RATE_SET_WAIT = 2 * 1000;
     const CLEAR_SUCCESS_TIME = 5 * 1000; // 5 seconds
 
     const OVERVIEW_DECIMALS    = 2;
@@ -98,9 +99,15 @@
 
 
     // ---------------------------------------------------------------------- //
+    const ALLOWED_FETCH_RATES = [0.5, 1, 2, 5, 10, 15, 30];
+
+    let fetchInt = null;
+    let fetchSetInt = null;
+    let fetchTimerValue = START_DATA_FETCH_TIME / 1000;
+
     onMount(async () => {
         fetchData();
-        setInterval(fetchData, DATA_FETCH_TIME);
+        fetchInt = setInterval(fetchData, START_DATA_FETCH_TIME);
     });
     // ---------------------------------------------------------------------- //
 
@@ -140,10 +147,54 @@
     }
     // ---------------------------------------------------------------------- //
 
+    // ---------------------------------------------------------------------- //
+    function fetchRateChange(e) {
+        const v = ALLOWED_FETCH_RATES.reduce((prev, curr) =>
+            Math.abs(curr - e.target.value) < Math.abs(prev - e.target.value)
+                ? curr
+                : prev
+            );
+
+        const fr = document.getElementById("fetchRate");
+        fr.value = v;
+
+        const frl = document.getElementById("fetchRateLabel");
+        frl.innerHTML = v;
+
+        console.log("rate requested");
+        if (fetchSetInt) {
+            console.log("rate wait cleared");
+            clearTimeout(fetchSetInt);
+        }
+        console.log("rate wait set");
+        fetchSetInt = setTimeout(() => {
+            console.log("rate set start");
+            fetchData();
+            if (fetchInt) {
+                fetchTimerValue = v;
+
+                clearInterval(fetchInt);
+                console.log("rate set!");
+                fetchData();
+                fetchInt = setInterval(fetchData, v * 1000);
+            }
+        }, FETCH_RATE_SET_WAIT);
+    }
+    // ---------------------------------------------------------------------- //
     
     // ---------------------------------------------------------------------- //
     function fetchData() {
         dataLoading = true;
+
+        const ele = document.getElementById("fetchTimer");
+        ele.animate(
+            [ { width: "0%" }, { width: "100%" } ],
+            {
+                duration: fetchTimerValue * 1000,
+                easing: "linear",
+                fill: "forwards",
+            }
+        );
 
         fetch(`${IP}/data`)
             .then((res) => res.json())
@@ -484,13 +535,12 @@
     }
     #fetchTimer {
         background: #ABD130;
-        animation: fetchTimer 5s linear infinite;
         padding-bottom: 2px;
     }
-    @keyframes fetchTimer {
+    /* @keyframes fetchTimer {
         from { width: 0%;   }
         to   { width: 100%; }
-    }
+    } */
     #logo {
         display: flex;
         flex-direction: row;
@@ -601,6 +651,17 @@
         display: flex;
         flex-direction: row;
         gap: 5px;
+    }
+
+    #fetchRateHolder {
+        width: 100%;
+        display: flex;
+    }
+    #fetchRateLabel {
+        padding-right: 5px;
+    }
+    #fetchRate {
+        flex: 1;
     }
 
     .normalButton {
@@ -1001,7 +1062,11 @@
                         <p class="error">Temperature difference triggered</p>
                     {/if}
 
-                    <h2>Temperature</h2>
+                    <h2>Fetch Rate</h2>
+                    <div id="fetchRateHolder">
+                        <label id="fetchRateLabel" for="fetchRate">5</label>
+                        <input type="range" id="fetchRate" name="fetchRate" value="5" min="0.5" max="30" step="0.5" oninput={fetchRateChange} />
+                    </div>
 
                     <h2>Save</h2>
                     <button
