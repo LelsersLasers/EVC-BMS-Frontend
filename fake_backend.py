@@ -20,9 +20,9 @@ def idle():
 def monitor():
 	return "monitor"
 
-@app.route('/state/charging', methods=['GET'])
-def charging():
-	return "charging"
+@app.route('/state/balancing', methods=['GET'])
+def balancing():
+	return "balancing"
 
 @app.route('/fullShutdown', methods=['GET'])
 def fullShutdown():
@@ -98,9 +98,9 @@ def data():
 
 	doc["anyBypassed"] = True # random.choice([True, False])
 	doc["tDiffTriggered"] = True
-	doc["balTempsOk"] = True
+	doc["balTempsOk"] = False
 
-	doc["state"] = "monitor" # random.choice(["idle", "monitor", "charging"] )
+	doc["state"] = "monitor" # random.choice(["idle", "monitor", "balancing"] )
 
 	doc["SSS"] = True # random.choice([True, False])
 	doc["HCS"] = True # random.choice([True, False])
