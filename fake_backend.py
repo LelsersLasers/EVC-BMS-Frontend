@@ -85,6 +85,11 @@ def data():
 	doc["max"] = max([max(doc["cells"][i]) for i in range(2)])
 	doc["avg"] = random_voltage()
 	doc["sum"] = random_voltage() * 12 * 2
+
+	doc["pack"] = {}
+	doc["pack"]["1"] = random_voltage() * 12
+	doc["pack"]["2"] = random_voltage() * 12
+
 	doc["current"] = random.random() * 30
 
 	doc["therm"] = {}
