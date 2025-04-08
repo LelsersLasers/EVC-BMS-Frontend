@@ -97,9 +97,9 @@ def data():
 	doc["therm"]["2"] = random_temperature()
 	doc["therm"]["3"] = random_temperature()
 	doc["therm"]["4"] = random_temperature()
-	doc["therm"]["FET"] = random_temperature()
-	doc["therm"]["balBot"] = random_temperature()
-	doc["therm"]["balTop"] = random_temperature()
+	doc["therm"]["FET"] = random_temperature() * 0.8
+	doc["therm"]["balBot"] = random_temperature() * 0.8
+	doc["therm"]["balTop"] = random_temperature() * 0.8
 
 	doc["anyBypassed"] = True # random.choice([True, False])
 	doc["tDiffTriggered"] = True
