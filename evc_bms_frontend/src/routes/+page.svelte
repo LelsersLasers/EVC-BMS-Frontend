@@ -296,7 +296,7 @@
                     });
                 }
 
-                const thermTemps = Object.values(d["therm"]).slice(0, 4);
+                const thermTemps = Object.values(d["therm"]).slice(0, THERM_TEMPS);
                 const minTemp = Math.min(...thermTemps);
                 const maxTemp = Math.max(...thermTemps);
                 temperatureBarSet["bars"].push({
