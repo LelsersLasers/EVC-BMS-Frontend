@@ -91,14 +91,19 @@ def data():
 	doc["therm"]["1"] = random_temperature()
 	doc["therm"]["2"] = random_temperature()
 	doc["therm"]["3"] = random_temperature()
+	doc["therm"]["4"] = random_temperature()
 	doc["therm"]["FET"] = random_temperature()
+	doc["therm"]["balBot"] = random_temperature()
+	doc["therm"]["balTop"] = random_temperature()
 
-	doc["anyBypassed"] = False # random.choice([True, False])
+	doc["anyBypassed"] = True # random.choice([True, False])
+	doc["tDiffTriggered"] = True
+	doc["balTempsOk"] = True
 
 	doc["state"] = "monitor" # random.choice(["idle", "monitor", "charging"] )
 
-	doc["SSS"] = False # random.choice([True, False])
-	doc["HCS"] = False # random.choice([True, False])
+	doc["SSS"] = True # random.choice([True, False])
+	doc["HCS"] = True # random.choice([True, False])
 
 	doc["parameters"] = {}
 
@@ -114,11 +119,9 @@ def data():
 	doc["parameters"]["tMin"] = 10.0
 	doc["parameters"]["tMax"] = 50.0
 	doc["parameters"]["tDiff"] = 30.0
-	doc["parameters"]["tDiffTriggered"] = False
 
 	doc["parameters"]["tMaxBal"] = 50.0
 	doc["parameters"]["tResetBal"] = 40.0
-	doc["parameters"]["balTempsOk"] = True
 
 	doc["parameters"]["logSpeed"] = 1000
 
@@ -131,6 +134,7 @@ def data():
 	doc["faults"]["batteryTherm1Temp"]     = False
 	doc["faults"]["batteryTherm2Temp"]     = False
 	doc["faults"]["batteryTherm3Temp"]     = True
+	doc["faults"]["batteryTherm4Temp"]     = False
 	doc["faults"]["batteryCurrent"]        = True
 
 
@@ -143,6 +147,7 @@ def data():
 	doc["pFaults"]["batteryTherm1Temp"]     = False
 	doc["pFaults"]["batteryTherm2Temp"]     = False
 	doc["pFaults"]["batteryTherm3Temp"]     = True
+	doc["pFaults"]["batteryTherm4Temp"]     = False
 	doc["pFaults"]["batteryCurrent"]        = True
 
 	doc["name"] = "apSSID"
