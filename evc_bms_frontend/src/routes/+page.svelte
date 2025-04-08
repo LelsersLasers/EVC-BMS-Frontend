@@ -1061,6 +1061,9 @@
                     {#if data["tDiffTriggered"]}
                         <p class="error">Temperature difference triggered</p>
                     {/if}
+                    {#if !data["balTempsOk"] && state == "balancing"}
+                        <p class="error">Balance temperature triggered</p>
+                    {/if}
 
                     <h2>Fetch Rate</h2>
                     <div id="fetchRateHolder">
