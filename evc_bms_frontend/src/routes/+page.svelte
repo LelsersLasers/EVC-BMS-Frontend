@@ -261,7 +261,9 @@
                 overviewBarSet["bars"][2] = { label: "V (min)",     v: d["min"]             .toFixed(OVERVIEW_DECIMALS) };
                 overviewBarSet["bars"][3] = { label: "V (max)",     v: d["max"]             .toFixed(OVERVIEW_DECIMALS) };
                 overviewBarSet["bars"][4] = { label: "V (diff)",    v: (d["max"] - d["min"]).toFixed(OVERVIEW_DECIMALS) };
-                overviewBarSet["bars"][5] = { label: "V (total)",   v: d["sum"]             .toFixed(OVERVIEW_DECIMALS) };
+                overviewBarSet["bars"][5] = { label: "V (pack 1)",  v: (d["pack"]["1"])     .toFixed(OVERVIEW_DECIMALS) };
+                overviewBarSet["bars"][6] = { label: "V (pack 2)",  v: (d["pack"]["2"])     .toFixed(OVERVIEW_DECIMALS) };
+                overviewBarSet["bars"][7] = { label: "V (total)",   v: d["sum"]             .toFixed(OVERVIEW_DECIMALS) };
                 // ---------------------------------------------------------- //
                 voltageBarSets = [];
 
@@ -495,6 +497,14 @@
         const maxCell = parameters["vMax"] ? parameters["vMax"] : oldParmeters["vMax"];
         const min = minCell * CELLS;
         const max = maxCell * CELLS;
+        return calcWidth(v, min - V_PADDING, max + V_PADDING);
+    }
+
+    function voltagePackWidth(v) {
+        const minCell = parameters["vMin"] ? parameters["vMin"] : oldParmeters["vMin"];
+        const maxCell = parameters["vMax"] ? parameters["vMax"] : oldParmeters["vMax"];
+        const min = minCell * CELLS / 2;
+        const max = maxCell * CELLS / 2;
         return calcWidth(v, min - V_PADDING, max + V_PADDING);
     }
 
@@ -901,13 +911,19 @@
                                             <span class="barV">{bar.v}</span><span class="barLabel">{bar.label}</span>
                                         </div>
                                     </div>
-                                {:else if i == overviewBarSet.bars.length - 2}
+                                {:else if i == 4}
                                     <div class="bar diff" style="width: {voltageDiffWidth(bar.v)}%">
                                         <div class="span-wrap">
                                             <span class="barV">{bar.v}</span><span class="barLabel">{bar.label}</span>
                                         </div>
                                     </div>
-                                {:else if i == overviewBarSet.bars.length - 1}
+                                {:else if i == 5 || i == 6}
+                                    <div class="bar" style="width: {voltagePackWidth(bar.v)}%">
+                                        <div class="span-wrap">
+                                            <span class="barV">{bar.v}</span><span class="barLabel">{bar.label}</span>
+                                        </div>
+                                    </div>
+                                {:else if i == 7}
                                     <div class="bar" style="width: {voltageTotalWidth(bar.v)}%">
                                         <div class="span-wrap">
                                             <span class="barV">{bar.v}</span><span class="barLabel">{bar.label}</span>
