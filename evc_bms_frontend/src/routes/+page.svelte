@@ -11,6 +11,7 @@
     const DISPLAY_IP = "192.168.4.1";
 
     const CELLS = 24;
+    const THERM_TEMPS = 4;
 
     const START_DATA_FETCH_TIME = 5 * 1000;
     const FETCH_RATE_SET_WAIT = 2 * 1000;
