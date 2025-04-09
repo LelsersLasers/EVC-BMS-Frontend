@@ -648,15 +648,15 @@
         border: 2px solid #ABD130;
         outline: none !important;
     }
-    #bypassDiv {
+    .checkboxDiv {
         display: flex;
         flex-direction: row;
         gap: 5px;
     }
-    #bypassLabel {
+    .checkboxLabel {
         cursor: pointer;
     }
-    #bypass {
+    .checkbox {
         cursor: pointer;
         transform: translateY(0.66px);
         accent-color: #ABD130;
@@ -1056,9 +1056,9 @@
                     </select>
 
                     <h2>Bypass</h2>
-                    <div id="bypassDiv">    
-                        <label id="bypassLabel" for="bypass">Enabled</label>
-                        <input type="checkbox" id="bypass" bind:checked={parameters["bypass"]} disabled={parameterLoading} />
+                    <div class="checkboxDiv" id="bypassDiv">    
+                        <label class="checkboxLabel" id="bypassLabel" for="bypass">Enabled</label>
+                        <input type="checkbox" class="checkbox" id="bypass" bind:checked={parameters["bypass"]} disabled={parameterLoading} />
                     </div>
                     {#if parameters["bypass"]}
                         <NumberInput l="Bypass Voltage:" k="vBypass" p={parameters} op={oldParmeters} pl={parameterLoading} />
@@ -1085,11 +1085,14 @@
                         <p class="error">Balance temperature triggered</p>
                     {/if}
 
-                    <h2>Fetch Rate</h2>
-                    <div id="fetchRateHolder">
-                        <label id="fetchRateLabel" for="fetchRate">5</label>
-                        <input type="range" id="fetchRate" name="fetchRate" value="5" min="0.5" max="30" step="0.5" oninput={fetchRateChange} />
+                    <h2>Logging</h2>
+                    <div class="checkboxDiv" id="bypassDiv">    
+                        <label class="checkboxLabel" id="deleteLogLabel" for="deleteLog">Delete when full</label>
+                        <input type="checkbox" class="checkbox" id="deleteLog" bind:checked={parameters["deleteLog"]} disabled={parameterLoading} />
                     </div>
+                    {#if state == "monitor"}
+                        <NumberInput l="Log speed:" k="logSpeed" p={parameters} op={oldParmeters} pl={parameterLoading} />
+                    {/if}
 
                     <h2>Save</h2>
                     <button
@@ -1099,13 +1102,16 @@
                         disabled={parameterLoading}
                     >Save</button>
 
+                    <h2>Fetch Rate</h2>
+                    <div id="fetchRateHolder">
+                        <label id="fetchRateLabel" for="fetchRate">5</label>
+                        <input type="range" id="fetchRate" name="fetchRate" value="5" min="0.5" max="30" step="0.5" oninput={fetchRateChange} />
+                    </div>
+
                     <h2>File Upload</h2>
                     <button class="normalButton" type="button" onclick={() => showFileUploadModal = true} disabled={parameterLoading}>Upload File</button>
 
                     <h2>Log file</h2>
-                    {#if state == "monitor"}
-                        <NumberInput l="Log speed:" k="logSpeed" p={parameters} op={oldParmeters} pl={parameterLoading} />
-                    {/if}
                     <div id="splitButton">
                         <button class="normalButton" type="button" onclick={downloadLog} disabled={parameterLoading}>Download Log</button>
                         <button class="dangerButton" type="button" onclick={deleteLog}   disabled={parameterLoading}>Delete Log</button>
