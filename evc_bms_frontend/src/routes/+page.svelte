@@ -1094,6 +1094,10 @@
                         <NumberInput l="Log speed:" k="logSpeed" p={parameters} op={oldParmeters} pl={parameterLoading} />
                     {/if}
 
+                    <h2>CAN Charging</h2>
+                    <NumberInput l="Voltage:" k="vCanCharge" p={parameters} op={oldParmeters} pl={parameterLoading} />
+                    <NumberInput l="Current:" k="iCanCharge" p={parameters} op={oldParmeters} pl={parameterLoading} />
+
                     <h2>Save</h2>
                     <button
                         class="normalButton saveButton {parametersDifferent ? 'saveButtonActive' : ''}"
