@@ -85,9 +85,12 @@
 
         "tMaxBal": 50.0,
         "tResetBal": 40.0,
-        "balTempsOk": true, # set
 
         "logSpeed": 1000,
+        "deleteLog": false,
+
+        "vCanCharge": 100.8,
+        "iCanCharge": 10.0,
     };
     */
 
