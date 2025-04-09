@@ -60,7 +60,7 @@ def acknowledge(fault):
 
 @app.route('/data', methods=['GET'])
 def data():
-	time.sleep(0.5)
+	time.sleep(0.2)
 
 	def random_voltage():
 		# return random.random() * (4.2 - 3.0) + 3.0
@@ -129,6 +129,10 @@ def data():
 	doc["parameters"]["tResetBal"] = 40.0
 
 	doc["parameters"]["logSpeed"] = 1000
+	doc["parameters"]["deleteLog"] = False
+
+	doc["parameters"]["vCanCharge"] = 100.8
+	doc["parameters"]["iCanCharge"] = 10.0
 
 	doc["faults"] = {}
 
