@@ -103,7 +103,9 @@ def data():
 
 	doc["anyBypassed"] = True # random.choice([True, False])
 	doc["tDiffTriggered"] = True
-	doc["balTempsOk"] = False
+	doc["balTempBotTriggered"] = True
+	doc["balTempTopTriggered"] = True
+
 
 	doc["state"] = "monitor" # random.choice(["idle", "monitor", "balancing"] )
 

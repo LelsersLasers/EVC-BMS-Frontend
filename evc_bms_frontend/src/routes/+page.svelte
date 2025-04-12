@@ -1081,8 +1081,11 @@
                     {#if data["tDiffTriggered"]}
                         <p class="error">Temperature difference triggered</p>
                     {/if}
-                    {#if !data["balTempsOk"] && state == "balancing"}
-                        <p class="error">Balance temperature triggered</p>
+                    {#if data["balTempTopTriggered"] && state == "balancing"}
+                        <p class="error">Balance temperature top triggered</p>
+                    {/if}
+                    {#if data["balTempBottomTriggered"] && state == "balancing"}
+                        <p class="error">Balance temperature bottom triggered</p>
                     {/if}
 
                     <h2>Logging</h2>
