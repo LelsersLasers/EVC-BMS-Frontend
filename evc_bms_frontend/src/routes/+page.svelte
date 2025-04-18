@@ -11,7 +11,7 @@
     const DISPLAY_IP = "192.168.4.1";
 
     const CELLS = 24;
-    const THERM_TEMPS = 4;
+    const THERM_TEMPS = 3;
 
     const START_DATA_FETCH_TIME = 5 * 1000;
     const FETCH_RATE_SET_WAIT = 2 * 1000;
@@ -83,14 +83,8 @@
         "tMax": 50.0,
         "tDiff": 30.0,
 
-        "tMaxBal": 50.0,
-        "tResetBal": 40.0,
-
         "logSpeed": 1000,
         "deleteLog": false,
-
-        "vCanCharge": 100.8,
-        "iCanCharge": 10.0,
     };
     */
 
@@ -1081,11 +1075,8 @@
                     {#if data["tDiffTriggered"]}
                         <p class="error">Temperature difference triggered</p>
                     {/if}
-                    {#if data["balTempTopTriggered"] && state == "balancing"}
-                        <p class="error">Balance temperature top triggered</p>
-                    {/if}
-                    {#if data["balTempBottomTriggered"] && state == "balancing"}
-                        <p class="error">Balance temperature bottom triggered</p>
+                    {#if data["tempFetTrigged"] && state == "balancing"}
+                        <p class="error">Balance FET temp triggered</p>
                     {/if}
 
                     <h2>Logging</h2>
@@ -1096,10 +1087,6 @@
                     {#if state == "monitor"}
                         <NumberInput l="Log speed:" k="logSpeed" p={parameters} op={oldParmeters} pl={parameterLoading} />
                     {/if}
-
-                    <h2>CAN Charging</h2>
-                    <NumberInput l="Voltage:" k="vCanCharge" p={parameters} op={oldParmeters} pl={parameterLoading} />
-                    <NumberInput l="Current:" k="iCanCharge" p={parameters} op={oldParmeters} pl={parameterLoading} />
 
                     <h2>Save</h2>
                     <button
