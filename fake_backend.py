@@ -20,9 +20,9 @@ def idle():
 def monitor():
 	return "monitor"
 
-@app.route('/state/charging', methods=['GET'])
-def charging():
-	return "charging"
+@app.route('/state/balancing', methods=['GET'])
+def balancing():
+	return "balancing"
 
 @app.route('/fullShutdown', methods=['GET'])
 def fullShutdown():
@@ -60,7 +60,7 @@ def acknowledge(fault):
 
 @app.route('/data', methods=['GET'])
 def data():
-	time.sleep(0.5)
+	time.sleep(0.2)
 
 	def random_voltage():
 		# return random.random() * (4.2 - 3.0) + 3.0
@@ -85,20 +85,32 @@ def data():
 	doc["max"] = max([max(doc["cells"][i]) for i in range(2)])
 	doc["avg"] = random_voltage()
 	doc["sum"] = random_voltage() * 12 * 2
+
+	doc["pack"] = {}
+	doc["pack"]["1"] = random_voltage() * 12
+	doc["pack"]["2"] = random_voltage() * 12
+
 	doc["current"] = random.random() * 30
 
 	doc["therm"] = {}
 	doc["therm"]["1"] = random_temperature()
 	doc["therm"]["2"] = random_temperature()
 	doc["therm"]["3"] = random_temperature()
-	doc["therm"]["FET"] = random_temperature()
+	doc["therm"]["4"] = random_temperature()
+	doc["therm"]["FET"] = random_temperature() * 0.8
+	doc["therm"]["balBot"] = random_temperature() * 0.8
+	doc["therm"]["balTop"] = random_temperature() * 0.8
 
-	doc["anyBypassed"] = False # random.choice([True, False])
+	doc["anyBypassed"] = True # random.choice([True, False])
+	doc["tDiffTriggered"] = True
+	doc["balTempBotTriggered"] = True
+	doc["balTempTopTriggered"] = True
 
-	doc["state"] = "monitor" # random.choice(["idle", "monitor", "charging"] )
 
-	doc["SSS"] = False # random.choice([True, False])
-	doc["HCS"] = False # random.choice([True, False])
+	doc["state"] = "monitor" # random.choice(["idle", "monitor", "balancing"] )
+
+	doc["SSS"] = True # random.choice([True, False])
+	doc["HCS"] = True # random.choice([True, False])
 
 	doc["parameters"] = {}
 
@@ -114,13 +126,15 @@ def data():
 	doc["parameters"]["tMin"] = 10.0
 	doc["parameters"]["tMax"] = 50.0
 	doc["parameters"]["tDiff"] = 30.0
-	doc["parameters"]["tDiffTriggered"] = False
 
 	doc["parameters"]["tMaxBal"] = 50.0
 	doc["parameters"]["tResetBal"] = 40.0
-	doc["parameters"]["balTempsOk"] = True
 
 	doc["parameters"]["logSpeed"] = 1000
+	doc["parameters"]["deleteLog"] = False
+
+	doc["parameters"]["vCanCharge"] = 100.8
+	doc["parameters"]["iCanCharge"] = 10.0
 
 	doc["faults"] = {}
 
@@ -131,6 +145,7 @@ def data():
 	doc["faults"]["batteryTherm1Temp"]     = False
 	doc["faults"]["batteryTherm2Temp"]     = False
 	doc["faults"]["batteryTherm3Temp"]     = True
+	doc["faults"]["batteryTherm4Temp"]     = False
 	doc["faults"]["batteryCurrent"]        = True
 
 
@@ -143,6 +158,7 @@ def data():
 	doc["pFaults"]["batteryTherm1Temp"]     = False
 	doc["pFaults"]["batteryTherm2Temp"]     = False
 	doc["pFaults"]["batteryTherm3Temp"]     = True
+	doc["pFaults"]["batteryTherm4Temp"]     = False
 	doc["pFaults"]["batteryCurrent"]        = True
 
 	doc["name"] = "apSSID"

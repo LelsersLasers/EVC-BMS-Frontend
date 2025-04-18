@@ -11,6 +11,7 @@
     const DISPLAY_IP = "192.168.4.1";
 
     const CELLS = 24;
+    const THERM_TEMPS = 4;
 
     const START_DATA_FETCH_TIME = 5 * 1000;
     const FETCH_RATE_SET_WAIT = 2 * 1000;
@@ -84,9 +85,12 @@
 
         "tMaxBal": 50.0,
         "tResetBal": 40.0,
-        "balTempsOk": true, # set
 
         "logSpeed": 1000,
+        "deleteLog": false,
+
+        "vCanCharge": 100.8,
+        "iCanCharge": 10.0,
     };
     */
 
@@ -261,7 +265,9 @@
                 overviewBarSet["bars"][2] = { label: "V (min)",     v: d["min"]             .toFixed(OVERVIEW_DECIMALS) };
                 overviewBarSet["bars"][3] = { label: "V (max)",     v: d["max"]             .toFixed(OVERVIEW_DECIMALS) };
                 overviewBarSet["bars"][4] = { label: "V (diff)",    v: (d["max"] - d["min"]).toFixed(OVERVIEW_DECIMALS) };
-                overviewBarSet["bars"][5] = { label: "V (total)",   v: d["sum"]             .toFixed(OVERVIEW_DECIMALS) };
+                overviewBarSet["bars"][5] = { label: "V (pack 1)",  v: (d["pack"]["1"])     .toFixed(OVERVIEW_DECIMALS) };
+                overviewBarSet["bars"][6] = { label: "V (pack 2)",  v: (d["pack"]["2"])     .toFixed(OVERVIEW_DECIMALS) };
+                overviewBarSet["bars"][7] = { label: "V (total)",   v: d["sum"]             .toFixed(OVERVIEW_DECIMALS) };
                 // ---------------------------------------------------------- //
                 voltageBarSets = [];
 
@@ -294,7 +300,7 @@
                     });
                 }
 
-                const thermTemps = Object.values(d["therm"]).slice(0, -1);
+                const thermTemps = Object.values(d["therm"]).slice(0, THERM_TEMPS);
                 const minTemp = Math.min(...thermTemps);
                 const maxTemp = Math.max(...thermTemps);
                 temperatureBarSet["bars"].push({
@@ -498,6 +504,14 @@
         return calcWidth(v, min - V_PADDING, max + V_PADDING);
     }
 
+    function voltagePackWidth(v) {
+        const minCell = parameters["vMin"] ? parameters["vMin"] : oldParmeters["vMin"];
+        const maxCell = parameters["vMax"] ? parameters["vMax"] : oldParmeters["vMax"];
+        const min = minCell * CELLS / 2;
+        const max = maxCell * CELLS / 2;
+        return calcWidth(v, min - V_PADDING, max + V_PADDING);
+    }
+
     function currentWidth(v) {
         if (state == "balancing") {
             return calcWidth(Math.abs(v), -C_PADDING, C_MAX_BALANCING);
@@ -634,15 +648,15 @@
         border: 2px solid #ABD130;
         outline: none !important;
     }
-    #bypassDiv {
+    .checkboxDiv {
         display: flex;
         flex-direction: row;
         gap: 5px;
     }
-    #bypassLabel {
+    .checkboxLabel {
         cursor: pointer;
     }
-    #bypass {
+    .checkbox {
         cursor: pointer;
         transform: translateY(0.66px);
         accent-color: #ABD130;
@@ -901,13 +915,19 @@
                                             <span class="barV">{bar.v}</span><span class="barLabel">{bar.label}</span>
                                         </div>
                                     </div>
-                                {:else if i == overviewBarSet.bars.length - 2}
+                                {:else if i == 4}
                                     <div class="bar diff" style="width: {voltageDiffWidth(bar.v)}%">
                                         <div class="span-wrap">
                                             <span class="barV">{bar.v}</span><span class="barLabel">{bar.label}</span>
                                         </div>
                                     </div>
-                                {:else if i == overviewBarSet.bars.length - 1}
+                                {:else if i == 5 || i == 6}
+                                    <div class="bar" style="width: {voltagePackWidth(bar.v)}%">
+                                        <div class="span-wrap">
+                                            <span class="barV">{bar.v}</span><span class="barLabel">{bar.label}</span>
+                                        </div>
+                                    </div>
+                                {:else if i == 7}
                                     <div class="bar" style="width: {voltageTotalWidth(bar.v)}%">
                                         <div class="span-wrap">
                                             <span class="barV">{bar.v}</span><span class="barLabel">{bar.label}</span>
@@ -1036,9 +1056,9 @@
                     </select>
 
                     <h2>Bypass</h2>
-                    <div id="bypassDiv">    
-                        <label id="bypassLabel" for="bypass">Enabled</label>
-                        <input type="checkbox" id="bypass" bind:checked={parameters["bypass"]} disabled={parameterLoading} />
+                    <div class="checkboxDiv" id="bypassDiv">    
+                        <label class="checkboxLabel" id="bypassLabel" for="bypass">Enabled</label>
+                        <input type="checkbox" class="checkbox" id="bypass" bind:checked={parameters["bypass"]} disabled={parameterLoading} />
                     </div>
                     {#if parameters["bypass"]}
                         <NumberInput l="Bypass Voltage:" k="vBypass" p={parameters} op={oldParmeters} pl={parameterLoading} />
@@ -1061,12 +1081,25 @@
                     {#if data["tDiffTriggered"]}
                         <p class="error">Temperature difference triggered</p>
                     {/if}
+                    {#if data["balTempTopTriggered"] && state == "balancing"}
+                        <p class="error">Balance temperature top triggered</p>
+                    {/if}
+                    {#if data["balTempBottomTriggered"] && state == "balancing"}
+                        <p class="error">Balance temperature bottom triggered</p>
+                    {/if}
 
-                    <h2>Fetch Rate</h2>
-                    <div id="fetchRateHolder">
-                        <label id="fetchRateLabel" for="fetchRate">5</label>
-                        <input type="range" id="fetchRate" name="fetchRate" value="5" min="0.5" max="30" step="0.5" oninput={fetchRateChange} />
+                    <h2>Logging</h2>
+                    <div class="checkboxDiv" id="bypassDiv">    
+                        <label class="checkboxLabel" id="deleteLogLabel" for="deleteLog">Delete when full</label>
+                        <input type="checkbox" class="checkbox" id="deleteLog" bind:checked={parameters["deleteLog"]} disabled={parameterLoading} />
                     </div>
+                    {#if state == "monitor"}
+                        <NumberInput l="Log speed:" k="logSpeed" p={parameters} op={oldParmeters} pl={parameterLoading} />
+                    {/if}
+
+                    <h2>CAN Charging</h2>
+                    <NumberInput l="Voltage:" k="vCanCharge" p={parameters} op={oldParmeters} pl={parameterLoading} />
+                    <NumberInput l="Current:" k="iCanCharge" p={parameters} op={oldParmeters} pl={parameterLoading} />
 
                     <h2>Save</h2>
                     <button
@@ -1076,13 +1109,16 @@
                         disabled={parameterLoading}
                     >Save</button>
 
+                    <h2>Fetch Rate</h2>
+                    <div id="fetchRateHolder">
+                        <label id="fetchRateLabel" for="fetchRate">5</label>
+                        <input type="range" id="fetchRate" name="fetchRate" value="5" min="0.5" max="30" step="0.5" oninput={fetchRateChange} />
+                    </div>
+
                     <h2>File Upload</h2>
                     <button class="normalButton" type="button" onclick={() => showFileUploadModal = true} disabled={parameterLoading}>Upload File</button>
 
                     <h2>Log file</h2>
-                    {#if state == "monitor"}
-                        <NumberInput l="Log speed:" k="logSpeed" p={parameters} op={oldParmeters} pl={parameterLoading} />
-                    {/if}
                     <div id="splitButton">
                         <button class="normalButton" type="button" onclick={downloadLog} disabled={parameterLoading}>Download Log</button>
                         <button class="dangerButton" type="button" onclick={deleteLog}   disabled={parameterLoading}>Delete Log</button>
