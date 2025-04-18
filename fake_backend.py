@@ -148,6 +148,7 @@ def data():
 	doc["faults"]["batteryTherm4Temp"]     = False
 	doc["faults"]["batteryCurrent"]        = True
 
+	doc["faults"]["overPower"]             = True
 
 	doc["pFaults"] = {}
 
@@ -160,6 +161,8 @@ def data():
 	doc["pFaults"]["batteryTherm3Temp"]     = True
 	doc["pFaults"]["batteryTherm4Temp"]     = False
 	doc["pFaults"]["batteryCurrent"]        = True
+
+	doc["pfaults"]["overPower"]             = True
 
 	doc["name"] = "apSSID"
 
