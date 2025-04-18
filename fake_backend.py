@@ -43,7 +43,8 @@ def forceDischargeDisable():
 
 @app.route('/log/download', methods=['GET'])
 def logDownload():
-	return "log"
+	path = "fake_log2.csv"
+	return flask.send_file(path, as_attachment=True)
 
 @app.route('/log/delete', methods=['GET'])
 def logDelete():

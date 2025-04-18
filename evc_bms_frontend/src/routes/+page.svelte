@@ -2,12 +2,14 @@
     import { onMount } from "svelte";
     import { slide, fade } from 'svelte/transition';
     import Modal from "$lib/Modal.svelte";
+    import BigModal from "$lib/BigModal.svelte";
     import NumberInput from "$lib/NumberInput.svelte";
+    import Plotly from "plotly.js-dist-min";
     // ---------------------------------------------------------------------- //
 
     // ---------------------------------------------------------------------- //
-    const IP = "http://192.168.4.1";
-    // const IP = "http://127.0.0.1:5000";
+    // const IP = "http://192.168.4.1";
+    const IP = "http://127.0.0.1:5000";
     const DISPLAY_IP = "192.168.4.1";
 
     const CELLS = 24;
@@ -50,6 +52,10 @@
     // ---------------------------------------------------------------------- //
     let dataLoading = $state(false);
     let parameterLoading = $state(false);
+    // ---------------------------------------------------------------------- //
+
+    // ---------------------------------------------------------------------- //
+    let showLogModal = $state(false);
     // ---------------------------------------------------------------------- //
 
     // ---------------------------------------------------------------------- //
@@ -540,6 +546,164 @@
     function temperatureDiffWidth(v) {
         const max = parameters["tDiff"] ? parameters["tDiff"] : oldParmeters["tDiff"];
         return calcWidth(v, 0, max);
+    }
+    // ---------------------------------------------------------------------- //
+
+    // ---------------------------------------------------------------------- //
+    function decodeFaults(faultValue, version) {
+        const FAULT_FLAGS_V1 = [
+            "batteryMinVoltage", "batteryMaxVoltage", "batteryAverageVoltage", "batteryVoltageDiff",
+            "batteryTherm1Temp", "batteryTherm2Temp", "batteryTherm3Temp", "batteryCurrent", "overPower"
+        ];
+        const FAULT_FLAGS_V2 = [
+            ...FAULT_FLAGS_V1,
+            "batteryTherm4Temp"
+        ];
+        const flags = version === 1 ? FAULT_FLAGS_V1 : FAULT_FLAGS_V2;
+        const faults = [];
+        faultValue = parseInt(faultValue);
+        flags.forEach((flag, i) => {
+            if ((faultValue >> i) & 1) faults.push(flag);
+        });
+        return faults.length ? faults.join(", ") : "clear";
+    }
+
+    async function analyzeLog() {
+        parameterLoading = true;
+        showLogModal = false;
+
+        try {
+            const res = await fetch(`${IP}/log/download`);
+            const text = await res.text();
+
+            parameterLoading = false;
+
+            const lines = text.trim().split("\n").map(l => l.split(","));
+            const version = (lines[0].length === 30 || lines[0].length === 31) ? 1 : 2;
+
+            const baseColumns = ["Timestamp", ...Array.from({ length: 24 }, (_, i) => `Cell_${i+1}`)];
+            const therms = version === 1
+                ? ["Therm_1", "Therm_2", "Therm_3", "Therm_FET"]
+                : ["Therm_1", "Therm_2", "Therm_3", "Therm_4", "MOSFET_Temp", "Bot_Bal_Temp", "Top_Bal_Temp"];
+
+            const columns = [...baseColumns, ...therms, "Current", "Faults"];
+            console.log(columns, columns.length);
+            const data = lines.map(row => {
+                const entry = {};
+                columns.forEach((col, i) => entry[col] = parseFloat(row[i]) || row[i]);
+                return entry;
+            });
+
+            // Preprocessing
+            data.forEach(row => {
+                // Voltages in V
+                for (let i = 1; i <= 24; i++) row[`Cell_${i}`] /= 10000.0;
+
+                // Total voltage
+                row.Total_Voltage = Array.from({ length: 24 }, (_, i) => row[`Cell_${i+1}`]).reduce((a, b) => a + b, 0);
+
+                // Delta
+                const voltages = Array.from({ length: 24 }, (_, i) => row[`Cell_${i+1}`]);
+                row.Delta = Math.max(...voltages) - Math.min(...voltages);
+
+                // Highest/lowest index
+                row.Highest_Cell = voltages.indexOf(Math.max(...voltages)) + 1;
+                row.Lowest_Cell = voltages.indexOf(Math.min(...voltages)) + 1;
+
+                // Power
+                row.Power = row.Total_Voltage * row.Current;
+
+                // Fault decode
+                row.Fault_Text = decodeFaults(row.Faults, version);
+            });
+
+            // Summary
+            const temps = therms.map(t => data.map(row => row[t])).flat();
+            const currents = data.map(r => r.Current);
+            const powers = data.map(r => r.Power);
+            const deltas = data.map(r => r.Delta);
+            const voltages = data.flatMap(row => Array.from({ length: 24 }, (_, i) => row[`Cell_${i+1}`]));
+            const highCells = data.map(r => r.Highest_Cell);
+            const lowCells = data.map(r => r.Lowest_Cell);
+            const faults = new Set(data.map(r => r.Fault_Text).filter(t => t !== "clear").flatMap(s => s.split(", ")));
+
+            const summary = {
+                "Max Temperature": temps.reduce((a, b) => Math.max(a, b), -Infinity).toFixed(2),
+                "Max Current": currents.reduce((a, b) => Math.max(a, b), -Infinity).toFixed(2),
+                "Max Power": powers.reduce((a, b) => Math.max(a, b), -Infinity).toFixed(2),
+                "Max Delta": deltas.reduce((a, b) => Math.max(a, b), -Infinity).toFixed(4),
+                "Max Cell Voltage": voltages.reduce((a, b) => Math.max(a, b), -Infinity).toFixed(4),
+                "Min Cell Voltage": voltages.reduce((a, b) => Math.min(a, b), Infinity).toFixed(4),
+                "Mode Highest Cell": mode(highCells),
+                "Mode Lowest Cell": mode(lowCells),
+                "Present Faults": [...faults].sort().join(", ") || "clear"
+            };
+
+            const summaryHTML = "<p>" + Object.entries(summary)
+                .map(([k, v]) => `${k}: ${v}`)
+                .join("&nbsp;&nbsp;") + "</p>";
+            document.getElementById("logSummary").innerHTML = summaryHTML;
+
+            // Plot
+            const traces = [];
+            for (let i = 1; i <= 24; i++) {
+                traces.push({
+                    x: data.map((_, idx) => idx),
+                    y: data.map(r => r[`Cell_${i}`]),
+                    mode: "lines",
+                    name: `Cell_${i}`
+                });
+            }
+            traces.push({
+                x: data.map((_, idx) => idx),
+                y: data.map(r => r.Current),
+                yaxis: "y2",
+                mode: "lines",
+                name: "Current (A)"
+            });
+            traces.push({
+                x: data.map((_, idx) => idx),
+                y: data.map(r => r.Power),
+                yaxis: "y2",
+                mode: "lines",
+                name: "Power (W)"
+            });
+
+            const faultIndices = data.map((r, i) => r.Fault_Text !== "clear" ? i : null).filter(i => i !== null);
+            const shapes = faultIndices.map(i => ({
+                type: "line",
+                x0: i,
+                x1: i,
+                y0: 0,
+                y1: 1,
+                yref: "paper",
+                line: { color: "red", dash: "dot" }
+            }));
+
+            Plotly.newPlot("logGraph", traces, {
+                title: "Battery Data",
+                xaxis: { title: { text: "Index"}  },
+                yaxis: { title: { text: "Voltage (V)" } },
+                yaxis2: { title: {text: "Current / Power"}, overlaying: "y", side: "right" },
+                shapes: shapes,
+                legend: { x: 1.05 },
+                automargin: true,
+            });
+
+            console.log(showLogModal);
+
+            showLogModal = true;
+        } catch (e) {
+            parameterLoading = false;
+            console.error(e);
+            error = e;
+        }
+    }
+
+    function mode(arr) {
+        return arr.sort((a,b) =>
+            arr.filter(v => v===a).length - arr.filter(v => v===b).length
+        ).pop();
     }
     // ---------------------------------------------------------------------- //
 </script>
@@ -1136,6 +1300,7 @@
                         <button class="normalButton" type="button" onclick={downloadLog} disabled={parameterLoading}>Download Log</button>
                         <button class="dangerButton" type="button" onclick={deleteLog}   disabled={parameterLoading}>Delete Log</button>
                     </div>
+                    <button class="normalButton" type="button" onclick={analyzeLog} disabled={parameterLoading}>Anaylize Log</button>
 
                     <h2>Force Discharge</h2>
                     <div id="splitButton">
@@ -1234,5 +1399,11 @@
     </form>
 {/snippet}
 
-<Modal showModal={showFileUploadModal} children={fileUploadSlot}>
-</Modal>
+{#snippet logSlot()}
+    <h2 class="modalTitle">Log File</h2>
+    <div id="logSummary"></div>
+    <div id="logGraph" style="width: 100%;"></div>
+{/snippet}
+
+<Modal showModal={showFileUploadModal} children={fileUploadSlot}></Modal>
+<BigModal showModal={showLogModal} children={logSlot}></BigModal>
