@@ -482,7 +482,7 @@
 
     // ---------------------------------------------------------------------- //
     function calcWidth(v, min, max) {
-        return (v - min) / (max - min) * 100;
+        return max((v - min) / (max - min) * 100, 0);
     }
 
     function voltageWidth(v) {
