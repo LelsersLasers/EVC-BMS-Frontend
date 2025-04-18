@@ -25,6 +25,8 @@
     const C_MAX_REGEN = 120;
     const C_MAX_DISCHARGE = 400;
 
+    const MAX_POWER = 14000; // 14kW max power
+
     const V_PADDING = 0.1;
     const T_PADDING = 2;
     const C_PADDING = 1.0;
@@ -265,9 +267,10 @@
                 overviewBarSet["bars"][2] = { label: "V (min)",     v: d["min"]             .toFixed(OVERVIEW_DECIMALS) };
                 overviewBarSet["bars"][3] = { label: "V (max)",     v: d["max"]             .toFixed(OVERVIEW_DECIMALS) };
                 overviewBarSet["bars"][4] = { label: "V (diff)",    v: (d["max"] - d["min"]).toFixed(OVERVIEW_DECIMALS) };
-                overviewBarSet["bars"][5] = { label: "V (pack 1)",  v: (d["pack"]["1"])     .toFixed(OVERVIEW_DECIMALS) };
-                overviewBarSet["bars"][6] = { label: "V (pack 2)",  v: (d["pack"]["2"])     .toFixed(OVERVIEW_DECIMALS) };
-                overviewBarSet["bars"][7] = { label: "V (total)",   v: d["sum"]             .toFixed(OVERVIEW_DECIMALS) };
+                // overviewBarSet["bars"][5] = { label: "V (pack 1)",  v: (d["pack"]["1"])     .toFixed(OVERVIEW_DECIMALS) };
+                // overviewBarSet["bars"][6] = { label: "V (pack 2)",  v: (d["pack"]["2"])     .toFixed(OVERVIEW_DECIMALS) };
+                overviewBarSet["bars"][5] = { label: "V (total)",   v: d["sum"]             .toFixed(OVERVIEW_DECIMALS) };
+                overviewBarSet["bars"][6] = { label: "kW (power)",  v: d["power"]           .toFixed(OVERVIEW_DECIMALS) };
                 // ---------------------------------------------------------- //
                 voltageBarSets = [];
 
@@ -482,7 +485,7 @@
 
     // ---------------------------------------------------------------------- //
     function calcWidth(v, min, max) {
-        return max((v - min) / (max - min) * 100, 0);
+        return Math.max((v - min) / (max - min) * 100, 0);
     }
 
     function voltageWidth(v) {
@@ -504,12 +507,16 @@
         return calcWidth(v, min - V_PADDING, max + V_PADDING);
     }
 
-    function voltagePackWidth(v) {
-        const minCell = parameters["vMin"] ? parameters["vMin"] : oldParmeters["vMin"];
-        const maxCell = parameters["vMax"] ? parameters["vMax"] : oldParmeters["vMax"];
-        const min = minCell * CELLS / 2;
-        const max = maxCell * CELLS / 2;
-        return calcWidth(v, min - V_PADDING, max + V_PADDING);
+    // function voltagePackWidth(v) {
+    //     const minCell = parameters["vMin"] ? parameters["vMin"] : oldParmeters["vMin"];
+    //     const maxCell = parameters["vMax"] ? parameters["vMax"] : oldParmeters["vMax"];
+    //     const min = minCell * CELLS / 2;
+    //     const max = maxCell * CELLS / 2;
+    //     return calcWidth(v, min - V_PADDING, max + V_PADDING);
+    // }
+
+    function powerWidth(v) {
+        return calcWidth(Math.abs(v), 0, MAX_POWER);
     }
 
     function currentWidth(v) {
@@ -620,7 +627,7 @@
     .discharge {
         background-color: #90d5ff;
     }
-    #current {
+    .current {
         background-color: #4DA6FF;
     }
     .diff {
@@ -910,7 +917,7 @@
                         <div class="bars">
                             {#each overviewBarSet.bars as bar, i (bar.label)}
                                 {#if i == 0}
-                                    <div id="current" class="bar" style="width: {currentWidth(bar.v)}%">
+                                    <div class="bar current" style="width: {currentWidth(bar.v)}%">
                                         <div class="span-wrap">
                                             <span class="barV">{bar.v}</span><span class="barLabel">{bar.label}</span>
                                         </div>
@@ -921,14 +928,20 @@
                                             <span class="barV">{bar.v}</span><span class="barLabel">{bar.label}</span>
                                         </div>
                                     </div>
-                                {:else if i == 5 || i == 6}
+                                <!-- {:else if i == 5 || i == 6}
                                     <div class="bar" style="width: {voltagePackWidth(bar.v)}%">
                                         <div class="span-wrap">
                                             <span class="barV">{bar.v}</span><span class="barLabel">{bar.label}</span>
                                         </div>
-                                    </div>
-                                {:else if i == 7}
+                                    </div> -->
+                                {:else if i == 5}
                                     <div class="bar" style="width: {voltageTotalWidth(bar.v)}%">
+                                        <div class="span-wrap">
+                                            <span class="barV">{bar.v}</span><span class="barLabel">{bar.label}</span>
+                                        </div>
+                                    </div>
+                                {:else if i == 6}
+                                    <div class="bar current" style="width: {powerWidth(bar.v)}%">
                                         <div class="span-wrap">
                                             <span class="barV">{bar.v}</span><span class="barLabel">{bar.label}</span>
                                         </div>

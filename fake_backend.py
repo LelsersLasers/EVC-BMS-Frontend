@@ -81,16 +81,17 @@ def data():
 		for _j in range(12):
 			doc["cells"][i].append(random_voltage())
 
+	doc["current"] = random.random() * 30
+
 	doc["min"] = min([min(doc["cells"][i]) for i in range(2)])
 	doc["max"] = max([max(doc["cells"][i]) for i in range(2)])
 	doc["avg"] = random_voltage()
 	doc["sum"] = random_voltage() * 12 * 2
+	doc["power"] = doc["sum"] * doc["current"]
 
 	doc["pack"] = {}
 	doc["pack"]["1"] = random_voltage() * 12
 	doc["pack"]["2"] = random_voltage() * 12
-
-	doc["current"] = random.random() * 30
 
 	doc["therm"] = {}
 	doc["therm"]["1"] = random_temperature()
@@ -162,7 +163,7 @@ def data():
 	doc["pFaults"]["batteryTherm4Temp"]     = False
 	doc["pFaults"]["batteryCurrent"]        = True
 
-	doc["pfaults"]["overPower"]             = True
+	doc["pFaults"]["overPower"]             = True
 
 	doc["name"] = "apSSID"
 
