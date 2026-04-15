@@ -1086,6 +1086,7 @@
                     <NumberInput l="Avg min:" k="vMinAvg" p={parameters} op={oldParmeters} pl={parameterLoading} />
                     <NumberInput l="Avg max:" k="vMaxAvg" p={parameters} op={oldParmeters} pl={parameterLoading} />
                     <NumberInput l="Cell diff:" k="vDiff" p={parameters} op={oldParmeters} pl={parameterLoading} />
+                    <NumberInput l="Balance Start Max Diff:" k="vBalanceStartDiff" p={parameters} op={oldParmeters} pl={parameterLoading} />
 
                     <h2>Temperature</h2>
                     <NumberInput l="Min:" k="tMin" p={parameters} op={oldParmeters} pl={parameterLoading} />
@@ -1106,9 +1107,7 @@
                         <label class="checkboxLabel" id="deleteLogLabel" for="deleteLog">Delete when full</label>
                         <input type="checkbox" class="checkbox" id="deleteLog" bind:checked={parameters["deleteLog"]} disabled={parameterLoading} />
                     </div>
-                    {#if state == "monitor"}
-                        <NumberInput l="Log speed:" k="logSpeed" p={parameters} op={oldParmeters} pl={parameterLoading} />
-                    {/if}
+                    <NumberInput l="Log speed:" k="logSpeed" p={parameters} op={oldParmeters} pl={parameterLoading} />
 
                     <h2>CAN Charging</h2>
                     <NumberInput l="Voltage:" k="vCanCharge" p={parameters} op={oldParmeters} pl={parameterLoading} />
